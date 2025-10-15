@@ -102,6 +102,7 @@ def decode_cw(signal, beam_width=5):
     beam = [("", "", 0.0)]  # (decoded_text, current_pattern, log_prob)
     for mark, duration in signal:
         probs = log_likelihood_duration(duration, mu, dah_mu, sigma, short_mu, medium_mu, long_mu, short_sigma, medium_sigma, long_sigma)
+        print(probs)
         candidates = []
 
         debug("\n\n\n")
