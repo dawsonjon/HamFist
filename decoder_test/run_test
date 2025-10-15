@@ -1,0 +1,2 @@
+g++ test.cpp ../cw_decoder/cw_decode.cpp ../cw_decoder/cw_data.cpp -o test_harness
+./test_harness

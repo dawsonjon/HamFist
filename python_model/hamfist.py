@@ -11,10 +11,29 @@ import cw_decode
 
 filename = sys.argv[1]
 
+def cluster_frequencies(max_hold, threshold):
+    best_frequencies = np.argsort(max_hold[:64])[::-1]
+
+    # group together adjacent frequency bins
+    frequency_clusters = []
+    for f in best_frequencies:
+        if max_hold[f] > threshold:
+          for i, fc in enumerate(frequency_clusters):
+              if f < max(fc)+2 and f > min(fc)-2:
+                  frequency_clusters[i].append(f)
+                  break
+          else:
+              frequency_clusters.append([f])
+
+    return [np.argmax(max_hold[cluster]) for cluster in frequency_clusters]
+
+
+threshold_setting = 2
+
 def get_cw(samples, rate, plot_map=False):
 
     num_frequency_bins = 128
-    frequency_bin = 42#47#81
+    frequency_bin = 56
     time_per_sample = 128/rate
 
     smoothed_freq_frame = np.zeros(num_frequency_bins)
@@ -36,34 +55,26 @@ def get_cw(samples, rate, plot_map=False):
     last_change = 0
     detection = False
     mark_space_lengths = []
+
+    clusters = []
     while(len(samples)) > 128:
 
       frame = samples[:num_frequency_bins]
       samples = samples[num_frequency_bins:]
       freq_frame_d1 = freq_frame
-      freq_frame = np.abs(np.fft.fftshift(np.fft.fft(frame)))
+      freq_frame = np.abs(np.fft.fftshift(np.fft.fft(frame * np.blackman(num_frequency_bins))))
       freq_frame_smoothed = np.mean([freq_frame, freq_frame_d1], 0)
-
       
       noise_estimate = np.mean(freq_frame_smoothed[frequency_bin-11:frequency_bin-2]+freq_frame_smoothed[frequency_bin+2:frequency_bin+11])
-      threshold = 0.98*threshold + 0.02*(noise_estimate * 2)
+      threshold = 0.98*threshold + 0.02*(noise_estimate * threshold_setting)
       old_detection = detection
       detection = freq_frame_smoothed[frequency_bin] > threshold
 
       max_hold = max_hold * 0.999
       max_hold[freq_frame > max_hold] = freq_frame[freq_frame > max_hold]
 
-      best_frequencies = np.argsort(max_hold[:64])[::-1]
-      frequency_clusters = []
-      for f in best_frequencies:
-        allow = True
-        for fc in frequency_clusters:
-           if abs(fc-f) < 4:
-              allow = False
-              break
-        if allow:
-           frequency_clusters.append(f)
-      print(frequency_clusters)
+      clusters =  cluster_frequencies(max_hold, threshold)
+      print(clusters)
 
       if old_detection != detection:
         length = sample_number - last_change
@@ -80,7 +91,7 @@ def get_cw(samples, rate, plot_map=False):
     plt.plot([i[frequency_bin] for i in freq_frame_capture])
     plt.plot(noise_estimate_capture)
     plt.plot(threshold_capture)
-    #plt.plot([1e6 if i else 0 for i in detection_capture])
+    plt.plot([1e6 if i else 0 for i in detection_capture])
     #plt.plot(max_hold_capture[500])
     plt.show()
 
