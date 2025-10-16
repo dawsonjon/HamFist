@@ -20,9 +20,18 @@ float log_gaussian(float x, float mu, float sigma)
 //Is this pattern part of a morse symbol?
 bool is_start_of_code(std::string &pattern)
 {
-    for(int idx=0; idx<NUM_MORSE_LETTERS; ++idx)
-    {
-      if(strncmp(MORSE[idx].code, pattern.c_str(), strlen(pattern.c_str())) == 0) return true;
+    int span = 128;
+    int morse_index = 0;
+
+    for(int i=0; i<7; i++) {
+      span /= 2;
+      if(pattern.c_str()[i] == 0) {
+        return MORSE[morse_index] != '#';
+      } else if(pattern.c_str()[i] == '.'){
+        morse_index++;
+      } else if(pattern.c_str()[i] == '-'){
+        morse_index+=span;
+      }
     }
     return false;
 }
@@ -30,10 +39,18 @@ bool is_start_of_code(std::string &pattern)
 //Is this pattern an exact match to a morse symbol?
 bool is_code(std::string &pattern)
 {
-    for(int idx=0; idx<NUM_MORSE_LETTERS; ++idx)
-    {
-      if(strlen(pattern.c_str()) != strlen(MORSE[idx].code)) continue;
-      if(strncmp(MORSE[idx].code, pattern.c_str(), strlen(pattern.c_str())) == 0) return true;
+    int span = 128;
+    int morse_index = 0;
+
+    for(int i=0; i<7; i++) {
+      span /= 2;
+      if(pattern.c_str()[i] == 0) {
+        return MORSE[morse_index] != '#' && MORSE[morse_index] != '~';
+      } else if(pattern.c_str()[i] == '.'){
+        morse_index++;
+      } else if(pattern.c_str()[i] == '-'){
+        morse_index+=span;
+      }
     }
     return false;
 }
@@ -41,10 +58,18 @@ bool is_code(std::string &pattern)
 //What letter does this code correspond to?
 char get_letter_from_code(std::string &pattern)
 {
-    for(int idx=0; idx<NUM_MORSE_LETTERS; ++idx)
-    {
-      if(strlen(pattern.c_str()) != strlen(MORSE[idx].code)) continue;
-      if(strncmp(MORSE[idx].code, pattern.c_str(), strlen(pattern.c_str())) == 0) return MORSE[idx].letter;
+    int span = 128;
+    int morse_index = 0;
+
+    for(int i=0; i<7; i++) {
+      span /= 2;
+      if(pattern.c_str()[i] == 0) {
+        return MORSE[morse_index];
+      } else if(pattern.c_str()[i] == '.'){
+        morse_index++;
+      } else if(pattern.c_str()[i] == '-'){
+        morse_index+=span;
+      }
     }
     return '#';
 }
