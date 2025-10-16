@@ -1,8 +1,10 @@
 
+#ifndef blah
+#define blah
 
 #include "cw_decode.h"
 
-s_observation signal[] = {
+s_observation cw_signal[] = {
 {true, 0.872060},
 {false, 1.255716},
 {true, 0.886952},
@@ -150,4 +152,4 @@ s_observation signal[] = {
 {true, 0.438046}
 };
 
-  
+#endif
