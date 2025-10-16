@@ -9,7 +9,7 @@ struct s_morse
 };
 
 extern const int NUM_MORSE_LETTERS;
-extern const s_morse MORSE[];
+extern const char MORSE[];
 
 extern const int NUM_CW_ABBREVIATIONS;
 extern const char * CW_ABBREVIATIONS[];
