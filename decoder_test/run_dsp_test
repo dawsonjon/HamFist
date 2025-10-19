@@ -2,6 +2,6 @@ g++ ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder/fft.cpp ../cw
 rm magnitudes
 rm noise_estimate
 rm threshold
-rm signal
+rm decode_bins
 ./cw_dsp_test
 python draw_plots.py

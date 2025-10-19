@@ -10,8 +10,9 @@
 
 static const uint16_t FRAME_SIZE = 64;
 static const uint16_t MAX_DECODERS = 10;
-static const uint16_t OBSERVATION_BUFFER_SIZE = 200;
-static const uint16_t TIMEOUT = 200;
+static const uint16_t OBSERVATION_BUFFER_SIZE = 400;
+static const uint16_t TIMEOUT = 1000;
+static const uint16_t CLUSTER_WIDTH = 2;
 
 struct s_cluster
 {
@@ -22,6 +23,10 @@ struct s_cluster
   uint32_t timeout;
   s_observation observations[OBSERVATION_BUFFER_SIZE];
   uint16_t num_observations;
+  uint16_t move_up_count;
+  uint16_t move_down_count;
+  uint32_t frame_count;
+  c_cw_decoder decoder;
 };
 
 class c_cw_dsp
@@ -34,6 +39,7 @@ class c_cw_dsp
   int32_t window[FRAME_SIZE];
   uint32_t magnitude[FRAME_SIZE/2];
   uint32_t smoothed_threshold;
+  uint32_t frame_count;
 
   std::list<s_cluster> clusters;
 
