@@ -1,7 +1,7 @@
 
 #include "cw_data.h"
 const int NUM_CW_ABBREVIATIONS = 68;
-const int NUM_CW_WORDS = 1093;
+const int NUM_CW_WORDS = 962;
 const int NUM_MORSE_LETTERS = 44;
 const char * CW_ABBREVIATIONS[] = {"73",
 "88",

@@ -19,9 +19,16 @@ with open("threshold") as inf:
 threshold = threshold.splitlines()
 threshold = [int(line) for line in threshold]
 
-plt.plot([x[22] for x in data])
-plt.plot(noise)
-plt.plot(threshold)
-plt.plot(1000*(np.array([x[22] for x in data]) > np.array(threshold)))
-plt.show()
+with open("decode_bins") as inf:
+  decode_bins = inf.read()
+decode_bins = decode_bins.splitlines()
+decode_bins = [int(line) for line in decode_bins]
+
+for bin in set(decode_bins):
+  plt.title("Frequency Bin %u"%bin)
+  plt.plot([x[bin] for x in data])
+  plt.plot(noise)
+  plt.plot(threshold)
+  plt.plot(1000*(np.array([x[bin] for x in data]) > np.array(threshold)))
+  plt.show()
   

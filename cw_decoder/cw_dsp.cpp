@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cmath>
 #include <cstring>
+#include <cassert>
 
 #include <algorithm>
 #include "cw_dsp.h"
@@ -22,6 +23,8 @@ void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
 {
   for(uint16_t idx=0; idx<n; ++idx)
   {
+    assert(idx >= 0);
+    assert(idx < FRAME_SIZE);
     int32_t i_val = i[idx];
     int32_t q_val = q[idx];
     i_val = window[idx] * i_val / 65536;
@@ -36,43 +39,94 @@ void c_cw_dsp :: decode(uint8_t bin, bool state, uint16_t duration)
   printf("output_state : %u %u %u\n", bin, state, duration);
 }
 
-void c_cw_dsp :: cluster_detections(uint32_t threshold)
+static uint16_t clear_surrounding_bins(uint32_t magnitude[], uint16_t bin, uint16_t &max_magnitude_bin) 
 {
+    int start = std::max(0,              (int)bin-(int)CLUSTER_WIDTH);
+    int stop =  std::min(FRAME_SIZE/2-1, (int)bin+(int)CLUSTER_WIDTH);
 
-  //refresh existing clusters
-  for (s_cluster &cluster : clusters) {
-      int start = cluster.bin>0?cluster.bin-1:cluster.bin;
-      int stop = cluster.bin<FRAME_SIZE/2-1?cluster.bin+1:cluster.bin;
-
-      cluster.value = magnitude[cluster.bin] > threshold;
-
-      uint32_t max_magnitude = 0;
-      for(uint16_t bin=start; bin<=stop; ++bin) {
-        if(magnitude[bin] > max_magnitude) max_magnitude = magnitude[bin];
-        magnitude[bin]=0;
+    uint32_t max_magnitude = 0;
+    max_magnitude_bin = bin;
+    for(uint16_t bin=start; bin<=stop; ++bin) {
+      assert(bin >= 0);
+      assert(bin < FRAME_SIZE/2);
+      if(magnitude[bin] > max_magnitude){
+        max_magnitude = magnitude[bin];
+        max_magnitude_bin = bin;
       }
-      //cluster.value = max_magnitude > threshold;
-  }
+      magnitude[bin]=0;
+    }
 
-  //find new clusters
-  while(clusters.size() < MAX_DECODERS) { 
-    uint32_t max = 0;
-    uint16_t max_bin = 0;
+    return max_magnitude;
+}
+
+static uint16_t max_magnitude(uint32_t magnitude[], uint32_t threshold, uint16_t &max_bin, uint32_t &max) 
+{
+    max = 0;
+    max_bin = 0;
     uint16_t num_detections = 0;
     for(uint16_t idx=1; idx<FRAME_SIZE/2; ++idx) {
+      assert(idx >= 0);
+      assert(idx < FRAME_SIZE/2);
       if(magnitude[idx] > threshold ) {
         num_detections++;
         if(magnitude[idx] > max) {
           max_bin = idx;
           max = magnitude[idx];
-          if(idx>0) magnitude[idx] = 0;
-          magnitude[idx+1] = 0;
-          if(idx+1 < FRAME_SIZE/2) magnitude[idx-1] = 0;
         }
       }
     }
-    if(num_detections == 0) break;
-    printf("starting %u\n", max_bin);
+    return num_detections;
+}
+
+void c_cw_dsp :: cluster_detections(uint32_t threshold)
+{
+
+  //refresh existing clusters
+  for (s_cluster &cluster : clusters) {
+      uint16_t max_magnitude_bin;
+      uint32_t max_magnitude = clear_surrounding_bins(magnitude, cluster.bin, max_magnitude_bin);
+
+      //track frequency changes
+      if(max_magnitude_bin > cluster.bin) {
+        cluster.move_up_count++;
+        cluster.move_down_count = 0;
+      } else if(max_magnitude_bin < cluster.bin) {
+        cluster.move_up_count = 0;
+        cluster.move_down_count++;
+      } else {
+        cluster.move_up_count = 0;
+        cluster.move_down_count = 0;
+      }
+      if(cluster.move_up_count > 10) {
+        printf("moving up %u\n", cluster.bin);
+        cluster.bin++;
+        cluster.move_up_count = 0;
+        cluster.move_down_count = 0;
+      } 
+      if(cluster.move_down_count > 10) {
+        printf("moving down %u\n", cluster.bin);
+        cluster.bin--;
+        cluster.move_up_count = 0;
+        cluster.move_down_count = 0;
+      }
+
+      cluster.value = max_magnitude > threshold;
+  }
+
+  //find new clusters
+  while(clusters.size() < MAX_DECODERS) { 
+    uint16_t max_bin;
+    uint32_t max;
+
+    //if no detections found break
+    if(max_magnitude(magnitude, threshold, max_bin, max) == 0) break;
+
+    //clear surrounding bins
+    uint16_t discard;
+    clear_surrounding_bins(magnitude, max_bin, discard);
+
+    //create a new cluster
+    printf("starting %u @frame %u\n", max_bin, frame_count);
     s_cluster cluster;
     cluster.bin = max_bin;
     cluster.value = true;
@@ -80,6 +134,9 @@ void c_cw_dsp :: cluster_detections(uint32_t threshold)
     cluster.duration = 0;
     cluster.timeout = TIMEOUT;
     cluster.num_observations = 0;
+    cluster.move_up_count = 0;
+    cluster.move_down_count = 0;
+    cluster.frame_count = frame_count;
     clusters.push_back(cluster);
   }
   
@@ -99,16 +156,12 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
       cluster.last_value = cluster.value;
 
       //decode when buffer is full
-      if( cluster.bin==22 && cluster.value == 0 && cluster.num_observations > OBSERVATION_BUFFER_SIZE-3 ) {
-        printf("Decode %u:\n", cluster.bin);
-        decode_cw(cluster.observations, cluster.num_observations, 5);
+      if(cluster.num_observations == OBSERVATION_BUFFER_SIZE) {
+        print_element("decode_bins", cluster.bin);
+        cluster.decoder.decode(cluster.observations, cluster.num_observations);
+        printf("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
         cluster.num_observations = 0;
       }
-
-      //for(s_observation observation : cluster->observations) {
-        //printf("{%u %f} ", observation.mark, observation.duration);
-      //}
-      //printf("\n");
     }
 
     //decrement timeout
@@ -120,11 +173,15 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
 
     //force decode on timeout
     if(cluster.timeout == 0 ) {
-      printf("Stopping %u:\n", cluster.bin);
-      //decode_cw(cluster.observations, cluster.num_observations, 5);
-      cluster.num_observations = 0;
+      printf("Stopping %u\n", cluster.bin);
+      float active_time = frame_count - cluster.frame_count;
+      if(cluster.num_observations/active_time > 0.05) {
+        print_element("decode_bins", cluster.bin);
+        cluster.decoder.decode(cluster.observations, cluster.num_observations);
+        printf("Decode %u %u: %s\n", cluster.num_observations, cluster.bin, cluster.decoder.get_text().c_str());
+        cluster.num_observations = 0;
+      }
     }
-    
 
   }
 
@@ -139,7 +196,6 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
 void c_cw_dsp :: process_frame()
 {
   print_frame("magnitudes", magnitude);
-
   // estimate noise with median
   std::vector<double> tmp(magnitude, magnitude+FRAME_SIZE/2);
   std::nth_element(tmp.begin(), tmp.begin()+FRAME_SIZE/4, tmp.end());
@@ -148,7 +204,7 @@ void c_cw_dsp :: process_frame()
 
   //calculate threshold
   uint32_t threshold = noise_estimate * 5;
-  smoothed_threshold = ((smoothed_threshold << 2) - smoothed_threshold + threshold) >> 2;
+  smoothed_threshold = ((smoothed_threshold << 5) - smoothed_threshold + threshold) >> 5;
   print_element("threshold", smoothed_threshold);
 
   //find live signals
@@ -156,6 +212,7 @@ void c_cw_dsp :: process_frame()
 
   //process active signals
   process_clusters(smoothed_threshold);
+  frame_count++;
 
 }
 
@@ -197,6 +254,7 @@ c_cw_dsp :: c_cw_dsp()
   }
   generate_window(window, FRAME_SIZE);
   smoothed_threshold = 0;
+  frame_count = 0;
 }
 
 void c_cw_dsp :: process_sample(int16_t sample)

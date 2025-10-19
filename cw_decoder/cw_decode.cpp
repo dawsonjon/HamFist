@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cstring>
+#include <cassert>
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -8,8 +9,19 @@
 #include "cw_data.h"
 #include "cw_decode.h"
 
-//#include <cstdio>
-//#include "Arduino.h"
+//#define LOGGING
+
+#ifdef LOGGING
+#ifdef ARDUINO
+  #include <Arduino.h>
+  #define DEBUG_PRINTF(...)  Serial.printf(__VA_ARGS__)
+#else
+  #include <cstdio>
+  #define DEBUG_PRINTF(...)  std::printf(__VA_ARGS__)
+#endif
+#else
+  #define DEBUG_PRINTF(...)
+#endif
 
 
 //return the log likelihood x in a normal distribution mu/sigma
@@ -26,8 +38,9 @@ bool is_start_of_code(std::string &pattern)
 
     for(int i=0; i<7; i++) {
       span >>= 1;
+      assert(i < strlen(pattern.c_str())+1);
       if(pattern.c_str()[i] == 0) {
-        return MORSE[morse_index] != '#';
+        return MORSE[morse_index] != '~';
       } else if(pattern.c_str()[i] == '.'){
         morse_index++;
       } else if(pattern.c_str()[i] == '-'){
@@ -45,6 +58,7 @@ bool is_code(std::string &pattern)
 
     for(int i=0; i<7; ++i) {
       span >>= 1;
+      assert(i < strlen(pattern.c_str())+1);
       if(pattern.c_str()[i] == 0) {
         return MORSE[morse_index] != '#' && MORSE[morse_index] != '~';
       } else if(pattern.c_str()[i] == '.'){
@@ -64,6 +78,7 @@ char get_letter_from_code(std::string &pattern)
 
     for(int i=0; i<7; i++) {
       span >>= 1;
+      assert(i < strlen(pattern.c_str())+1);
       if(pattern.c_str()[i] == 0) {
         return MORSE[morse_index];
       } else if(pattern.c_str()[i] == '.'){
@@ -82,6 +97,7 @@ bool binary_search_word(const char * words[], int num_words, const std::string &
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
+        assert(mid < num_words);
         int cmp = std::strcmp(words[mid], target.c_str());
 
         if (cmp == 0) {
@@ -99,11 +115,8 @@ bool binary_search_word(const char * words[], int num_words, const std::string &
 //What is the log probability that this is a word?
 float language_log_prob(std::string &word)
 {
-    printf("aaa");
-    if(binary_search_word(CW_ABBREVIATIONS, NUM_CW_ABBREVIATIONS, word.c_str())) return 6.0f;
-    printf("bbb");
-    if(binary_search_word(CW_WORDS, NUM_CW_WORDS, word.c_str())) return 4.0f;
-    printf("ccc");
+    if(binary_search_word(CW_ABBREVIATIONS, NUM_CW_ABBREVIATIONS, word)) return 6.0f;
+    if(binary_search_word(CW_WORDS, NUM_CW_WORDS, word)) return 4.0f;
     return 0;
 }
 
@@ -112,7 +125,7 @@ std::string get_last_word(const std::string& text)
 {
     // Trim trailing spaces
     size_t end = text.find_last_not_of(" \t\n\r");
-    if (end == std::string::npos) return ""; // no non-space characters
+    if (end == std::string::npos) return std::string(""); // no non-space characters
 
     // Find start of last word
     size_t start = text.find_last_of(" \t\n\r", end);
@@ -210,23 +223,28 @@ void kmeans(float x[], const int x_n, float means[], float sigmas[], const int n
   }
 }
 
-struct s_candidate
-{
-  std::string text;
-  std::string pattern;
-  float logp;
-};
-
 
 //find the n most likely decodes
-void decode_cw(s_observation signal[], int num_observations, int beam_width)
+std::string c_cw_decoder :: get_text()
+{
+    std::string letter = std::string("")+get_letter_from_code(beam[0].pattern);
+    std::string text = beam[0].text + letter;
+    DEBUG_PRINTF("%s\n", text.c_str());
+
+    return text;
+}
+
+//find the n most likely decodes
+void c_cw_decoder :: decode(s_observation signal[], int num_observations)
 {
 
-    for(uint8_t idx=0; idx<num_observations; idx++) {
+    DEBUG_PRINTF("Duration: \n");
+    for(uint16_t idx=0; idx<num_observations; idx++) {
 
-      if(signal[idx].mark) printf("Duration %f: \n", signal[idx].duration);
+      if(signal[idx].mark) DEBUG_PRINTF("%f ", signal[idx].duration);
 
     }
+    DEBUG_PRINTF("\n");
 
     //global clustering
     float means[3];
@@ -242,7 +260,7 @@ void decode_cw(s_observation signal[], int num_observations, int beam_width)
     float mu = means[0];
     float dah_mu = means[1];
     float sigma = sigmas[0];
-    printf("mu %f dash_mu %f, sigma %f\n", mu, dah_mu, sigma);
+    DEBUG_PRINTF("mu %f dash_mu %f, sigma %f\n", mu, dah_mu, sigma);
     //Serial.println(mu);
     //Serial.println(dah_mu);
 
@@ -267,17 +285,28 @@ void decode_cw(s_observation signal[], int num_observations, int beam_width)
     float medium_sigma = sigma;
     float long_sigma = sigma;
 
-    printf("short mu %f medium_mu %f, long_mu %f\n", short_mu, medium_mu, long_mu);
-    printf("short sigma %f medium sigma %f, long sigma %f\n", short_sigma, medium_sigma, long_sigma);
+    DEBUG_PRINTF("short mu %f medium_mu %f, long_mu %f\n", short_mu, medium_mu, long_mu);
+    DEBUG_PRINTF("short sigma %f medium sigma %f, long sigma %f\n", short_sigma, medium_sigma, long_sigma);
     //Serial.println(short_mu);
     //Serial.println(medium_mu);
     //Serial.println(long_mu);
 
     //the beam contains hte most likely decodes and their probabilities
-    s_candidate beam[beam_width];
-    beam[0] = {"", "", 0.0f}; //decoded_text, current_pattern, log_probability
-    int items_in_beam = 1;
 
+    for(int i=0; i<num_observations; ++i)
+    {
+      float logp_dot  = log_gaussian(signal[i].duration, mu, sigma);
+      float logp_dash = log_gaussian(signal[i].duration, dah_mu, sigma);
+      if(signal[i].mark) {
+        if(logp_dot > logp_dash)
+          DEBUG_PRINTF("dot ");
+        else
+          DEBUG_PRINTF("dash ");
+      }
+    }
+    DEBUG_PRINTF("\n");
+
+    DEBUG_PRINTF("num observations %u\n", num_observations);
     for(int i=0; i<num_observations; ++i)
     {
       
@@ -289,24 +318,16 @@ void decode_cw(s_observation signal[], int num_observations, int beam_width)
         float logp_gap7 = duration<long_mu?log_gaussian(duration, long_mu, long_sigma):0;
 
 
-
-        s_candidate candidates[beam_width*3]; //max 3 new predictions for each item in beam
+        s_candidate candidates[BEAM_WIDTH*3]; //max 3 new predictions for each item in beam
         int num_candidates = 0;
-
-        //if (signal[i].mark) //Serial.printf("dot %f dash %f\n", logp_dot, logp_dash);
-        //else //Serial.printf("gap %f %f %f\n", logp_gap1, logp_gap3, logp_gap7);
-
 
         for(int j=0; j<items_in_beam; j++)
         {
-            printf("aa\n");
             std::string &text = beam[j].text;
             std::string &pattern = beam[j].pattern;
             float &logp = beam[j].logp;
-            printf("bb\n");
 
             if(signal[i].mark) {
-              printf("cc\n");
               
               char letter = get_letter_from_code(pattern);
               bool pattern_is_code = letter != '#' && letter != '~';
@@ -315,18 +336,20 @@ void decode_cw(s_observation signal[], int num_observations, int beam_width)
               std::string dot_pattern = pattern+'.';
               if (is_start_of_code(dot_pattern))
               {
+                assert(num_candidates < BEAM_WIDTH*3);
                 candidates[num_candidates].text    = text;
                 candidates[num_candidates].pattern = pattern + '.';
                 candidates[num_candidates].logp    = logp + logp_dot;
-                printf("dot \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dot \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
               else if (pattern_is_code)
               {
+                assert(num_candidates < BEAM_WIDTH*3);
                 candidates[num_candidates].text    = text + letter;
                 candidates[num_candidates].pattern = ".";
                 candidates[num_candidates].logp    = logp + logp_dot;
-                printf("dot2 \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dot2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
 
@@ -334,83 +357,77 @@ void decode_cw(s_observation signal[], int num_observations, int beam_width)
               std::string dash_pattern = pattern+'-';
               if (is_start_of_code(dash_pattern))
               {
+                assert(num_candidates < BEAM_WIDTH*3);
                 candidates[num_candidates].text    = text;
                 candidates[num_candidates].pattern = pattern + '-';
                 candidates[num_candidates].logp    = logp + logp_dash;
-                printf("dash \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dash \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
               else if (pattern_is_code)
               {
+                assert(num_candidates < BEAM_WIDTH*3);
                 candidates[num_candidates].text    = text + letter;
                 candidates[num_candidates].pattern = "-";
                 candidates[num_candidates].logp    = logp + logp_dash;
-                printf("dash2 \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dash2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
 
             }
             else
             {
-              printf("dd\n");
               //Case 3: symbol gap
+              assert(num_candidates < BEAM_WIDTH*3);
               candidates[num_candidates].text    = text;
               candidates[num_candidates].pattern = pattern;
               candidates[num_candidates].logp    = logp + logp_gap1;
-              //printf("symbol_gap \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+              DEBUG_PRINTF("%u symbol_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
               num_candidates++;
-              printf("ee\n");
 
               char letter = get_letter_from_code(pattern);
               bool pattern_is_code = letter != '#' && letter != '~';
-              printf("ff\n");
               if (pattern_is_code)
               {
                   std::string last_word = get_last_word(text + letter);
-                  printf("gg\n");
                   float language_bonus = language_log_prob(last_word);
-                  printf("hh\n");
 
                   // Case 4: letter gap
+                  assert(num_candidates < BEAM_WIDTH*3);
                   candidates[num_candidates].text    = text + letter;
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap3;
-                  printf("letter_gap \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                  DEBUG_PRINTF("%u letter_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                   num_candidates++;
 
                   // Case 5: word gap
+                  assert(num_candidates < BEAM_WIDTH*3);
                   candidates[num_candidates].text    = text + letter + ' ';
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap7 + language_bonus;
-                  printf("word_gap \"%s\" \"%s\"\n", candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                  DEBUG_PRINTF("%u word_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                   num_candidates++;
               }
             }
         }
 
-        printf("a\n");
-
         //find best candidates to propagate forward
-        items_in_beam = std::min(beam_width, num_candidates);
+        items_in_beam = std::min(BEAM_WIDTH, num_candidates);
         std::vector<int> best_indices(num_candidates);
         std::iota(best_indices.begin(), best_indices.end(), 0);
         std::partial_sort(best_indices.begin(), best_indices.begin()+items_in_beam, best_indices.end(),
             [&](const int a, const int b) { return candidates[a].logp > candidates[b].logp; }
         );
-        printf("b\n");
 
         //copy best candidates into beam
         for(int idx = 0; idx < items_in_beam; ++idx)
         {
+          assert(idx < BEAM_WIDTH);
+          assert(idx < num_candidates);
           beam[idx] = candidates[best_indices[idx]];
         }
-        printf("c\n");
+
+        assert(items_in_beam);
 
     }
-
-    std::string letter = std::string("")+get_letter_from_code(beam[0].pattern);
-    std::string text = beam[0].text + letter;
-    printf("%s\n", text.c_str());
-    //Serial.println(text.c_str());
-
 }
