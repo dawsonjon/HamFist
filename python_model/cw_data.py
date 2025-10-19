@@ -91,6 +91,60 @@ WORDS = [
     "DEGREE","POPULATE","CHICK","DEAR","ENEMY","REPLY","DRINK","OCCUR","SUPPORT",
     "SPEECH","NATURE","RANGE","STEAM","MOTION","PATH","LIQUID","LOG","MEANT",
     "QUOTIENT","TEETH","SHELL","NECK",
+
+    # General operating terms
+    "ANTENNA","AERIAL","BALUN","BEAM","DIPOLE","VERTICAL","YAGI","LOOP","GROUND",
+    "COUNTERPOISE","RADIAL","FEEDLINE","COAX","CONNECTOR","SWR","IMPEDANCE",
+    "RESONANT","TUNER","LOADING","MATCHING","FILTER","ATTENUATOR","PREAMP",
+    "AMPLIFIER","TRANSMITTER","RECEIVER","TRANSCEIVER","RIG","RADIO","SET",
+    "STATION","PORTABLE","MOBILE","BASE","POWER","BATTERY","CHARGER","SOLAR",
+    "GENERATOR","FUSE","RELAY","SWITCH","METER","VOLTAGE","CURRENT","SIGNAL",
+    "NOISE","INTERFERENCE","ATTENUATION","MODULATION","FREQUENCY","BAND",
+    "CHANNEL","TONE","TONEBURST",
+
+    # Bands and modes
+    "HF","VHF","UHF","MF","LF","160M","80M","40M","20M","15M","10M","6M","2M",
+    "70CM","CW","SSB","FM","AM","DIGITAL","FT8","PSK31","RTTY","PACKET","APRS",
+    "SATELLITE","MOONBOUNCE","EME",
+
+    # Operating activities
+    "CONTEST","DX","DXPEDITION","SKED","NET","ROUNDTABLE","RAGCHEW","CQ","CALL",
+    "CALLING","REPLY","RESPONSE","QSO","EXCHANGE","LOG","LOGGING","CONTACT",
+    "COPY","SIGNAL","REPORT","RST","REPORTING","REPEAT","REPEATER","SIMPLEX",
+    "DUPLEX","SPLIT","ZERO","NINE","FIVE",
+
+    # Q-codes and procedural signs
+    "QRM","QRN","QRO","QRP","QRQ","QRS","QRT","QRV","QSB","QSL","QSO","QSY",
+    "QTH","QRZ","QRL","QRX","QSP","QTC","QTR","QRA","DE","K","SK","AR","BT","BK",
+
+    # Common abbreviations / shorthand
+    "AGN","ANT","BTU","CU","CUL","DR","ES","FB","FER","GD","GUD","HPE","HW",
+    "OM","OP","PSE","RPT","RST","RX","TX","RXTX","TKS","THX","TU","UR","URS",
+    "VY","WX","WXR","YR","YRN",
+
+    # Everyday exchange words
+    "HELLO","HI","NAME","QTH","LOCATION","CITY","TOWN","COUNTRY","STATE",
+    "PROVINCE","RIG","ANTENNA","POWER","AGE","YEARS","OLD","OPERATOR","WEATHER",
+    "SUNNY","RAIN","SNOW","WIND","CLOUDY","TEMP","TEMPERATURE","WARM","COLD",
+    "FINE","OK","GOOD","BEST","GREETINGS","THANKS","THANK","CHEERS","BYE","SEE",
+    "SOON","AGAIN","FRIEND","NEW","OLD","RADIO","HAM","CLUB","CONTEST","FIELD",
+    "DAY","PORTABLE","HOME","BASE","CALL","CALLSIGN","NUMBER","FIVE","NINE",
+    "ZERO","SEVEN","THREE","TWO",
+
+    # Common phrase components
+    "BEST","REGARDS","GOOD","LUCK","DX","SEE","YOU","SOON","NICE","TO","MEET",
+    "COPY","ALL","MANY","THANKS","PLEASE","REPEAT","CONFIRM","AGAIN","OVER","OUT",
+
+    # Equipment / extras
+    "UNUN","COIL","CAPACITOR","RESISTOR","SOLDER","WIRE","PLUG","JACK","MIC",
+    "KEY","PADDLE","KEYER","STRAIGHT","BUG","SPEED","TONE","SIDETONE","VFO",
+    "DISPLAY","MENU","MEMORY","SCAN","TUNE","AUDIO","SPEAKER","HEADPHONES",
+    "NOTCH","BANDWIDTH",
+
+    # Optional call sign prefixes
+    "K","W","N","AA","AB","AC","AD","AE","AF","AG","AI","AJ","AK","G","M","2E",
+    "DL","DF","DJ","DK","JA","JE","JF","VK","ZL","VE","VA","F","EA","ON","OH",
+    "OE","HB9","LA","OZ","SM","PA","LX","SV","4X","9A","9H","ZS"
 ]
 
 MORSE = {

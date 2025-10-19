@@ -40,7 +40,9 @@ def morse_tree():
   return tree
 
 cw_abbreviations = ",\n".join(['"%s"'%letter for letter in sorted(cw_data.CW_ABREVIATIONS)])
-cw_words = ",\n".join(['"%s"'%letter for letter in sorted(cw_data.WORDS)])
+cw_words = set(cw_data.WORDS)
+cw_words = [word for word in cw_words if word not in cw_data.CW_ABREVIATIONS]
+cw_words = ",\n".join(['"%s"'%letter for letter in sorted(cw_words)])
 morse = ",\n".join(['{\'%s\',"%s"}'%(letter, code) for letter, code in cw_data.MORSE.items()])
 
 content = """
