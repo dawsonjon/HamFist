@@ -142,6 +142,21 @@ void c_cw_dsp :: cluster_detections(uint32_t threshold)
   
 }
 
+void c_cw_dsp :: flush()
+{
+
+  for (auto &cluster : clusters) {
+
+      printf("completing: %u\n", cluster.bin);
+      print_element("decode_bins", cluster.bin);
+      cluster.decoder.decode(cluster.observations, cluster.num_observations);
+      printf("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
+  }
+
+  clusters.clear();
+
+}
+
 void c_cw_dsp :: process_clusters(uint32_t threshold)
 {
 
@@ -175,7 +190,7 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
     if(cluster.timeout == 0 ) {
       printf("Stopping %u\n", cluster.bin);
       float active_time = frame_count - cluster.frame_count;
-      if(cluster.num_observations/active_time > 0.05) {
+      if(cluster.num_observations/active_time > 0.01) {
         print_element("decode_bins", cluster.bin);
         cluster.decoder.decode(cluster.observations, cluster.num_observations);
         printf("Decode %u %u: %s\n", cluster.num_observations, cluster.bin, cluster.decoder.get_text().c_str());
@@ -203,7 +218,7 @@ void c_cw_dsp :: process_frame()
   print_element("noise_estimate", noise_estimate);
 
   //calculate threshold
-  uint32_t threshold = noise_estimate * 5;
+  uint32_t threshold = noise_estimate * 6;
   smoothed_threshold = ((smoothed_threshold << 5) - smoothed_threshold + threshold) >> 5;
   print_element("threshold", smoothed_threshold);
 
