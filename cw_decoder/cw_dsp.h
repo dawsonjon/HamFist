@@ -38,6 +38,8 @@ class c_cw_dsp
   int16_t q[FRAME_SIZE];
   int32_t window[FRAME_SIZE];
   uint32_t magnitude[FRAME_SIZE/2];
+  uint32_t old_magnitude[FRAME_SIZE/2];
+  uint32_t new_magnitude[FRAME_SIZE/2];
   uint32_t smoothed_threshold;
   uint32_t frame_count;
 
@@ -55,6 +57,7 @@ class c_cw_dsp
 
   c_cw_dsp();
   void process_sample(int16_t sample);
+  void flush();
 
 };
 

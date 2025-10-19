@@ -1,0 +1,11 @@
+sox 14.023_2021-12-22_11-47-28.wav -t s16 -r 15k test1.wav
+sox 14.023_2021-12-22_11-47-54.wav -t s16 -r 15k test2.wav
+sox 14.023_2021-12-22_11-48-57.wav -t s16 -r 15k test3.wav
+sox 14.023_2021-12-22_11-52-46.wav -t s16 -r 15k test4.wav
+sox 14.024_2021-12-22_11-59-12.wav -t s16 -r 15k test5.wav
+sox 14.053_2021-12-22_11-58-08.wav -t s16 -r 15k test6.wav
+sox 14.054_2021-12-22_11-55-47.wav -t s16 -r 15k test7.wav
+sox cw2.wav -t s16 -r 15k test8.wav
+sox cw3.wav -t s16 -r 15k test9.wav
+sox cw4.wav -t s16 -r 15k test10.wav
+sox cw.wav -t s16 -r 15k test11.wav

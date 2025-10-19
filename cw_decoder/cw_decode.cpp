@@ -311,6 +311,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
     {
       
         float duration = signal[i].duration;
+        float logp_glitch = duration>mu/2?log_gaussian(duration, mu/2, sigma):0;
         float logp_dot  = log_gaussian(duration, mu, sigma);
         float logp_dash = log_gaussian(duration, dah_mu, sigma);
         float logp_gap1 = log_gaussian(duration, short_mu, short_sigma);
@@ -318,7 +319,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
         float logp_gap7 = duration<long_mu?log_gaussian(duration, long_mu, long_sigma):0;
 
 
-        s_candidate candidates[BEAM_WIDTH*3]; //max 3 new predictions for each item in beam
+        s_candidate candidates[BEAM_WIDTH*4]; //max 3 new predictions for each item in beam
         int num_candidates = 0;
 
         for(int j=0; j<items_in_beam; j++)
@@ -336,7 +337,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               std::string dot_pattern = pattern+'.';
               if (is_start_of_code(dot_pattern))
               {
-                assert(num_candidates < BEAM_WIDTH*3);
+                assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text;
                 candidates[num_candidates].pattern = pattern + '.';
                 candidates[num_candidates].logp    = logp + logp_dot;
@@ -345,7 +346,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               }
               else if (pattern_is_code)
               {
-                assert(num_candidates < BEAM_WIDTH*3);
+                assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text + letter;
                 candidates[num_candidates].pattern = ".";
                 candidates[num_candidates].logp    = logp + logp_dot;
@@ -353,11 +354,12 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                 num_candidates++;
               }
 
+
               // Case 2: dash
               std::string dash_pattern = pattern+'-';
               if (is_start_of_code(dash_pattern))
               {
-                assert(num_candidates < BEAM_WIDTH*3);
+                assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text;
                 candidates[num_candidates].pattern = pattern + '-';
                 candidates[num_candidates].logp    = logp + logp_dash;
@@ -366,7 +368,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               }
               else if (pattern_is_code)
               {
-                assert(num_candidates < BEAM_WIDTH*3);
+                assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text + letter;
                 candidates[num_candidates].pattern = "-";
                 candidates[num_candidates].logp    = logp + logp_dash;
@@ -374,11 +376,19 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                 num_candidates++;
               }
 
+              //glitch
+              assert(num_candidates < BEAM_WIDTH*4);
+              candidates[num_candidates].text    = text;
+              candidates[num_candidates].pattern = pattern;
+              candidates[num_candidates].logp    = logp + logp_glitch;
+              DEBUG_PRINTF("%u glitch \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+              num_candidates++;
+
             }
             else
             {
               //Case 3: symbol gap
-              assert(num_candidates < BEAM_WIDTH*3);
+              assert(num_candidates < BEAM_WIDTH*4);
               candidates[num_candidates].text    = text;
               candidates[num_candidates].pattern = pattern;
               candidates[num_candidates].logp    = logp + logp_gap1;
@@ -393,7 +403,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                   float language_bonus = language_log_prob(last_word);
 
                   // Case 4: letter gap
-                  assert(num_candidates < BEAM_WIDTH*3);
+                  assert(num_candidates < BEAM_WIDTH*4);
                   candidates[num_candidates].text    = text + letter;
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap3;
@@ -401,13 +411,21 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                   num_candidates++;
 
                   // Case 5: word gap
-                  assert(num_candidates < BEAM_WIDTH*3);
+                  assert(num_candidates < BEAM_WIDTH*4);
                   candidates[num_candidates].text    = text + letter + ' ';
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap7 + language_bonus;
                   DEBUG_PRINTF("%u word_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
                   num_candidates++;
               }
+
+              //glitch
+              assert(num_candidates < BEAM_WIDTH*4);
+              candidates[num_candidates].text    = text;
+              candidates[num_candidates].pattern = pattern;
+              candidates[num_candidates].logp    = logp + logp_glitch;
+              DEBUG_PRINTF("%u glitch \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+              num_candidates++;
             }
         }
 
