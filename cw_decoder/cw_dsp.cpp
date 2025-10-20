@@ -9,6 +9,22 @@
 #include "fft.h"
 #include "utils.h"
 
+#define LOGGING
+
+#ifdef LOGGING
+#ifdef ARDUINO
+  #include <Arduino.h>
+  #define DEBUG_PRINTF(...)  Serial.printf(__VA_ARGS__)
+#else
+  #include <cstdio>
+  #define DEBUG_PRINTF(...)  std::printf(__VA_ARGS__)
+#endif
+#else
+  #define DEBUG_PRINTF(...)
+#endif
+
+
+
 // Function to generate a window
 void generate_window(int32_t *window, int size) {
   for (uint16_t i = 0; i < size; i++) 
@@ -81,6 +97,12 @@ static uint16_t max_magnitude(uint32_t magnitude[], uint32_t threshold, uint16_t
 void c_cw_dsp :: cluster_detections(uint32_t threshold)
 {
 
+  uint16_t max_bin;
+  uint32_t max;
+  //if(max_magnitude(magnitude, threshold, max_bin, max))
+  //  DEBUG_PRINTF("max bin %u\n", max_bin);
+
+
   //refresh existing clusters
   for (s_cluster &cluster : clusters) {
       uint16_t max_magnitude_bin;
@@ -98,13 +120,13 @@ void c_cw_dsp :: cluster_detections(uint32_t threshold)
         cluster.move_down_count = 0;
       }
       if(cluster.move_up_count > 10) {
-        printf("moving up %u\n", cluster.bin);
+        //DEBUG_PRINTF("moving up %u\n", cluster.bin);
         cluster.bin++;
         cluster.move_up_count = 0;
         cluster.move_down_count = 0;
       } 
       if(cluster.move_down_count > 10) {
-        printf("moving down %u\n", cluster.bin);
+        //DEBUG_PRINTF("moving down %u\n", cluster.bin);
         cluster.bin--;
         cluster.move_up_count = 0;
         cluster.move_down_count = 0;
@@ -121,12 +143,14 @@ void c_cw_dsp :: cluster_detections(uint32_t threshold)
     //if no detections found break
     if(max_magnitude(magnitude, threshold, max_bin, max) == 0) break;
 
+
+    if(max_bin != 8) break;
     //clear surrounding bins
     uint16_t discard;
     clear_surrounding_bins(magnitude, max_bin, discard);
 
     //create a new cluster
-    printf("starting %u @frame %u\n", max_bin, frame_count);
+    DEBUG_PRINTF("starting %u @frame %u\n", max_bin, frame_count);
     s_cluster cluster;
     cluster.bin = max_bin;
     cluster.value = true;
@@ -147,10 +171,10 @@ void c_cw_dsp :: flush()
 
   for (auto &cluster : clusters) {
 
-      printf("completing: %u\n", cluster.bin);
+      DEBUG_PRINTF("completing: %u\n", cluster.bin);
       print_element("decode_bins", cluster.bin);
       cluster.decoder.decode(cluster.observations, cluster.num_observations);
-      printf("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
+      DEBUG_PRINTF("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
   }
 
   clusters.clear();
@@ -165,7 +189,7 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
     //measure duration of signal present and signal absent periods.
     cluster.duration++;
     if(cluster.value != cluster.last_value) {
-      s_observation observation = {cluster.last_value, cluster.duration};
+      s_observation observation = {cluster.last_value, static_cast<float>(cluster.duration)};
       if(cluster.num_observations < OBSERVATION_BUFFER_SIZE) cluster.observations[cluster.num_observations++] = observation;
       cluster.duration = 0;
       cluster.last_value = cluster.value;
@@ -174,7 +198,7 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
       if(cluster.num_observations == OBSERVATION_BUFFER_SIZE) {
         print_element("decode_bins", cluster.bin);
         cluster.decoder.decode(cluster.observations, cluster.num_observations);
-        printf("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
+        DEBUG_PRINTF("Decode %u %u %u: %s\n", cluster.bin, cluster.frame_count, cluster.num_observations, cluster.decoder.get_text().c_str());
         cluster.num_observations = 0;
       }
     }
@@ -188,12 +212,12 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
 
     //force decode on timeout
     if(cluster.timeout == 0 ) {
-      printf("Stopping %u\n", cluster.bin);
+      //DEBUG_PRINTF("Stopping %u\n", cluster.bin);
       float active_time = frame_count - cluster.frame_count;
       if(cluster.num_observations/active_time > 0.01) {
         print_element("decode_bins", cluster.bin);
         cluster.decoder.decode(cluster.observations, cluster.num_observations);
-        printf("Decode %u %u: %s\n", cluster.num_observations, cluster.bin, cluster.decoder.get_text().c_str());
+        DEBUG_PRINTF("Decode %u %u: %s\n", cluster.num_observations, cluster.bin, cluster.decoder.get_text().c_str());
         cluster.num_observations = 0;
       }
     }
@@ -233,6 +257,7 @@ void c_cw_dsp :: process_frame()
 
 void c_cw_dsp :: print_frame(const char filename[], uint32_t frame[])
 {
+  #ifdef LOG_TO_FILE
   FILE *outf = fopen(filename, "a");
   for(uint16_t f=0; f<FRAME_SIZE/2; f++)
   {
@@ -241,22 +266,27 @@ void c_cw_dsp :: print_frame(const char filename[], uint32_t frame[])
   }
   fprintf(outf, "\n");
   fclose(outf);
+  #endif
 }
 
 void c_cw_dsp :: print_element(const char filename[], uint32_t element)
 {
+  #ifdef LOG_TO_FILE
   FILE *outf = fopen(filename, "a");
   fprintf(outf, "%i", (int)element);
   fprintf(outf, "\n");
   fclose(outf);
+  #endif
 }
 
 void c_cw_dsp :: print_bool(const char filename[], bool element)
 {
+  #ifdef LOG_TO_FILE
   FILE *outf = fopen(filename, "a");
   fprintf(outf, "%i", (int)element);
   fprintf(outf, "\n");
   fclose(outf);
+  #endif
 }
 
 c_cw_dsp :: c_cw_dsp()

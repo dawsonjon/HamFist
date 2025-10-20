@@ -239,7 +239,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
 {
 
     DEBUG_PRINTF("Duration: \n");
-    for(uint16_t idx=0; idx<num_observations; idx++) {
+    for(int idx=0; idx<num_observations; idx++) {
 
       if(signal[idx].mark) DEBUG_PRINTF("%f ", signal[idx].duration);
 
@@ -311,13 +311,21 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
     {
       
         float duration = signal[i].duration;
-        float logp_glitch = duration>mu/2?log_gaussian(duration, mu/2, sigma):0;
         float logp_dot  = log_gaussian(duration, mu, sigma);
         float logp_dash = log_gaussian(duration, dah_mu, sigma);
         float logp_gap1 = log_gaussian(duration, short_mu, short_sigma);
         float logp_gap3 = log_gaussian(duration, medium_mu, medium_sigma);
         float logp_gap7 = duration<long_mu?log_gaussian(duration, long_mu, long_sigma):0;
 
+
+        //attempt to fix glitches 
+        if(i+2 < num_observations && signal[i+1].duration < mu/4) { //next symbol is a glitch
+          //assume that this symbol and the next one (gitch) and the one after should have been one symbol
+          const float fixed_duration = signal[i].duration + signal[i+1].duration + signal[i+2].duration; 
+          signal[i+2].duration = fixed_duration;
+          i++; //skip this symbol ....
+          continue; //... and the next one
+        }
 
         s_candidate candidates[BEAM_WIDTH*4]; //max 3 new predictions for each item in beam
         int num_candidates = 0;
@@ -376,14 +384,6 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                 num_candidates++;
               }
 
-              //glitch
-              assert(num_candidates < BEAM_WIDTH*4);
-              candidates[num_candidates].text    = text;
-              candidates[num_candidates].pattern = pattern;
-              candidates[num_candidates].logp    = logp + logp_glitch;
-              DEBUG_PRINTF("%u glitch \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
-              num_candidates++;
-
             }
             else
             {
@@ -419,13 +419,6 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                   num_candidates++;
               }
 
-              //glitch
-              assert(num_candidates < BEAM_WIDTH*4);
-              candidates[num_candidates].text    = text;
-              candidates[num_candidates].pattern = pattern;
-              candidates[num_candidates].logp    = logp + logp_glitch;
-              DEBUG_PRINTF("%u glitch \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
-              num_candidates++;
             }
         }
 
