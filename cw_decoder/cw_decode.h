@@ -17,7 +17,7 @@ struct s_candidate
   float logp;
 };
 
-static const int BEAM_WIDTH = 5;
+static const int BEAM_WIDTH = 3;
 class c_cw_decoder
 {
 

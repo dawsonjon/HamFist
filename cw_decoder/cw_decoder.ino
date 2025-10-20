@@ -1,5 +1,7 @@
-#include "cw_decode.h"
-#include "cw_test_data.h"
+#include "cw_dsp.h"
+#include "ADCAudio.h"
+#include "fft.h"
+
 
 void setup() {
   Serial.begin(115200);
@@ -9,36 +11,24 @@ void setup() {
   Serial.println("github: https://github.com/dawsonjon/101Things");
   Serial.println("docs: 101-things.readthedocs.io");
 
-  pinMode(17, INPUT_PULLUP); 
-  
+  fft_initialise();
 }
 
 void loop() {
+  
+  ADCAudio adc_audio;
+  adc_audio.begin(28, 15000);
+  c_cw_dsp cw_dsp;
 
-  s_observation capture[101];
-  uint32_t last_time = millis();
-  bool last_value = 0;
-  int observations = 0;
+  while(1) {
+    static int16_t *samples;
 
-  for(int idx=0; idx<101; ++idx) {
-    while(1){
-      bool value = !digitalRead(17);
-      if(value != last_value) {
-        Serial.printf("%u %u\n", last_value, millis()-last_time);
-        capture[observations++] = {last_value, static_cast<float>(millis()-last_time)};
-        last_value = value;
-        last_time = millis();
-        break;
-      }
-      if(!value && (millis()-last_time) > 2000) break;
-      sleep_ms(10);
+    //fetch a new block of 1024 samples
+    samples = adc_audio.input_samples();
+    for(int sample_number=0; sample_number<1024; ++sample_number)
+    {
+      cw_dsp.process_sample(samples[sample_number]);
     }
   }
 
-
-  if(observations) {
-    uint32_t t0 = millis();
-    decode_cw(capture, observations, 3);
-    Serial.println(millis()-t0);
-  }
 }
