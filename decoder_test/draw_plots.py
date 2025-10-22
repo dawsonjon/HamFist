@@ -26,9 +26,9 @@ decode_bins = [int(line) for line in decode_bins]
 
 for bin in set(decode_bins):
   plt.title("Frequency Bin %u"%bin)
-  plt.plot([x[bin] for x in data])
+  plt.plot([max(x[bin:bin+5]) for x in data])
   plt.plot(noise)
   plt.plot(threshold)
-  plt.plot(1000*(np.array([x[bin] for x in data]) > np.array(threshold)))
+  plt.plot(1000*(np.array([max(x[bin:bin+5]) for x in data]) > np.array(threshold)))
   plt.show()
   

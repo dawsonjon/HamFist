@@ -9,23 +9,19 @@
 #include "cw_decode.h"
 
 static const uint16_t FRAME_SIZE = 64;
-static const uint16_t MAX_DECODERS = 10;
 static const uint16_t OBSERVATION_BUFFER_SIZE = 400;
 static const uint16_t TIMEOUT = 1000;
-static const uint16_t CLUSTER_WIDTH = 2;
+static const uint16_t NUM_CLUSTERS = 6;
+static const uint16_t CLUSTER_SIZE = 5;
+static const float SAMPLE_FREQUENCY = 15000.0f;
+static const float FRAME_MS = 1000.0f*64.0f/SAMPLE_FREQUENCY;
 
 struct s_cluster
 {
-  uint16_t bin;
-  bool value;
-  bool last_value;
   uint16_t duration;
-  uint32_t timeout;
+  bool value;
   s_observation observations[OBSERVATION_BUFFER_SIZE];
   uint16_t num_observations;
-  uint16_t move_up_count;
-  uint16_t move_down_count;
-  uint32_t frame_count;
   c_cw_decoder decoder;
 };
 
@@ -43,13 +39,12 @@ class c_cw_dsp
   uint32_t smoothed_threshold;
   uint32_t frame_count;
 
-  std::list<s_cluster> clusters;
+  s_cluster clusters[7];
 
   void print_frame(const char filename[], uint32_t frame[]);
   void print_element(const char filename[], uint32_t element);
   void print_bool(const char filename[], bool element);
   void process_frame();
-  void cluster_detections(uint32_t threshold);
   void process_clusters(uint32_t threshold);
   void decode(uint8_t bin, bool state, uint16_t duration);
 

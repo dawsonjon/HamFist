@@ -9,7 +9,7 @@
 #include "cw_data.h"
 #include "cw_decode.h"
 
-//#define LOGGING
+#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -120,23 +120,6 @@ float language_log_prob(std::string &word)
     return 0;
 }
 
-//Find last word in a string
-std::string get_last_word(const std::string& text) 
-{
-    // Trim trailing spaces
-    size_t end = text.find_last_not_of(" \t\n\r");
-    if (end == std::string::npos) return std::string(""); // no non-space characters
-
-    // Find start of last word
-    size_t start = text.find_last_of(" \t\n\r", end);
-    if (start == std::string::npos)
-        start = 0;
-    else
-        start += 1; // move past the space
-
-    return text.substr(start, end - start + 1);
-}
-
 //calculate the mean of each cluster - output in means[]
 void calculate_means(std::vector<float> clusters[], const int num_clusters, float means[])
 {
@@ -157,13 +140,11 @@ void calculate_sigmas(std::vector<float> clusters[], const int num_clusters, con
   for(int i=0; i<num_clusters; ++i)
   {
     float sq_sum = std::accumulate(clusters[i].begin(), clusters[i].end(), 0.0,
-        [means, i](float acc, float x) {
-            float diff = x - means[i];
-            return acc + diff * diff;
-        });
-
+    [means, i](float acc, float x) {
+        float diff = x - means[i];
+        return acc + diff * diff;
+    });
     sigmas[i] = std::sqrt(sq_sum/clusters[i].size());
-
   }
 }
 
@@ -227,8 +208,20 @@ void kmeans(float x[], const int x_n, float means[], float sigmas[], const int n
 //find the n most likely decodes
 std::string c_cw_decoder :: get_text()
 {
+
     std::string letter = std::string("")+get_letter_from_code(beam[0].pattern);
-    std::string text = beam[0].text + letter;
+    std::string word = beam[0].word + letter;
+    std::string text = beam[0].text + word + letter;
+
+    //prune candidates that don't share the same prefix
+    int filtered_candidate_index=1;
+    for(int candidate_index = 1; candidate_index<items_in_beam; ++candidate_index) {
+      if(beam[candidate_index].text == beam[0].text) {
+        beam[filtered_candidate_index++] = beam[candidate_index];
+      } 
+    }
+    items_in_beam = filtered_candidate_index;
+
     DEBUG_PRINTF("%s\n", text.c_str());
 
     return text;
@@ -254,7 +247,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
     float marks[num_observations];
     int num_marks = 0;
     for(int idx=0; idx<num_observations; idx++) { 
-      if(signal[idx].mark) marks[num_marks++] = signal[idx].duration; 
+      if(signal[idx].mark && signal[idx].duration < 1000) marks[num_marks++] = signal[idx].duration;
     }
     kmeans(marks, num_marks, means, sigmas, 2, 5);
     float mu = means[0];
@@ -333,6 +326,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
         for(int j=0; j<items_in_beam; j++)
         {
             std::string &text = beam[j].text;
+            std::string &word = beam[j].word;
             std::string &pattern = beam[j].pattern;
             float &logp = beam[j].logp;
 
@@ -347,18 +341,20 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               {
                 assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text;
+                candidates[num_candidates].word    = word;
                 candidates[num_candidates].pattern = pattern + '.';
                 candidates[num_candidates].logp    = logp + logp_dot;
-                DEBUG_PRINTF("%u dot \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dot \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
               else if (pattern_is_code)
               {
                 assert(num_candidates < BEAM_WIDTH*4);
-                candidates[num_candidates].text    = text + letter;
+                candidates[num_candidates].text    = text;
+                candidates[num_candidates].word    = word + letter;
                 candidates[num_candidates].pattern = ".";
                 candidates[num_candidates].logp    = logp + logp_dot;
-                DEBUG_PRINTF("%u dot2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dot2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
 
@@ -369,18 +365,20 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               {
                 assert(num_candidates < BEAM_WIDTH*4);
                 candidates[num_candidates].text    = text;
+                candidates[num_candidates].word    = word;
                 candidates[num_candidates].pattern = pattern + '-';
                 candidates[num_candidates].logp    = logp + logp_dash;
-                DEBUG_PRINTF("%u dash \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dash \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
               else if (pattern_is_code)
               {
                 assert(num_candidates < BEAM_WIDTH*4);
-                candidates[num_candidates].text    = text + letter;
+                candidates[num_candidates].text    = text;
+                candidates[num_candidates].word    = word + letter;
                 candidates[num_candidates].pattern = "-";
                 candidates[num_candidates].logp    = logp + logp_dash;
-                DEBUG_PRINTF("%u dash2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                DEBUG_PRINTF("%u dash2 \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                 num_candidates++;
               }
 
@@ -390,32 +388,35 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               //Case 3: symbol gap
               assert(num_candidates < BEAM_WIDTH*4);
               candidates[num_candidates].text    = text;
+              candidates[num_candidates].word    = word;
               candidates[num_candidates].pattern = pattern;
               candidates[num_candidates].logp    = logp + logp_gap1;
-              DEBUG_PRINTF("%u symbol_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+              DEBUG_PRINTF("%u symbol_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
               num_candidates++;
 
               char letter = get_letter_from_code(pattern);
               bool pattern_is_code = letter != '#' && letter != '~';
               if (pattern_is_code)
               {
-                  std::string last_word = get_last_word(text + letter);
+                  std::string last_word = word + letter;
                   float language_bonus = language_log_prob(last_word);
 
                   // Case 4: letter gap
                   assert(num_candidates < BEAM_WIDTH*4);
-                  candidates[num_candidates].text    = text + letter;
+                  candidates[num_candidates].word    = word + letter;
+                  candidates[num_candidates].text    = text;
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap3;
-                  DEBUG_PRINTF("%u letter_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                  DEBUG_PRINTF("%u letter_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                   num_candidates++;
 
                   // Case 5: word gap
                   assert(num_candidates < BEAM_WIDTH*4);
-                  candidates[num_candidates].text    = text + letter + ' ';
+                  candidates[num_candidates].text    = text + word + letter + ' ';
+                  candidates[num_candidates].word    = "";
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap7 + language_bonus;
-                  DEBUG_PRINTF("%u word_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].pattern.c_str());
+                  DEBUG_PRINTF("%u word_gap \"%s\" \"%s\"\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str());
                   num_candidates++;
               }
 

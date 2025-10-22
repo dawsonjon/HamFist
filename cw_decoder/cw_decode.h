@@ -13,6 +13,7 @@ struct s_observation
 struct s_candidate
 {
   std::string text;
+  std::string word;
   std::string pattern;
   float logp;
 };
@@ -31,7 +32,7 @@ class c_cw_decoder
 
   c_cw_decoder()
   {
-    beam[0] = {"", "", 0.0f};
+    beam[0] = {"", "", "", 0.0f};
     items_in_beam = 1;
   }
 
