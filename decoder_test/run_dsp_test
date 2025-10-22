@@ -1,4 +1,4 @@
-g++ ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder/fft.cpp ../cw_decoder/cw_decode.cpp ../cw_decoder/cw_data.cpp cw_dsp_test.cpp -o cw_dsp_test
+g++ -DLOG_TO_FILE ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder/fft.cpp ../cw_decoder/cw_decode.cpp ../cw_decoder/cw_data.cpp cw_dsp_test.cpp -o cw_dsp_test
 
 echo
 echo "********** TEST1 **********"
