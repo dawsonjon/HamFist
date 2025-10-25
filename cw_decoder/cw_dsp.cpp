@@ -50,9 +50,9 @@ void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
   }
 }
 
-void c_cw_dsp :: decode(uint8_t bin, bool state, uint16_t duration)
+void c_cw_dsp :: decode(uint16_t cluster, std::string text)
 {
-  printf("output_state : %u %u %u\n", bin, state, duration);
+  DEBUG_PRINTF("decode on channel %u %s\n", cluster, text.c_str());
 }
 
 static void max_magnitude(uint32_t magnitude[], uint8_t start_bin, uint8_t stop_bin, uint16_t &max_bin, uint32_t &max) 
@@ -74,7 +74,7 @@ void c_cw_dsp :: flush()
   for (uint8_t cluster = 0; cluster < NUM_CLUSTERS; cluster++) {
     print_element("decode_bins", cluster * CLUSTER_SIZE);
     clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-    DEBUG_PRINTF("Decode %u %u %s\n", cluster, clusters[cluster].num_observations, clusters[cluster].decoder.get_text().c_str());
+    decode(cluster, clusters[cluster].decoder.get_text());
     clusters[cluster].num_observations = 0;
     clusters[cluster].duration = 0;
   }
@@ -94,8 +94,6 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
 
     //measure signal present periods
     bool value = max > threshold;
-
-    //if(value) DEBUG_PRINTF("detection %u %u %u\n", cluster, threshold, max);
     clusters[cluster].duration++;
     if(value != clusters[cluster].value) {
       s_observation observation = {clusters[cluster].value, FRAME_MS * clusters[cluster].duration};
@@ -103,13 +101,13 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
       clusters[cluster].value = value;
       clusters[cluster].observations[clusters[cluster].num_observations++] = observation;
     }
-    if(value) DEBUG_PRINTF("duration: %u %u\n", cluster, clusters[cluster].duration);
 
     //decode messages
     if((clusters[cluster].num_observations && clusters[cluster].duration == TIMEOUT) || (clusters[cluster].num_observations == OBSERVATION_BUFFER_SIZE)) {
       print_element("decode_bins", cluster * CLUSTER_SIZE);
       clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-      DEBUG_PRINTF("Decode %u %u %s\n", cluster, clusters[cluster].num_observations, clusters[cluster].decoder.get_text().c_str());
+      std::string text = clusters[cluster].decoder.get_text();
+      decode(cluster, text);
       clusters[cluster].num_observations = 0;
       clusters[cluster].duration = 0;
     }
@@ -131,47 +129,12 @@ void c_cw_dsp :: process_frame()
   smoothed_threshold = ((smoothed_threshold << 5) - smoothed_threshold + threshold) >> 5;
   print_element("threshold", smoothed_threshold);
 
-  //DEBUG_PRINTF("Threshold %u %u %u\n", noise_estimate, smoothed_threshold, threshold);
-
   //process active signals
   process_clusters(smoothed_threshold);
   frame_count++;
 
 }
 
-void c_cw_dsp :: print_frame(const char filename[], uint32_t frame[])
-{
-  #ifdef LOG_TO_FILE
-  FILE *outf = fopen(filename, "a");
-  for(uint16_t f=0; f<FRAME_SIZE/2; f++)
-  {
-    fprintf(outf, "%i ", (int)frame[f]);
-    fprintf(outf, " ");
-  }
-  fprintf(outf, "\n");
-  fclose(outf);
-  #endif
-}
-
-void c_cw_dsp :: print_element(const char filename[], uint32_t element)
-{
-  #ifdef LOG_TO_FILE
-  FILE *outf = fopen(filename, "a");
-  fprintf(outf, "%i", (int)element);
-  fprintf(outf, "\n");
-  fclose(outf);
-  #endif
-}
-
-void c_cw_dsp :: print_bool(const char filename[], bool element)
-{
-  #ifdef LOG_TO_FILE
-  FILE *outf = fopen(filename, "a");
-  fprintf(outf, "%i", (int)element);
-  fprintf(outf, "\n");
-  fclose(outf);
-  #endif
-}
 
 c_cw_dsp :: c_cw_dsp()
 {
@@ -220,3 +183,38 @@ void c_cw_dsp :: process_sample(int16_t sample)
   }
 }
 
+//********** debug code from here down **********
+
+void c_cw_dsp :: print_frame(const char filename[], uint32_t frame[])
+{
+  #ifdef LOG_TO_FILE
+  FILE *outf = fopen(filename, "a");
+  for(uint16_t f=0; f<FRAME_SIZE/2; f++)
+  {
+    fprintf(outf, "%i ", (int)frame[f]);
+    fprintf(outf, " ");
+  }
+  fprintf(outf, "\n");
+  fclose(outf);
+  #endif
+}
+
+void c_cw_dsp :: print_element(const char filename[], uint32_t element)
+{
+  #ifdef LOG_TO_FILE
+  FILE *outf = fopen(filename, "a");
+  fprintf(outf, "%i", (int)element);
+  fprintf(outf, "\n");
+  fclose(outf);
+  #endif
+}
+
+void c_cw_dsp :: print_bool(const char filename[], bool element)
+{
+  #ifdef LOG_TO_FILE
+  FILE *outf = fopen(filename, "a");
+  fprintf(outf, "%i", (int)element);
+  fprintf(outf, "\n");
+  fclose(outf);
+  #endif
+}
