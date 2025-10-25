@@ -9,7 +9,7 @@
 #include "cw_data.h"
 #include "cw_decode.h"
 
-#define LOGGING
+//#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -120,91 +120,6 @@ float language_log_prob(std::string &word)
     return 0;
 }
 
-//calculate the mean of each cluster - output in means[]
-void calculate_means(std::vector<float> clusters[], const int num_clusters, float means[])
-{
-  for(int i=0; i<num_clusters; ++i)
-  {
-    if (clusters[i].empty()){
-      means[i] = 0.0f;
-    } else {
-      float sum = std::accumulate(clusters[i].begin(), clusters[i].end(), 0.0);
-      means[i] =  sum / clusters[i].size();
-    }
-  }
-}
-
-//calculate the standard deviation of each cluster - input means[], output sigmas[]
-void calculate_sigmas(std::vector<float> clusters[], const int num_clusters, const float means[], float sigmas[])
-{
-  for(int i=0; i<num_clusters; ++i)
-  {
-    float sq_sum = std::accumulate(clusters[i].begin(), clusters[i].end(), 0.0,
-    [means, i](float acc, float x) {
-        float diff = x - means[i];
-        return acc + diff * diff;
-    });
-    sigmas[i] = std::sqrt(sq_sum/clusters[i].size());
-  }
-}
-
-//find the closest cluster to a particular data item
-int calculate_closest_cluster(float means[], int num_clusters, float x)
-{
-  
-  float closest_distance = std::abs(means[0] - x);
-  int closest_cluster = 0;
-
-  for(int i=1; i<num_clusters; ++i) {
-    float distance = std::abs(means[i] - x);
-    if(distance < closest_distance) {
-      closest_cluster = i;
-      closest_distance = distance;
-    }
-  }
-
-  return closest_cluster;
-}
-
-void kmeans(float x[], const int x_n, float means[], float sigmas[], const int num_clusters, const int iterations)
-{
-  std::vector<float> clusters[num_clusters];
-  for(int item=0; item<x_n; item++)
-  {
-   int cluster_idx = item % num_clusters;
-   clusters[cluster_idx].push_back(x[item]);
-  }
-
-  for(int iteration = 0; iteration < iterations; ++iteration)
-  {
-    calculate_means(clusters, num_clusters, means); 
-    for(int idx=0; idx<num_clusters; idx++) clusters[idx].clear(); //empty clusters
-    for(int item=0; item<x_n; item++) {
-      int closest_cluster = calculate_closest_cluster(means, num_clusters, x[item]);
-      clusters[closest_cluster].push_back(x[item]);
-    }
-  }
-
-  calculate_means(clusters, num_clusters, means); 
-  calculate_sigmas(clusters, num_clusters, means, sigmas);
-
-  // Combine
-  std::vector<std::pair<float, float>> pairs;
-  for (size_t i = 0; i < num_clusters; ++i)
-      pairs.emplace_back(means[i], sigmas[i]);
-
-  // Sort by first element
-  std::sort(pairs.begin(), pairs.end(),
-      [](const auto& a, const auto& b) { return a.first < b.first; });
-
-  // Unzip back
-  for (size_t i = 0; i < num_clusters; ++i) {
-      means[i] = pairs[i].first;
-      sigmas[i] = pairs[i].second;
-  }
-}
-
-
 //find the n most likely decodes
 std::string c_cw_decoder :: get_text()
 {
@@ -224,11 +139,6 @@ std::string c_cw_decoder :: get_text()
   }
   beam[0].text = "";
   items_in_beam = filtered_candidate_index;
-
-  //for(int idx = 1; idx<items_in_beam; ++candidate_index) {
-  //  printf("Beam %u %s\n", idx, beam[idx].text.c_str());
-  //}
-
   DEBUG_PRINTF("get_text %s\n", text.c_str());
 
   return text;
@@ -306,102 +216,43 @@ void print_durations(s_observation signal[], int num_observations)
 void c_cw_decoder :: decode(s_observation signal[], int num_observations)
 {
 
+    //prefilter signal to remove obvious errors
     print_durations(signal, num_observations);
     pre_filter_observations(signal, num_observations);
     print_durations(signal, num_observations);
 
-    //global clustering
-    float means[3];
-    float sigmas[3];
-
-    //use k-means to estimate dit and dah length
-    float marks[num_observations];
-    int num_marks = 0;
-    for(int idx=0; idx<num_observations; idx++) { 
-      if(signal[idx].mark && signal[idx].duration < 1000) marks[num_marks++] = signal[idx].duration;
-    }
-    kmeans(marks, num_marks, means, sigmas, 2, 5);
-    if(
-      std::isnan(means[0])  || std::isinf(means[0])  || means[0]<8.0f || 
-      std::isnan(means[1])  || std::isinf(means[1])  || means[1]<8.0f || 
-      std::isnan(sigmas[0]) || std::isinf(sigmas[0]) || sigmas[0] < 1.0f
-    ) {
-      if(!have_fallback_mark) {
-        mu = 1200.0f/20.0f; //use 20WPM as fallback
-        dah_mu = mu*3.0f;
-        sigma = mu*0.5;
-      }
-    } else {
-      mu = means[0];
-      dah_mu = means[1];
-      sigma = sigmas[0];
-      have_fallback_mark = true;
+    //update adaptive clissifier with latest on and off durations
+    float on_durations[num_observations];
+    float off_durations[num_observations];
+    int on_count = 0;
+    int off_count = 0;
+    for(int idx=0; idx<num_observations; ++idx) {
+      if(signal[idx].mark) on_durations[on_count++] = signal[idx].duration;
+      if(!signal[idx].mark) off_durations[off_count++] = signal[idx].duration;
     }
 
-    DEBUG_PRINTF("mu %f dash_mu %f, sigma %f\n", mu, dah_mu, sigma);
+    // ON (key down) times:
+    classifier.updateOnModel(on_durations, on_count);
 
-    //use k-means to estimate space lengths
-    float spaces[num_observations];
-    int num_spaces = 0;
-    for(int idx=0; idx<num_observations; idx++) { 
-      if(!signal[idx].mark && signal[idx].duration < 10*mu) spaces[num_spaces++] = signal[idx].duration; 
-    }
-    kmeans(spaces, num_spaces, means, sigmas, 3, 5);
-    if(
-      std::isnan(means[0]) || std::isinf(means[0]) || means[0]<8.0f || 
-      std::isnan(means[1]) || std::isinf(means[1]) || means[1]<8.0f || 
-      std::isnan(means[2]) || std::isinf(means[2]) || means[2]<8.0f || 
-      std::isnan(sigmas[0]) || std::isinf(sigmas[0]) || sigmas[0] < 1.0f ||
-      std::isnan(sigmas[1]) || std::isinf(sigmas[1]) || sigmas[1] < 1.0f ||
-      std::isnan(sigmas[2]) || std::isinf(sigmas[2]) || sigmas[2] < 1.0f 
-    ) {
-      if(!have_fallback_space) {
-        short_mu = mu;
-        medium_mu = 3*mu;
-        long_mu = 7*mu;
-        short_sigma = sigma;
-        medium_sigma = sigma;
-        long_sigma = sigma;
-        have_fallback_space = true;
-      }
-    } else {
-      short_mu = means[0];
-      medium_mu = means[1];
-      long_mu = means[2];
-      short_sigma = sigmas[0];
-      medium_sigma = sigmas[1];
-      long_sigma = sigmas[2];
-      have_fallback_space = true;
-    }
+    // OFF (silence) times:
+    classifier.updateOffModel(off_durations, off_count);
 
-    DEBUG_PRINTF("short mu %f medium_mu %f, long_mu %f\n", short_mu, medium_mu, long_mu);
-    DEBUG_PRINTF("short sigma %f medium sigma %f, long sigma %f\n", short_sigma, medium_sigma, long_sigma);
-
-    //the beam contains hte most likely decodes and their probabilities
-
-    for(int i=0; i<num_observations; ++i)
-    {
-      float logp_dot  = log_gaussian(signal[i].duration, mu, sigma);
-      float logp_dash = log_gaussian(signal[i].duration, dah_mu, sigma);
-      if(signal[i].mark) {
-        if(logp_dot > logp_dash)
-          DEBUG_PRINTF("dot ");
-        else
-          DEBUG_PRINTF("dash ");
-      }
-    }
-    DEBUG_PRINTF("\n");
 
     DEBUG_PRINTF("num observations %u\n", num_observations);
     for(int i=0; i<num_observations; ++i)
     {
       
         float duration = signal[i].duration;
-        float logp_dot  = duration>mu?log_gaussian(duration, mu, sigma):0;
-        float logp_dash = log_gaussian(duration, dah_mu, sigma);
-        float logp_gap1 = log_gaussian(duration, short_mu, short_sigma);
-        float logp_gap3 = log_gaussian(duration, medium_mu, medium_sigma);
-        float logp_gap7 = duration<long_mu?log_gaussian(duration, long_mu, long_sigma):0;
+        float logp_dot, logp_dash;
+        classifier.classifyOn(duration, logp_dot, logp_dash);
+        if(signal[i].mark) DEBUG_PRINTF("duration: %f dot: %f dash: %f\n", duration, logp_dot, logp_dash);
+
+        float logp[3];
+        classifier.classifyOff(duration, logp);
+        float logp_gap1 = logp[0];
+        float logp_gap3 = logp[1];
+        float logp_gap7 = logp[2];
+        if(!signal[i].mark) DEBUG_PRINTF("duration: %f symbol: %f letter: %f space: %f\n", duration, logp_gap1, logp_gap3, logp_gap7);
 
 
         //attempt to fix glitches 
@@ -509,6 +360,7 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
                   candidates[num_candidates].word    = "";
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap7 + language_bonus;
+                  DEBUG_PRINTF("language bonus%f\n", language_bonus);
                   DEBUG_PRINTF("%u word_gap \"%s\" \"%s\" %s %f\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str(), candidates[num_candidates].logp);
                   num_candidates++;
               }

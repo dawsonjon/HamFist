@@ -102,8 +102,20 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
       clusters[cluster].observations[clusters[cluster].num_observations++] = observation;
     }
 
-    //decode messages
-    if((clusters[cluster].num_observations && clusters[cluster].duration == TIMEOUT) || (clusters[cluster].num_observations == OBSERVATION_BUFFER_SIZE)) {
+    //timeout
+    if(clusters[cluster].duration == TIMEOUT) {
+      if(clusters[cluster].num_observations > 20) {
+        print_element("decode_bins", cluster * CLUSTER_SIZE);
+        clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
+        std::string text = clusters[cluster].decoder.get_text();
+        decode(cluster, text);
+      }
+      clusters[cluster].num_observations = 0;
+      clusters[cluster].duration = 0;
+    }
+
+    //full buffer
+    if(clusters[cluster].num_observations == OBSERVATION_BUFFER_SIZE) {
       print_element("decode_bins", cluster * CLUSTER_SIZE);
       clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
       std::string text = clusters[cluster].decoder.get_text();
