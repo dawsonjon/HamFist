@@ -9,7 +9,7 @@
 #include "cw_decode.h"
 
 static const uint16_t FRAME_SIZE = 64;
-static const uint16_t OBSERVATION_BUFFER_SIZE = 400;
+static const uint16_t OBSERVATION_BUFFER_SIZE = 100;
 static const uint16_t TIMEOUT = 1000;
 static const uint16_t NUM_CLUSTERS = 6;
 static const uint16_t CLUSTER_SIZE = 5;
@@ -46,13 +46,17 @@ class c_cw_dsp
   void print_bool(const char filename[], bool element);
   void process_frame();
   void process_clusters(uint32_t threshold);
-  void decode(uint8_t bin, bool state, uint16_t duration);
+  virtual void decode(uint16_t cluster, std::string text);
 
   public:
 
   c_cw_dsp();
   void process_sample(int16_t sample);
   void flush();
+  uint32_t *get_magnitudes()
+  {
+    return &magnitude[0];
+  }
 
 };
 
