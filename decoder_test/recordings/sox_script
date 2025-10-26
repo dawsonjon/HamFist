@@ -9,3 +9,14 @@ sox cw2.wav -t s16 -r 15k test8.wav
 sox cw3.wav -t s16 -r 15k test9.wav
 sox cw4.wav -t s16 -r 15k test10.wav
 sox cw.wav -t s16 -r 15k test11.wav
+sox 250930_20WPM.mp3 -r 15k test12.wav
+sox 250930_25WPM.mp3 -r 15k test13.wav
+sox 250930_30WPM.mp3 -r 15k test14.wav
+sox 250930_35WPM.mp3 -r 15k test15.wav
+sox 250930_40WPM.mp3 -r 15k test16.wav
+sox 251001_05WPM.mp3 -r 15k test17.wav
+sox 251001_075WPM.mp3 -r 15k test18.wav
+sox 251001_10WPM.mp3 -r 15k test19.wav
+sox 251001_13WPM.mp3 -r 15k test20.wav
+sox 251001_15WPM.mp3 -r 15k test21.wav
+sox 251001_18WPM.mp3 -r 15k test22.wav

@@ -7,7 +7,7 @@
 class my_cw_dsp : public c_cw_dsp
 {
   std::string decoded_text[7]; 
-  virtual void decode(uint16_t cluster, std::string text)
+  virtual void decode(uint16_t cluster, std::string text, std::string partial)
   {
     decoded_text[cluster]+=text; 
   }
