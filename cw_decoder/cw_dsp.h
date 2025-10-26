@@ -10,7 +10,7 @@
 
 static const uint16_t FRAME_SIZE = 64;
 static const uint16_t OBSERVATION_BUFFER_SIZE = 200;
-static const uint16_t TIMEOUT = 400;
+static const uint16_t TIMEOUT = 1000;
 static const uint16_t NUM_CLUSTERS = 6;
 static const uint16_t CLUSTER_SIZE = 5;
 static const float SAMPLE_FREQUENCY = 15000.0f;
