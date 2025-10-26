@@ -45,22 +45,27 @@ cw_words = [word for word in cw_words if word not in cw_data.CW_ABREVIATIONS]
 len_cw_words = len(cw_words)
 cw_words = ",\n".join(['"%s"'%letter for letter in sorted(cw_words)])
 morse = ",\n".join(['{\'%s\',"%s"}'%(letter, code) for letter, code in cw_data.MORSE.items()])
+prosigns = ",\n".join(['"%s"'%letter for letter in cw_data.PROSIGNS.values()])
 
 content = """
 #include "cw_data.h"
 const int NUM_CW_ABBREVIATIONS = %u;
 const int NUM_CW_WORDS = %u;
 const int NUM_MORSE_LETTERS = %u;
+const int NUM_PROSIGNS = %u;
 const char * CW_ABBREVIATIONS[] = {%s};
 const char * CW_WORDS[] = {%s};
 const char MORSE[] = "%s";
+const char * PROSIGNS[] = {%s};
 """%(
   len(cw_data.CW_ABREVIATIONS),
   len_cw_words,
   len(cw_data.MORSE),
+  len(cw_data.PROSIGNS),
   cw_abbreviations,
   cw_words,
-  "".join(morse_tree())
+  "".join(morse_tree()),
+  prosigns,
 )
 
 with open("../cw_decoder/cw_data.cpp", "w") as outf:

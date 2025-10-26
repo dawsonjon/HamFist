@@ -50,7 +50,7 @@ void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
   }
 }
 
-void c_cw_dsp :: decode(uint16_t cluster, std::string text)
+void c_cw_dsp :: decode(uint16_t cluster, std::string text, std::string partial)
 {
   DEBUG_PRINTF("decode on channel %u %s\n", cluster, text.c_str());
 }
@@ -74,7 +74,7 @@ void c_cw_dsp :: flush()
   for (uint8_t cluster = 0; cluster < NUM_CLUSTERS; cluster++) {
     print_element("decode_bins", cluster * CLUSTER_SIZE);
     clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-    decode(cluster, clusters[cluster].decoder.get_text());
+    decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
     clusters[cluster].num_observations = 0;
     clusters[cluster].duration = 0;
   }
@@ -107,8 +107,7 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
       if(clusters[cluster].num_observations > 20) {
         print_element("decode_bins", cluster * CLUSTER_SIZE);
         clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-        std::string text = clusters[cluster].decoder.get_text();
-        decode(cluster, text);
+        decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
       }
       clusters[cluster].num_observations = 0;
       clusters[cluster].duration = 0;
@@ -118,8 +117,7 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
     if(clusters[cluster].num_observations == OBSERVATION_BUFFER_SIZE) {
       print_element("decode_bins", cluster * CLUSTER_SIZE);
       clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-      std::string text = clusters[cluster].decoder.get_text();
-      decode(cluster, text);
+      decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
       clusters[cluster].num_observations = 0;
       clusters[cluster].duration = 0;
     }

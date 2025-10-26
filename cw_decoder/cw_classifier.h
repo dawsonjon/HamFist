@@ -3,19 +3,19 @@
 #include <cstdint>
 #include <algorithm>
 
-class MorseTimingClassifier {
+class c_morse_timing_classifier {
   public:
-    MorseTimingClassifier();
+    c_morse_timing_classifier();
 
     // Element ON durations (dots/dashes)
-    void updateOnModel(const float* durations, size_t count);
-    void updateOffModel(const float* durations, size_t count);
+    void update_on_model(const float* durations, size_t count);
+    void update_off_model(const float* durations, size_t count);
 
-    void classifyOn(float duration_ms, float& logProbDot, float& logProbDash);
-    void classifyOff(float duration_ms, float* logProbs);
+    void classify_on(float duration_ms, float& logProbDot, float& logProbDash);
+    void classify_off(float duration_ms, float* logProbs);
 
-    float getDot() const { return dot_mu; }
-    float getWPM() const { return 1200.0f / getDot(); }
+    float get_dot_length() const { return dot_mu; }
+    float get_WPM() const { return 1200.0f / get_dot_length(); }
 
   private:
     float dot_mu, dot_sigma;
