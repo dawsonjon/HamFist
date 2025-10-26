@@ -120,13 +120,37 @@ float language_log_prob(std::string &word)
     return 0;
 }
 
-//find the n most likely decodes
+void replace_all(std::string& str, const std::string& from, const std::string& to) {
+    if (from.empty()) return; // avoid infinite loop
+    size_t startPos = 0;
+    while ((startPos = str.find(from, startPos)) != std::string::npos) {
+        str.replace(startPos, from.length(), to);
+        startPos += to.length();
+    }
+}
+
+void replace_prosigns(std::string& str) {
+    for(int i=0; i<NUM_PROSIGNS; ++i) {
+      char char_to_replace[] = {static_cast<char>(0x80 + i), 0};
+      std::string from = std::string(char_to_replace);
+      std::string to = std::string(PROSIGNS[i]);
+      replace_all(str, from, to);
+    }
+}
+
+//get the text we are currently decoding
+std::string c_cw_decoder :: get_text_partial()
+{
+  std::string letter = std::string("")+get_letter_from_code(beam[0].pattern);
+  std::string text = beam[0].word + letter;
+  replace_prosigns(text);
+  return text;
+}
+
+//get the text we are committed to.
 std::string c_cw_decoder :: get_text()
 {
-
-  //std::string letter = std::string("")+get_letter_from_code(beam[0].pattern);
-  //std::string word = beam[0].word + letter;
-  std::string text = beam[0].text;// + word + letter;
+  std::string text = beam[0].text;
 
   //prune candidates that don't share the same prefix
   int filtered_candidate_index=1;
@@ -141,9 +165,11 @@ std::string c_cw_decoder :: get_text()
   items_in_beam = filtered_candidate_index;
   DEBUG_PRINTF("get_text %s\n", text.c_str());
 
+  replace_prosigns(text);
   return text;
 }
 
+//filter unreasonable dot and dash lengths
 static void pre_filter_observations(s_observation signal[], int &num_observations)
 {
 
@@ -226,43 +252,33 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
     float off_durations[num_observations];
     int on_count = 0;
     int off_count = 0;
-    for(int idx=0; idx<num_observations; ++idx) {
+    for(int idx; idx<num_observations; ++idx) {
       if(signal[idx].mark) on_durations[on_count++] = signal[idx].duration;
       if(!signal[idx].mark) off_durations[off_count++] = signal[idx].duration;
     }
 
     // ON (key down) times:
-    classifier.updateOnModel(on_durations, on_count);
+    classifier.update_on_model(on_durations, on_count);
 
     // OFF (silence) times:
-    classifier.updateOffModel(off_durations, off_count);
+    classifier.update_off_model(off_durations, off_count);
 
 
-    DEBUG_PRINTF("num observations %u\n", num_observations);
+    DEBUG_PRINTF("nclassify_ontions %u\n", num_observations);
     for(int i=0; i<num_observations; ++i)
     {
       
         float duration = signal[i].duration;
         float logp_dot, logp_dash;
-        classifier.classifyOn(duration, logp_dot, logp_dash);
+        classifier.classify_on(duration, logp_dot, logp_dash);
         if(signal[i].mark) DEBUG_PRINTF("duration: %f dot: %f dash: %f\n", duration, logp_dot, logp_dash);
 
         float logp[3];
-        classifier.classifyOff(duration, logp);
+        classifier.classify_off(duration, logp);
         float logp_gap1 = logp[0];
         float logp_gap3 = logp[1];
         float logp_gap7 = logp[2];
         if(!signal[i].mark) DEBUG_PRINTF("duration: %f symbol: %f letter: %f space: %f\n", duration, logp_gap1, logp_gap3, logp_gap7);
-
-
-        //attempt to fix glitches 
-        //if(i+2 < num_observations && signal[i+1].duration < mu/4) { //next symbol is a glitch
-          //assume that this symbol and the next one (gitch) and the one after should have been one symbol
-        //  const float fixed_duration = signal[i].duration + signal[i+1].duration + signal[i+2].duration; 
-        //  signal[i+2].duration = fixed_duration;
-        //  i++; //skip this symbol ....
-        //  continue; //... and the next one
-        //}
 
         s_candidate candidates[BEAM_WIDTH*4]; //max 3 new predictions for each item in beam
         int num_candidates = 0;

@@ -46,7 +46,7 @@ class c_cw_dsp
   void print_bool(const char filename[], bool element);
   void process_frame();
   void process_clusters(uint32_t threshold);
-  virtual void decode(uint16_t cluster, std::string text);
+  virtual void decode(uint16_t cluster, std::string text, std::string partial);
 
   public:
 

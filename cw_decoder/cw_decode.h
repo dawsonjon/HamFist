@@ -24,13 +24,14 @@ class c_cw_decoder
 {
 
   private:
-  MorseTimingClassifier classifier;
+  c_morse_timing_classifier classifier;
   s_candidate beam[BEAM_WIDTH];
   int items_in_beam;
     
   public:
   void decode(s_observation signal[], int num_observations);
   std::string get_text();
+  std::string get_text_partial();
 
   c_cw_decoder()
   {

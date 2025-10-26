@@ -1,4 +1,5 @@
 #include "cw_classifier.h"
+#include <vector>
 
 //#define LOGGING
 
@@ -14,7 +15,7 @@
   #define DEBUG_PRINTF(...)
 #endif
 
-MorseTimingClassifier::MorseTimingClassifier() {
+c_morse_timing_classifier::c_morse_timing_classifier() {
   dot_mu = 20.0f;
   dash_mu = dot_mu*3.0f;
   gap1_mu = dot_mu*1.0f;
@@ -53,7 +54,7 @@ static float stddev(const float* data, size_t n, float mean) {
     return std::sqrt(sumSq / static_cast<float>(n));  // population stddev
 }
 
-void MorseTimingClassifier::updateOnModel(const float* d, size_t n) {
+void c_morse_timing_classifier::update_on_model(const float* d, size_t n) {
   const int BIN_WIDTH = 5;
   const int BIN_MAX = 1000;
 
@@ -134,7 +135,7 @@ void MorseTimingClassifier::updateOnModel(const float* d, size_t n) {
 
 }
 
-void MorseTimingClassifier::updateOffModel(const float* d, size_t n) {
+void c_morse_timing_classifier::update_off_model(const float* d, size_t n) {
   const int BIN_WIDTH = 5;
   const int BIN_MAX = 1000;
 
@@ -255,12 +256,12 @@ void MorseTimingClassifier::updateOffModel(const float* d, size_t n) {
 
 }
 
-void MorseTimingClassifier::classifyOn(float d, float& logp_dot, float& logp_dash) {
+void c_morse_timing_classifier::classify_on(float d, float& logp_dot, float& logp_dash) {
   logp_dot = log_gaussian(d, dot_mu, dot_sigma);
   logp_dash = log_gaussian(d, dash_mu, dash_sigma);
 }
 
-void MorseTimingClassifier::classifyOff(float d, float log_probs[]) {
+void c_morse_timing_classifier::classify_off(float d, float log_probs[]) {
   log_probs[0] = log_gaussian(d, gap1_mu, gap1_sigma);
   log_probs[1] = log_gaussian(d, gap3_mu, gap3_sigma);
   log_probs[2] = log_gaussian(d, gap7_mu, gap7_sigma);

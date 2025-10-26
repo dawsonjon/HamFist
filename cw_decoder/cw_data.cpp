@@ -3,6 +3,7 @@
 const int NUM_CW_ABBREVIATIONS = 68;
 const int NUM_CW_WORDS = 962;
 const int NUM_MORSE_LETTERS = 46;
+const int NUM_PROSIGNS = 6;
 const char * CW_ABBREVIATIONS[] = {"73",
 "88",
 "AGN",
@@ -1034,3 +1035,9 @@ const char * CW_WORDS[] = {"10M",
 "ZL",
 "ZS"};
 const char MORSE[] = "#EISH5~~4~~V~~~3~~UF~~~~~~##?~2~~ARL~~~~~~##~.~~~WP~~~~~~J~~~1~~TNDB6~-=~~X/~~~~~KC~~~~~~Y(~)~~~MGZ7~~#~,Q~~~~~~O#8:~~~~#9~~0~~#";
+const char * PROSIGNS[] = {"[AR]",
+"[AS]",
+"[VE]",
+"[KN]",
+"[KA]",
+"[SK]"};

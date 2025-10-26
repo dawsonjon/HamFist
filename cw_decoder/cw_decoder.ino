@@ -57,7 +57,7 @@
 ILI934X *display;
 void setup() {
   Serial.begin(115200);
-  while (!Serial) delay(1);  // wait for serial port to connect.
+  //while (!Serial) delay(1);  // wait for serial port to connect.
 
   Serial.println("HamFist Copyright (C) Jonathan P Dawson 2025");
   Serial.println("github: https://github.com/dawsonjon/101Things");
@@ -70,12 +70,14 @@ void setup() {
 class my_cw_dsp : public c_cw_dsp
 {
   std::string decoded_text[7];
-  virtual void decode(uint16_t cluster, std::string text)
+  std::string partial_decoded_text[7];
+  virtual void decode(uint16_t cluster, std::string text, std::string partial)
   {
     decoded_text[cluster]+=text;
-    int excess_length = decoded_text[cluster].size() - 50;
+    int excess_length = decoded_text[cluster].size() + partial.size() - 50;
     if(excess_length > 0) decoded_text[cluster].erase(0, excess_length);
     display->drawString(20, 20*cluster, font_8x5, decoded_text[cluster].c_str(), COLOUR_WHITE, COLOUR_BLACK);
+    display->drawString(20+(6*decoded_text[cluster].size()), 20*cluster, font_8x5, partial.c_str(), COLOUR_AQUA, COLOUR_BLACK);
   }
 };
 
@@ -85,9 +87,11 @@ void loop() {
   adc_audio.begin(28, 15000);
   my_cw_dsp cw_dsp;
 
-  uint16_t frame_line = 0;
+  uint16_t waterfall_newest = 0;
+  uint8_t waterfall[320][FRAME_SIZE/2] = {0};
+  
   while(1) {
-    static int16_t *samples;
+    int16_t *samples;
 
     //fetch a new block of 1024 samples
     samples = adc_audio.input_samples();
@@ -95,17 +99,31 @@ void loop() {
     {
       cw_dsp.process_sample(samples[sample_number]);
 
-      if(sample_number%128 == 0) {
+      if(sample_number%256 == 0) {
         uint32_t *magnitudes = cw_dsp.get_magnitudes();
-        uint16_t waterfall_line[FRAME_SIZE/2];
-        for(uint16_t idx=0; idx<FRAME_SIZE/2; ++idx) {
-          uint32_t magnitude = magnitudes[idx];
+        
+        for(uint16_t bin=0; bin<FRAME_SIZE/2; ++bin) {
+          uint32_t magnitude = magnitudes[bin];
           float scaled_magnitude = magnitude>0?20*log10(magnitude):0;
-          uint8_t pixel = scaled_magnitude * 3.5;
-          waterfall_line[idx] = display->colour565(0, 0, pixel);
+          uint8_t pixel = scaled_magnitude * 3.5;        
+          waterfall[waterfall_newest][bin] = pixel;
         }
-        display->writeVLine(frame_line++, 239-FRAME_SIZE/2-2, FRAME_SIZE/2, waterfall_line);
-        if(frame_line == 320) frame_line = 0;
+
+        for(uint16_t waterfall_y=0; waterfall_y<32; ++waterfall_y) {
+          uint16_t waterfall_line[320];
+          for(uint16_t pixel_x=0; pixel_x<320; ++pixel_x){
+            uint16_t waterfall_x;
+            if(pixel_x <= waterfall_newest){
+              waterfall_x = waterfall_newest-pixel_x;
+            } else {
+              waterfall_x = 320+waterfall_newest-pixel_x;
+            }
+            waterfall_line[319-pixel_x] = display->colour565(0, 0, waterfall[waterfall_x][waterfall_y]);
+          }
+          display->writeHLine(0, 239-FRAME_SIZE/2-2+waterfall_y, 320, waterfall_line);
+        }
+
+        if(++waterfall_newest == 320) waterfall_newest = 0;
       }
     }
 

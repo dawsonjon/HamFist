@@ -17,4 +17,6 @@ extern const char * CW_ABBREVIATIONS[];
 extern const int NUM_CW_WORDS;
 extern const char * CW_WORDS[];
 
+extern const int NUM_PROSIGNS;
+extern const char * PROSIGNS[];
 #endif
