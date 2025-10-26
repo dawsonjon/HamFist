@@ -11,7 +11,7 @@ class c_morse_timing_classifier {
     void update_on_model(const float* durations, size_t count);
     void update_off_model(const float* durations, size_t count);
 
-    void classify_on(float duration_ms, float& logProbDot, float& logProbDash);
+    void classify_on(float d, float& logp_dot, float& logp_dash, float& logp_dotdot, float& logp_dotdash, float& logp_dashdash);
     void classify_off(float duration_ms, float* logProbs);
 
     float get_dot_length() const { return dot_mu; }

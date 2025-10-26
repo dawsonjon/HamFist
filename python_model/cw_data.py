@@ -140,11 +140,6 @@ WORDS = [
     "KEY","PADDLE","KEYER","STRAIGHT","BUG","SPEED","TONE","SIDETONE","VFO",
     "DISPLAY","MENU","MEMORY","SCAN","TUNE","AUDIO","SPEAKER","HEADPHONES",
     "NOTCH","BANDWIDTH",
-
-    # Optional call sign prefixes
-    "K","W","N","AA","AB","AC","AD","AE","AF","AG","AI","AJ","AK","G","M","2E",
-    "DL","DF","DJ","DK","JA","JE","JF","VK","ZL","VE","VA","F","EA","ON","OH",
-    "OE","HB9","LA","OZ","SM","PA","LX","SV","4X","9A","9H","ZS"
 ]
 
 MORSE = {
