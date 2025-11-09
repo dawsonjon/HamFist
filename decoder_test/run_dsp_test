@@ -1,65 +1,65 @@
 g++ -DLOG_TO_FILE ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder/fft.cpp ../cw_decoder/cw_decode.cpp ../cw_decoder/cw_data.cpp ../cw_decoder/cw_classifier.cpp cw_dsp_test.cpp -o cw_dsp_test
 
-#echo
-#echo "********** TEST11 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test11.wav
+echo
+echo "********** TEST11 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test11.wav
 #python draw_plots.py
 
-#echo
-#echo "********** TEST12 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test12.wav
+echo
+echo "********** TEST12 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test12.wav
 #python draw_plots.py
 
-#echo
-#echo "********** TEST13 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test13.wav
+echo
+echo "********** TEST13 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test13.wav
 #python draw_plots.py
 
-#echo
-#echo "********** TEST14 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test14.wav
+echo
+echo "********** TEST14 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test14.wav
 #python draw_plots.py
 
-#echo
-#echo "********** TEST15 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test15.wav
+echo
+echo "********** TEST15 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test15.wav
 #python draw_plots.py
 
-#echo
-#echo "********** TEST16 **********"
-#echo
-#rm magnitudes
-#rm noise_estimate
-#rm threshold
-#rm decode_bins
-#./cw_dsp_test test16.wav
+echo
+echo "********** TEST16 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test16.wav
 #python draw_plots.py
-#
+
 #echo
 #echo "********** TEST17 **********"
 #echo
@@ -69,6 +69,7 @@ g++ -DLOG_TO_FILE ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder
 #rm decode_bins
 #./cw_dsp_test test17.wav
 #python draw_plots.py
+
 #echo
 #echo "********** TEST18 **********"
 #echo
@@ -89,24 +90,24 @@ g++ -DLOG_TO_FILE ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder
 #./cw_dsp_test test19.wav
 #python draw_plots.py
 
-echo
-echo "********** TEST20 **********"
-echo
-rm magnitudes
-rm noise_estimate
-rm threshold
-rm decode_bins
-./cw_dsp_test test20.wav
-python draw_plots.py
-
 #echo
-#echo "********** TEST1 **********"
+#echo "********** TEST20 **********"
 #echo
 #rm magnitudes
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
-#./cw_dsp_test test1.wav
+#./cw_dsp_test test20.wav
+#python draw_plots.py
+
+echo
+echo "********** TEST1 **********"
+echo
+rm magnitudes
+rm noise_estimate
+rm threshold
+rm decode_bins
+./cw_dsp_test test1.wav
 #python draw_plots.py
 
 echo
@@ -117,7 +118,7 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test2.wav
-python draw_plots.py
+#python draw_plots.py
 
 echo
 echo "********** TEST3 **********"
@@ -127,7 +128,7 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test3.wav
-python draw_plots.py
+#python draw_plots.py
 
 echo
 echo "********** TEST4 **********"
@@ -137,8 +138,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test4.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST5 **********"
 echo
@@ -147,8 +148,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test5.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST6 **********"
 echo
@@ -157,8 +158,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test6.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST7 **********"
 echo
@@ -167,8 +168,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test7.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST8 **********"
 echo
@@ -177,8 +178,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test8.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST9 **********"
 echo
@@ -187,8 +188,8 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test9.wav
-python draw_plots.py
-
+##python draw_plots.py
+#
 echo
 echo "********** TEST10 **********"
 echo
@@ -197,5 +198,5 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test10.wav
-python draw_plots.py
-
+##python draw_plots.py
+#

@@ -16,6 +16,11 @@
 #endif
 
 c_morse_timing_classifier::c_morse_timing_classifier() {
+  reset();
+}
+
+void c_morse_timing_classifier::reset()
+{
   dot_mu = 20.0f;
   dash_mu = dot_mu*3.0f;
   gap1_mu = dot_mu*1.0f;
@@ -26,6 +31,8 @@ c_morse_timing_classifier::c_morse_timing_classifier() {
   gap1_sigma = dot_sigma;
   gap3_sigma = dot_sigma;
   gap7_sigma = dot_sigma;
+  for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { on_histogram[idx]=0; }
+  for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { off_histogram[idx]=0; }
 }
 
 static float log_gaussian(float x, float mu, float sigma)
@@ -43,6 +50,37 @@ static float mean(const float* data, size_t n) {
     return sum / static_cast<float>(n);
 }
 
+static float histogram_mean(const int data[], const int begin, const int end, int bin_width) {
+    float sum_data = 0.0f;
+    float sum_counts = 0.0f;
+    for (size_t idx = begin; idx <= end; idx++) {
+	float bin_centre = (1.0f * idx * bin_width) + (0.5f*bin_width);
+        sum_data += data[idx] * bin_centre;
+        sum_counts += data[idx];
+        DEBUG_PRINTF("sum_data %f sum_mean %f\n", sum_data, sum_counts);
+    }
+    DEBUG_PRINTF("sum_data %f sum_mean %f\n", sum_data, sum_counts);
+    return sum_data / sum_counts;
+}
+
+static float histogram_stddev(const float mean, const int data[], const int begin, const int end, int bin_width) {
+    float sum_data_squared = 0.0f;
+    float sum_counts = 0.0f;
+    for (size_t idx = begin; idx <= end; idx++) {
+	float bin_centre = (1.0f * idx * bin_width) + (0.5f*bin_width);
+        sum_data_squared += static_cast<float>(data[idx]) * static_cast<float>(bin_centre) * static_cast<float>(bin_centre);
+        sum_counts += data[idx];
+    }
+    float m2 = sum_data_squared / sum_counts;
+    DEBUG_PRINTF("m2 %f mean*mean %f\n", m2, mean*mean);
+    float variance_binned = m2 - (mean * mean);
+    DEBUG_PRINTF("variance %f\n", variance_binned);
+    if (variance_binned < 0.0 && variance_binned > -1e-8) variance_binned = 0.0;
+    float within_bin_var = (bin_width * bin_width) / 12.0;
+    float variance = variance_binned + within_bin_var;
+    return std::sqrt(variance);
+}
+
 static float stddev(const float* data, size_t n, float mean) {
     if (n == 0) return 0.0f;
 
@@ -55,26 +93,23 @@ static float stddev(const float* data, size_t n, float mean) {
 }
 
 void c_morse_timing_classifier::update_on_model(const float* d, size_t n) {
-  const int BIN_WIDTH = 5;
-  const int BIN_MAX = 500;
+  DEBUG_PRINTF("new data %lu\n", n);
 
-  if(n < 2){ DEBUG_PRINTF("no samples to classify\n"); return;} //not enough samples
-
-  //create histogram
-  int histogram[BIN_MAX/BIN_WIDTH];
-  for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { histogram[idx]=0; }
+  if(n < 2){ DEBUG_PRINTF("no samples to classify %lu\n", n); return;} //not enough samples
+								
+  //update histogram
   for(int idx=0; idx<n; ++idx) {
     int bin = d[idx]/BIN_WIDTH;
     bin = std::min(bin, BIN_MAX/BIN_WIDTH-1);
     DEBUG_PRINTF("duration %f, bin %u\n", d[idx], bin);
-    histogram[bin]++;
+    on_histogram[bin]++;
   }
 
   //smooth histogram
-  uint16_t smoothed_histogram[BIN_MAX/BIN_WIDTH];
+  int smoothed_histogram[BIN_MAX/BIN_WIDTH];
   for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { smoothed_histogram[idx]=0; }
   for(int idx = 1; idx < BIN_MAX/BIN_WIDTH-1; idx++){
-      smoothed_histogram[idx] = (histogram[idx-1] + histogram[idx] + histogram[idx+1]);
+      smoothed_histogram[idx] = (on_histogram[idx-1] + on_histogram[idx] + on_histogram[idx+1]);
   }
 
   //print histogram
@@ -122,51 +157,41 @@ void c_morse_timing_classifier::update_on_model(const float* d, size_t n) {
   DEBUG_PRINTF("valley_bin %u valley_value %u\n", valley_bin, valley_value);
 
   //cluster dots
-  float dots[n];
-  int num_dots = 0;
-  for(int idx=0; idx<n; ++idx) if(d[idx] < valley_bin*BIN_WIDTH) dots[num_dots++] = d[idx];
-  dot_mu = mean(dots, num_dots);
-  dot_sigma = stddev(dots, num_dots, dot_mu);
+  dot_mu = histogram_mean(smoothed_histogram, 0, valley_bin, BIN_WIDTH); 
+  dot_sigma = histogram_stddev(dot_mu, smoothed_histogram, 0, valley_bin, BIN_WIDTH); 
   DEBUG_PRINTF("dot mu %f\n", dot_mu);
   DEBUG_PRINTF("dot sigma %f\n", dot_sigma);
 
   //cluster dashes
-  float dashes[n];
-  int num_dashes = 0;
-  for(int idx=0; idx<n; ++idx) if(d[idx] >= valley_bin*BIN_WIDTH) dashes[num_dashes++] = d[idx];
-  dash_mu = mean(dashes, num_dashes);
-  dash_sigma = stddev(dashes, num_dashes, dash_mu);
+  int end = std::min(peak1 * 6, BIN_MAX/BIN_WIDTH-1);
+  dash_mu = histogram_mean(smoothed_histogram, valley_bin, end, BIN_WIDTH); 
+  dash_sigma = histogram_stddev(dash_mu, smoothed_histogram, valley_bin, end, BIN_WIDTH); 
   DEBUG_PRINTF("dash mu %f\n", dash_mu);
   DEBUG_PRINTF("dash sigma %f\n", dash_sigma);
   
-
 }
 
 void c_morse_timing_classifier::update_off_model(const float* d, size_t n) {
-  const int BIN_WIDTH = 5;
-  const int BIN_MAX = 500;
+  DEBUG_PRINTF("new data %lu\n", n);
+  if(n < 2){ DEBUG_PRINTF("no samples to classify %lu\n", n); return;} //not enough samples
 
-  if(n < 2){ DEBUG_PRINTF("no samples to classify\n"); return;} //not enough samples
-
-  //create histogram
-  int histogram[BIN_MAX/BIN_WIDTH];
-  for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { histogram[idx]=0; }
+  //update histogram
   for(int idx=0; idx<n; ++idx) {
     int bin = d[idx]/BIN_WIDTH;
     bin = std::min(bin, BIN_MAX/BIN_WIDTH-1);
     DEBUG_PRINTF("duration %f, bin %u\n", d[idx], bin);
-    histogram[bin]++;
+    off_histogram[bin]++;
   }
 
   for(int idx=0;idx<BIN_MAX/BIN_WIDTH;idx++){
-      DEBUG_PRINTF("histogram %u, %u\n", idx, histogram[idx]);
+      DEBUG_PRINTF("histogram %u, %u\n", idx, off_histogram[idx]);
   }
 
   //smooth histogram
   int smoothed_histogram[BIN_MAX/BIN_WIDTH];
   for(int idx=0; idx<BIN_MAX/BIN_WIDTH; ++idx) { smoothed_histogram[idx]=0; }
   for(int idx = 1; idx < BIN_MAX/BIN_WIDTH-1; idx++){
-      smoothed_histogram[idx] = (histogram[idx-1] + histogram[idx] + histogram[idx+1]);
+      smoothed_histogram[idx] = (off_histogram[idx-1] + off_histogram[idx] + off_histogram[idx+1]);
   }
 
   //print histogram
@@ -249,19 +274,17 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n) {
   }
   DEBUG_PRINTF("valley2_bin %u valley2_value %u\n", valley2_bin, valley2_value);
 
-  float gap1s[n];
-  int num_gap1s = 0;
-  for(int idx=0; idx<n; ++idx) if(d[idx] < valley1_bin*BIN_WIDTH) gap1s[num_gap1s++] = d[idx];
-  gap1_mu = mean(gap1s, num_gap1s);
-  gap1_sigma = std::max(0.1f*gap1_mu, stddev(gap1s, num_gap1s, gap1_mu));
+  //cluster dots
+
+  gap1_mu = histogram_mean(smoothed_histogram, 0, valley1_bin, BIN_WIDTH); 
+  gap1_sigma = histogram_stddev(gap1_mu, smoothed_histogram, 0, valley1_bin, BIN_WIDTH); 
+  gap1_sigma = std::max(0.1f*gap1_mu, gap1_sigma);
   DEBUG_PRINTF("gap1 mu %f\n", gap1_mu);
   DEBUG_PRINTF("gap1 sigma %f\n", gap1_sigma);
 
-  float gap3s[n];
-  int num_gap3s = 0;
-  for(int idx=0; idx<n; ++idx) if(d[idx] >= valley1_bin*BIN_WIDTH && d[idx] < valley2_bin*BIN_WIDTH) gap3s[num_gap3s++] = d[idx];
-  gap3_mu = mean(gap3s, num_gap3s);
-  gap3_sigma = std::min(std::max(0.1f*gap3_mu, stddev(gap3s, num_gap3s, gap3_mu)), 2*gap1_sigma);
+  gap3_mu = histogram_mean(smoothed_histogram, valley1_bin, valley2_bin, BIN_WIDTH); 
+  gap3_sigma = histogram_stddev(gap3_mu, smoothed_histogram, valley1_bin, valley2_bin, BIN_WIDTH); 
+  gap3_sigma = std::min(std::max(0.1f*gap3_mu, gap3_sigma), 2*gap1_sigma);
   DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
   DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
 

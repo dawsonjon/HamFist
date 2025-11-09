@@ -27,7 +27,7 @@
 
 // Function to generate a window
 void generate_window(int32_t *window, int size) {
-  for (uint16_t i = 0; i < size; i++) 
+  for (uint16_t i = 0; i < size; i++)
   {
     float multiplier = 0.5 * (1 - cosf(2*M_PI*i/size));
     window[i] = multiplier * 65536;
@@ -50,12 +50,12 @@ void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
   }
 }
 
-void c_cw_dsp :: decode(uint16_t cluster, std::string text, std::string partial)
+void c_cw_dsp :: decode(uint16_t channel, std::string text, std::string partial)
 {
-  DEBUG_PRINTF("decode on channel %u %s\n", cluster, text.c_str());
+  DEBUG_PRINTF("decode on channel %u %s\n", channel, text.c_str());
 }
 
-static void max_magnitude(uint32_t magnitude[], uint8_t start_bin, uint8_t stop_bin, uint16_t &max_bin, uint32_t &max) 
+static void max_magnitude(uint32_t magnitude[], uint8_t start_bin, uint8_t stop_bin, uint16_t &max_bin, uint32_t &max)
 {
     max = 0;
     max_bin = 0;
@@ -71,22 +71,22 @@ static void max_magnitude(uint32_t magnitude[], uint8_t start_bin, uint8_t stop_
 
 void c_cw_dsp :: flush()
 {
-  for (uint8_t cluster = 0; cluster < NUM_CLUSTERS; cluster++) {
-    print_element("decode_bins", cluster * CLUSTER_SIZE);
-    clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-    decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
-    clusters[cluster].num_observations = 0;
-    clusters[cluster].duration = 0;
+  for (uint8_t channel = 0; channel < NUM_CHANNELS; channel++) {
+    print_element("decode_bins", channel * CHANNEL_SIZE);
+    channels[channel].decoder.decode(channels[channel].observations, channels[channel].num_observations);
+    decode(channel, channels[channel].decoder.get_text(), channels[channel].decoder.get_text_partial());
+    channels[channel].num_observations = 0;
+    channels[channel].duration = 0;
   }
 }
 
-void c_cw_dsp :: process_clusters(uint32_t threshold)
+void c_cw_dsp :: process_channels(uint32_t threshold)
 {
 
-  for (uint8_t cluster = 0; cluster < NUM_CLUSTERS; cluster++) {
+  for (uint8_t channel = 0; channel < NUM_CHANNELS; channel++) {
 
-    uint8_t start_bin = cluster * CLUSTER_SIZE;
-    uint8_t stop_bin = start_bin + CLUSTER_SIZE - 1;
+    uint8_t start_bin = channel * CHANNEL_SIZE;
+    uint8_t stop_bin = start_bin + CHANNEL_SIZE - 1;
 
     uint16_t max_bin;
     uint32_t max;
@@ -94,32 +94,35 @@ void c_cw_dsp :: process_clusters(uint32_t threshold)
 
     //measure signal present periods
     bool value = max > threshold;
-    clusters[cluster].duration++;
-    if(value != clusters[cluster].value) {
-      s_observation observation = {clusters[cluster].value, FRAME_MS * clusters[cluster].duration};
-      clusters[cluster].duration = 0;
-      clusters[cluster].value = value;
-      clusters[cluster].observations[clusters[cluster].num_observations++] = observation;
+    channels[channel].duration++;
+    if(value != channels[channel].value) {
+      s_observation observation = {channels[channel].value, FRAME_MS * channels[channel].duration};
+      channels[channel].duration = 0;
+      channels[channel].value = value;
+      channels[channel].observations[channels[channel].num_observations++] = observation;
     }
 
     //timeout
-    if(clusters[cluster].duration == TIMEOUT) {
-      if(clusters[cluster].num_observations > 20) {
-        print_element("decode_bins", cluster * CLUSTER_SIZE);
-        clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-        decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
+    if(channels[channel].duration == TIMEOUT) {
+      if(channels[channel].num_observations > OBSERVATION_BURST_SIZE) {
+        print_element("decode_bins", channel * CHANNEL_SIZE);
+        channels[channel].decoder.decode(channels[channel].observations, channels[channel].num_observations);
+        decode(channel, channels[channel].decoder.get_text(), channels[channel].decoder.get_text_partial());
       }
-      clusters[cluster].num_observations = 0;
-      clusters[cluster].duration = 0;
+      channels[channel].num_observations = 0;
+      channels[channel].duration = 0;
+      channels[channel].trained = false; //treat this as the end of a communication and retrain
+      channels[channel].decoder.reset();
     }
 
     //full buffer
-    if(clusters[cluster].num_observations == OBSERVATION_BUFFER_SIZE) {
-      print_element("decode_bins", cluster * CLUSTER_SIZE);
-      clusters[cluster].decoder.decode(clusters[cluster].observations, clusters[cluster].num_observations);
-      decode(cluster, clusters[cluster].decoder.get_text(), clusters[cluster].decoder.get_text_partial());
-      clusters[cluster].num_observations = 0;
-      clusters[cluster].duration = 0;
+    if(channels[channel].num_observations == OBSERVATION_BUFFER_SIZE || (channels[channel].trained && channels[channel].num_observations == OBSERVATION_BURST_SIZE)) {
+      print_element("decode_bins", channel * CHANNEL_SIZE);
+      channels[channel].decoder.decode(channels[channel].observations, channels[channel].num_observations);
+      decode(channel, channels[channel].decoder.get_text(), channels[channel].decoder.get_text_partial());
+      channels[channel].num_observations = 0;
+      channels[channel].duration = 0;
+      channels[channel].trained = true; //we have seen one whole buffer's worth, consider the decoder trained.
     }
 
   }
@@ -140,30 +143,37 @@ void c_cw_dsp :: process_frame()
   print_element("threshold", smoothed_threshold);
 
   //process active signals
-  process_clusters(smoothed_threshold);
+  process_channels(smoothed_threshold);
   frame_count++;
 
 }
-
 
 c_cw_dsp :: c_cw_dsp()
 {
   //clear buffer
   for(uint16_t idx = 0; idx<FRAME_SIZE; idx++)
   {
-    i[idx]=0; 
+    i[idx]=0;
     q[idx]=0;
   }
-  //initialise clusters
-  for (uint8_t cluster = 0; cluster < NUM_CLUSTERS; cluster++) {
-    clusters[cluster].duration = 0;
-    clusters[cluster].value = false;
-    clusters[cluster].observations[clusters[cluster].num_observations++];
-    clusters[cluster].num_observations = 0;
+  //initialise channels
+  for (uint8_t channel = 0; channel < NUM_CHANNELS; channel++) {
+    channels[channel].duration = 0;
+    channels[channel].value = false;
+    channels[channel].observations[channels[channel].num_observations++];
+    channels[channel].num_observations = 0;
+    channels[channel].trained = false;
   }
   generate_window(window, FRAME_SIZE);
   smoothed_threshold = 0;
   frame_count = 0;
+}
+
+uint32_t c_cw_dsp :: get_buffer_percent(int channel)
+{
+  uint32_t percentage = 100*channels[channel].num_observations/OBSERVATION_BUFFER_SIZE;
+  if(channels[channel].trained) return 100;
+  return percentage;
 }
 
 void c_cw_dsp :: process_sample(int16_t sample)
@@ -173,22 +183,22 @@ void c_cw_dsp :: process_sample(int16_t sample)
   sample_number_f16 += sample_ratio_f16;
   if(sample_number_f16 < 65536) return;
   sample_number_f16 -= 65536;
-  i[frequency_count] = sample;    
+  i[frequency_count++] = sample;
 
   //sample rate is 15000, 1st Nyquist -3750 to +3750, but only 0 to ~2500Hz is used.
   //at 7500Hz, each bin in a 64 point FFT represents 117Hz
-  frequency_count++;
   if(frequency_count == FRAME_SIZE)
   {
     frequency_count = 0;
+
     apply_window(i, q, window, FRAME_SIZE);
     fixed_fft(i, q, 6);
 
-    uint32_t total = 0;
     for(uint16_t idx=0; idx<FRAME_SIZE/2; idx++)
     {
       magnitude[idx] = rectangular_2_magnitude(i[idx], q[idx]);
     }
+    memcpy(magnitude_copy, magnitude, sizeof(magnitude));
     process_frame();
   }
 }
