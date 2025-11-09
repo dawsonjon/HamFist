@@ -32,6 +32,8 @@ class c_cw_decoder
   void decode(s_observation signal[], int num_observations);
   std::string get_text();
   std::string get_text_partial();
+  void reset() {classifier.reset();}
+  float get_WPM() {return classifier.get_WPM();}
 
   c_cw_decoder()
   {

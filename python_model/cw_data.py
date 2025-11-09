@@ -90,7 +90,8 @@ WORDS = [
     "CHARGE","PROPER","BAR","OFFER","SEGMENT","SLAVE","DUCK","INSTANT","MARKET",
     "DEGREE","POPULATE","CHICK","DEAR","ENEMY","REPLY","DRINK","OCCUR","SUPPORT",
     "SPEECH","NATURE","RANGE","STEAM","MOTION","PATH","LIQUID","LOG","MEANT",
-    "QUOTIENT","TEETH","SHELL","NECK",
+    "QUOTIENT","TEETH","SHELL","NECK","MORSE", "TIMING", "QUICKLY", "TEXT", "LETTER",
+    "CHOSE", "CHOOSE", "ALPHABET",
 
     # General operating terms
     "ANTENNA","AERIAL","BALUN","BEAM","DIPOLE","VERTICAL","YAGI","LOOP","GROUND",
@@ -157,7 +158,7 @@ MORSE = {
  '7':'--...', '8':'---..', '9':'----.',
  '0':'-----', ',':'--..--', '.':'.-.-.-',
  '?':'..--..', '/':'-..-.', '-':'-....-',
- '(':'-.--.', ')':'-.--.-', ':':'---...', 
+ '(':'-.--.', ')':'-.--.-', ':':'---...',
  "=":"-...-", " ":" ",
 
  #'\x80':'.-.-.',  #AR  - OUT
@@ -178,6 +179,7 @@ PROSIGNS = {
  '\x85':'[SK]',  #SK  - OUT
  '\x83':'[KN]',  #KN  - GO AHEAD
 }
-  
+
 REVERSE = {v: k for k, v in MORSE.items()}
+
 

@@ -112,11 +112,74 @@ bool binary_search_word(const char * words[], int num_words, const std::string &
     return false;
 }
 
+bool binary_search_prefix(const char *words[], int num_words, const std::string &target)
+{
+    int left = 0;
+    int right = num_words - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        assert(mid < num_words);
+
+        const char *word = words[mid];
+        int cmp = std::strncmp(word, target.c_str(), target.size());
+
+        if (cmp == 0) {
+            // target is a prefix of words[mid]
+            return true;
+        } else if (std::strcmp(word, target.c_str()) < 0) {
+            left = mid + 1;  // search right half
+        } else {
+            right = mid - 1; // search left half
+        }
+    }
+
+    return false;
+}
+
+//What is the log probability that this is the start of a word?
+float word_prefix_log_prob(std::string &word)
+{
+    if(word.size() < 2) return 0;
+    if(binary_search_prefix(AUTOCORRECT_WORDS, NUM_AUTOCORRECT_WORDS, word)) return 1.0f;
+    return 0;
+}
+
+bool is_valid_callsign(const std::string& s) {
+    size_t i = 0;
+    size_t n = s.size();
+
+    // 1–2 starting letters
+    int letters1 = 0;
+    while (i < n && std::isalpha(s[i]) && letters1 < 2) { ++i; ++letters1; }
+    if (letters1 == 0 || i >= n) return false;
+
+    // one digit
+    if (!std::isdigit(s[i++])) return false;
+    if (i >= n) return false;
+
+    // 1–3 trailing letters
+    int letters2 = 0;
+    while (i < n && std::isalpha(s[i]) && letters2 < 3) { ++i; ++letters2; }
+    if (letters2 == 0) return false;
+
+    // optional suffix like /P, /M, /MM, etc.
+    if (i < n) {
+        if (s[i++] != '/' || i >= n) return false;
+        int suf = 0;
+        while (i < n && std::isalpha(s[i]) && suf < 3) { ++i; ++suf; }
+        if (suf == 0) return false;
+    }
+
+    // must end exactly here
+    return i == n;
+}
+
 //What is the log probability that this is a word?
 float language_log_prob(std::string &word)
 {
-    if(binary_search_word(CW_ABBREVIATIONS, NUM_CW_ABBREVIATIONS, word)) return 6.0f;
-    if(binary_search_word(CW_WORDS, NUM_CW_WORDS, word)) return 4.0f;
+    if(binary_search_word(AUTOCORRECT_WORDS, NUM_AUTOCORRECT_WORDS, word)) return 4.0f;
+    if(is_valid_callsign(word)) return 2.0f;
     return 0;
 }
 
@@ -136,6 +199,95 @@ void replace_prosigns(std::string& str) {
       std::string to = std::string(PROSIGNS[i]);
       replace_all(str, from, to);
     }
+}
+
+int levenshtein_bounded(const char* a, const char* b, int max_dist) {
+    size_t la = strlen(a);
+    size_t lb = strlen(b);
+    if (a == b) return 0;
+
+    // Ensure la <= lb to use less memory
+    if (la > lb) {
+        // swap
+        const char* t = a; a = b; b = t;
+        size_t tmp = la; la = lb; lb = tmp;
+    }
+
+    // If length difference already greater than max_dist, early out
+    if ((int)(lb - la) > max_dist) return max_dist + 1;
+
+    // Create two rows
+    int prev_row[32]; // conservative fixed-size buffer for microcontrollers
+    int cur_row[32];
+    if (lb + 1 > sizeof(prev_row)/sizeof(prev_row[0])) {
+        // word too long for buffers; fallback to safe upper bound
+        return max_dist + 1;
+    }
+
+    for (size_t j = 0; j <= lb; ++j) prev_row[j] = (int)j;
+
+    for (size_t i = 1; i <= la; ++i) {
+        cur_row[0] = (int)i;
+        int best_in_row = cur_row[0];
+        for (size_t j = 1; j <= lb; ++j) {
+            int cost = (a[i-1] == b[j-1]) ? 0 : 1;
+            int ins = cur_row[j-1] + 1;
+            int del = prev_row[j] + 1;
+            int sub = prev_row[j-1] + cost;
+            int val = ins < del ? ins : del;
+            if (sub < val) val = sub;
+            cur_row[j] = val;
+            if (val < best_in_row) best_in_row = val;
+        }
+        // early exit: if smallest value in this row > max_dist, no need to continue
+        if (best_in_row > max_dist) return max_dist + 1;
+        // swap rows
+        for (size_t j = 0; j <= lb; ++j) prev_row[j] = cur_row[j];
+    }
+
+    int result = prev_row[lb];
+    return result;
+}
+
+void autocorrect(std::string &word) {
+  if(binary_search_word(AUTOCORRECT_WORDS, NUM_AUTOCORRECT_WORDS, word)) return;
+  std::string best_word = word;
+  int best_distance = 10;
+  int best_ranking = 100000;
+  for (size_t i = 0; i < NUM_AUTOCORRECT_WORDS; ++i) {
+    std::string candidate = AUTOCORRECT_WORDS[i];
+    int d = levenshtein_bounded(word.c_str(), candidate.c_str(), 1);
+    if (d <= 1 && ((d < best_distance) || (d == best_distance && RANKINGS[i] < best_ranking))) {
+      best_distance = d;
+      best_word = candidate;
+      best_ranking = RANKINGS[i];
+    }
+
+    if(best_distance == 0) break;
+  }
+  if(best_distance == 1) {
+    word = best_word;
+  }
+}
+
+void autocorrect_text(std::string &text)
+{
+  std::string word = "";
+  std::string new_text = "";
+
+  for(int i=0; i<text.size(); ++i){
+    if(isalpha(text[i])){
+      word += text[i];
+    } else {
+      if(word.size() > 2) autocorrect(word);
+      new_text += word + text[i];
+      word = "";
+    }
+  }
+  if(word.size() > 2) autocorrect(word);
+  new_text += word;
+
+  text = new_text;
 }
 
 //get the text we are currently decoding
@@ -165,8 +317,10 @@ std::string c_cw_decoder :: get_text()
   items_in_beam = filtered_candidate_index;
   DEBUG_PRINTF("get_text %s\n", text.c_str());
 
+  autocorrect_text(text);
   replace_prosigns(text);
   return text;
+
 }
 
 //filter unreasonable dot and dash lengths
@@ -456,20 +610,22 @@ void c_cw_decoder :: decode(s_observation signal[], int num_observations)
               if (pattern_is_code)
               {
                   std::string last_word = word + letter;
-                  float language_bonus = language_log_prob(last_word);
+                  float language_bonus = language_log_prob(last_word); //bonus for being a whole word, favours a word gap.
+                  float prefix_bonus = word_prefix_log_prob(last_word); //prefix of a word, favours a letter gap over a symbol gap
 
                   // Case 4: letter gap
                   assert(num_candidates < BEAM_WIDTH*6);
                   candidates[num_candidates].word    = word + letter;
                   candidates[num_candidates].text    = text;
                   candidates[num_candidates].pattern = "";
-                  candidates[num_candidates].logp    = logp + logp_gap3;
+                  candidates[num_candidates].logp    = logp + logp_gap3 + prefix_bonus;
                   DEBUG_PRINTF("%u letter_gap \"%s\" \"%s\" %s %f\n", i, candidates[num_candidates].text.c_str(), candidates[num_candidates].word.c_str(), candidates[num_candidates].pattern.c_str(), candidates[num_candidates].logp);
                   num_candidates++;
 
                   // Case 5: word gap
                   assert(num_candidates < BEAM_WIDTH*6);
-                  candidates[num_candidates].text    = text + word + letter + ' ';
+                  std::string new_word = word + letter;
+                  candidates[num_candidates].text    = text + new_word + ' ';
                   candidates[num_candidates].word    = "";
                   candidates[num_candidates].pattern = "";
                   candidates[num_candidates].logp    = logp + logp_gap7 + language_bonus;

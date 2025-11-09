@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <algorithm>
 
+const int BIN_WIDTH = 5;
+const int BIN_MAX = 500;
+
 class c_morse_timing_classifier {
   public:
     c_morse_timing_classifier();
@@ -15,9 +18,13 @@ class c_morse_timing_classifier {
     void classify_off(float duration_ms, float* logProbs);
 
     float get_dot_length() const { return dot_mu; }
-    float get_WPM() const { return 1200.0f / get_dot_length(); }
+    float get_WPM() const {return 1200.0f / get_dot_length();}
+
+    void reset();
 
   private:
+    int on_histogram[BIN_MAX/BIN_WIDTH];
+    int off_histogram[BIN_MAX/BIN_WIDTH];
     float dot_mu, dot_sigma;
     float dash_mu, dash_sigma;
     float gap1_mu, gap1_sigma;

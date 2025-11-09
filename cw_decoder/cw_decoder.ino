@@ -69,15 +69,30 @@ void setup() {
 
 class my_cw_dsp : public c_cw_dsp
 {
-  std::string decoded_text[7];
+  std::string decoded_text[NUM_CHANNELS];
   std::string partial_decoded_text[7];
   virtual void decode(uint16_t cluster, std::string text, std::string partial)
   {
-    decoded_text[cluster]+=text;
-    int excess_length = decoded_text[cluster].size() + partial.size() - 50;
-    if(excess_length > 0) decoded_text[cluster].erase(0, excess_length);
+    int decoded_text_size = decoded_text[cluster].size();
+    int new_text_size = text.size();
+    int partial_size = partial.size();
+
+    int excess_length = decoded_text_size + new_text_size + partial_size - 50;
+    if(excess_length > 0) {
+      int chars_to_remove = std::min(excess_length, decoded_text_size);
+      decoded_text[cluster].erase(0, chars_to_remove);
+      excess_length -= chars_to_remove;
+    }
+    if(excess_length > 0) {
+      int chars_to_remove = std::min(excess_length, new_text_size);
+      text.erase(0, chars_to_remove);
+      excess_length -= chars_to_remove;
+    }
+    
     display->drawString(20, 20*cluster, font_8x5, decoded_text[cluster].c_str(), COLOUR_WHITE, COLOUR_BLACK);
-    display->drawString(20+(6*decoded_text[cluster].size()), 20*cluster, font_8x5, partial.c_str(), COLOUR_AQUA, COLOUR_BLACK);
+    display->drawString(20+(6*decoded_text[cluster].size()), 20*cluster, font_8x5, text.c_str(), COLOUR_AQUA, COLOUR_BLACK);
+    display->drawString(20+(6*(decoded_text[cluster].size() + text.size())), 20*cluster, font_8x5, partial.c_str(), COLOUR_ORANGE, COLOUR_BLACK);
+    decoded_text[cluster]+=text;
   }
 };
 
@@ -99,12 +114,13 @@ void loop() {
     {
       cw_dsp.process_sample(samples[sample_number]);
 
+      //Serial.println(sample_number);
       if(sample_number%256 == 0) {
         uint32_t *magnitudes = cw_dsp.get_magnitudes();
         
         for(uint16_t bin=0; bin<FRAME_SIZE/2; ++bin) {
           uint32_t magnitude = magnitudes[bin];
-          float scaled_magnitude = magnitude>0?20*log10(magnitude):0;
+          float scaled_magnitude = std::max(0.0, 20*log10(magnitude+1)-20);
           uint8_t pixel = scaled_magnitude * 3.5;        
           waterfall[waterfall_newest][bin] = pixel;
         }
@@ -122,9 +138,21 @@ void loop() {
           }
           display->writeHLine(0, 239-FRAME_SIZE/2-2+waterfall_y, 320, waterfall_line);
         }
-
+          
         if(++waterfall_newest == 320) waterfall_newest = 0;
       }
+    }
+
+    int x = 8;
+    for(int channel=0; channel<NUM_CHANNELS; ++channel)
+    {
+      char buffer[20];
+      snprintf(buffer, 20, "%u : %2.0f ", channel, cw_dsp.get_WPM(channel));
+      display->drawString(x, 190, font_8x5, buffer, COLOUR_WHITE, COLOUR_BLACK);
+      snprintf(buffer, 20, "%u : %u ", channel, cw_dsp.get_buffer_percent(channel));
+      display->drawString(x, 180, font_8x5, buffer, COLOUR_WHITE, COLOUR_BLACK);
+      x+=36;
+      x+=17;
     }
 
 
