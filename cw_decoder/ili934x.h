@@ -37,9 +37,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __ILI934X_H__
 #define __ILI934X_H__
 
-//#include "gfxfont.h"
-#include "hardware/spi.h"
+// #include "gfxfont.h"
 #include "hardware/dma.h"
+#include "hardware/spi.h"
 
 #define _SWRST 0x01     // Software Reset
 #define _RDDSDR 0x0f    // Read Display Self-Diagnostic Result
@@ -83,82 +83,84 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #define _MAX_CHUNK_SIZE 256
 
-
-enum e_display_type{
+enum e_display_type
+{
   ILI9341,
   ILI9341_2,
   ILI9488,
   ST7796
 };
 
-
 enum ILI934X_ROTATION
 {
-    R0DEG,
-    R90DEG,
-    R180DEG,
-    R270DEG,
-    MIRRORED0DEG,
-    MIRRORED90DEG,
-    MIRRORED180DEG,
-    MIRRORED270DEG
+  R0DEG,
+  R90DEG,
+  R180DEG,
+  R270DEG,
+  MIRRORED0DEG,
+  MIRRORED90DEG,
+  MIRRORED180DEG,
+  MIRRORED270DEG
 };
 
 class ILI934X
 {
 public:
-    ILI934X(spi_inst_t *spi, uint8_t cs, uint8_t dc, uint16_t width = 240, uint16_t height = 320);
+  ILI934X(spi_inst_t* spi, uint8_t cs, uint8_t dc, uint16_t width = 240, uint16_t height = 320);
 
-    void init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_display, e_display_type display_type);
-    void configure_ili934x();
-    void configure_st7796();
-    void configure_ili9488();
-    void configure_ili9341_2();
-    void setPixel(uint16_t x, uint16_t y, uint16_t colour);
-    void writeHLine(uint16_t x, uint16_t y, uint16_t w, const uint16_t line[]);
-    void writeVLine(uint16_t x, uint16_t y, uint16_t h, const uint16_t line[]);
-    void writeImage(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, const uint16_t *data);
-    void drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
-    void drawFastHline(int x0, int x1, int y, uint16_t colour);
-    void drawFastVline(int x, int y0, int y1, uint16_t colour);
-    void fillCircle(uint16_t xc, uint16_t yc, uint16_t radius, uint16_t colour);
-    void drawCircle(uint16_t xc, uint16_t yc, uint16_t radius, uint16_t colour);
-    void drawRect(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t colour);
-    void fillRect(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t colour);
-    void fillRoundedRect(int x, int y, int h, int w, int r, uint16_t colour);
-    void drawRoundedRect(int x, int y, int h, int w, int r, uint16_t colour);
-    void drawEllipse(int xc, int yc, int rx, int ry, uint16_t color); 
-    void fillEllipse(int xc, int yc, int rx, int ry, uint16_t color);
-    void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t colour);
-    void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t colour);
-    void clear(uint16_t colour = COLOUR_BLACK);
-    void drawChar(uint32_t x, uint32_t y, const uint8_t *font, char c, uint16_t fg, uint16_t bg);
-    void drawString(uint32_t x, uint32_t y, const uint8_t *font, const char *s, uint16_t fg, uint16_t bg);
-    uint16_t colour565(uint8_t r, uint8_t g, uint8_t b);
-    void powerOn(bool power_on);
-    
+  void init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_display,
+            e_display_type display_type);
+  void configure_ili934x();
+  void configure_st7796();
+  void configure_ili9488();
+  void configure_ili9341_2();
+  void setPixel(uint16_t x, uint16_t y, uint16_t colour);
+  void writeHLine(uint16_t x, uint16_t y, uint16_t w, const uint16_t line[]);
+  void writeVLine(uint16_t x, uint16_t y, uint16_t h, const uint16_t line[]);
+  void writeImage(uint16_t x0, uint16_t y0, uint16_t w, uint16_t h, const uint16_t* data);
+  void drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
+  void drawFastHline(int x0, int x1, int y, uint16_t colour);
+  void drawFastVline(int x, int y0, int y1, uint16_t colour);
+  void fillCircle(uint16_t xc, uint16_t yc, uint16_t radius, uint16_t colour);
+  void drawCircle(uint16_t xc, uint16_t yc, uint16_t radius, uint16_t colour);
+  void drawRect(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t colour);
+  void fillRect(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t colour);
+  void fillRoundedRect(int x, int y, int h, int w, int r, uint16_t colour);
+  void drawRoundedRect(int x, int y, int h, int w, int r, uint16_t colour);
+  void drawEllipse(int xc, int yc, int rx, int ry, uint16_t color);
+  void fillEllipse(int xc, int yc, int rx, int ry, uint16_t color);
+  void drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t colour);
+  void fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint16_t colour);
+  void clear(uint16_t colour = COLOUR_BLACK);
+  void drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint16_t fg, uint16_t bg);
+  void drawString(uint32_t x, uint32_t y, const uint8_t* font, const char* s, uint16_t fg,
+                  uint16_t bg);
+  uint16_t colour565(uint8_t r, uint8_t g, uint8_t b);
+  void powerOn(bool power_on);
+
 private:
-    e_display_type _display_type;
-    void drawCircleQuadrant(int xc, int yc, int r, int quadrant, uint16_t colour);
-    void drawFilledCircleQuadrant(int xc, int yc, int r, int quadrant, uint16_t colour);
-    void _writeBlock(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t *data = NULL, size_t dataLen = 0);
-    void _setRotation(ILI934X_ROTATION rotation, bool invert_colours);
-    void _write(uint8_t cmd, uint8_t *data = NULL, size_t dataLen = 0);
-    void _writePixels(const uint16_t *data, size_t dataLen);
-    void _data(uint8_t *data, size_t dataLen = 0);
-    
-    uint32_t dma_tx;
-    dma_channel_config dma_config;
-    
+  e_display_type _display_type;
+  void drawCircleQuadrant(int xc, int yc, int r, int quadrant, uint16_t colour);
+  void drawFilledCircleQuadrant(int xc, int yc, int r, int quadrant, uint16_t colour);
+  void _writeBlock(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint8_t* data = NULL,
+                   size_t dataLen = 0);
+  void _setRotation(ILI934X_ROTATION rotation, bool invert_colours);
+  void _write(uint8_t cmd, uint8_t* data = NULL, size_t dataLen = 0);
+  void _writePixels(const uint16_t* data, size_t dataLen);
+  void _data(uint8_t* data, size_t dataLen = 0);
+
+  uint32_t dma_tx;
+  dma_channel_config dma_config;
+
 private:
-    spi_inst_t *_spi = NULL;
-    uint8_t _cs;
-    uint8_t _dc;
-    uint8_t _rst;
-    uint16_t _width;
-    uint16_t _height;
-    uint16_t _init_width;
-    uint16_t _init_height;
+  spi_inst_t* _spi = NULL;
+  uint8_t _cs;
+  uint8_t _dc;
+  uint8_t _rst;
+  uint16_t _width;
+  uint16_t _height;
+  uint16_t _init_width;
+  uint16_t _init_height;
 };
 
 #endif //__ILI934X_H__

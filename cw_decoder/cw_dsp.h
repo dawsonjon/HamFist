@@ -5,19 +5,19 @@
 #include <list>
 #include <vector>
 
-#include "cw_dsp.h"
 #include "cw_decode.h"
+#include "cw_dsp.h"
 
 static const uint16_t FRAME_SIZE = 64;
-//enough observations to train the decoder
+// enough observations to train the decoder
 static const uint16_t OBSERVATION_BUFFER_SIZE = 100;
-//enough observations to update the decoder
+// enough observations to update the decoder
 static const uint16_t OBSERVATION_BURST_SIZE = 20;
 static const uint16_t TIMEOUT = 1000;
 static const uint16_t NUM_CHANNELS = 6;
 static const uint16_t CHANNEL_SIZE = 5;
 static const float SAMPLE_FREQUENCY = 15000.0f;
-static const float FRAME_MS = 1000.0f*64.0f/SAMPLE_FREQUENCY;
+static const float FRAME_MS = 1000.0f * 64.0f / SAMPLE_FREQUENCY;
 
 struct s_channel
 {
@@ -32,15 +32,15 @@ struct s_channel
 class c_cw_dsp
 {
 
-  uint16_t frequency_count=0;
-  uint32_t sample_number_f16=0;
+  uint16_t frequency_count = 0;
+  uint32_t sample_number_f16 = 0;
   int16_t i[FRAME_SIZE];
   int16_t q[FRAME_SIZE];
   int32_t window[FRAME_SIZE];
-  uint32_t magnitude[FRAME_SIZE/2];
-  uint32_t magnitude_copy[FRAME_SIZE/2];
-  uint32_t old_magnitude[FRAME_SIZE/2];
-  uint32_t new_magnitude[FRAME_SIZE/2];
+  uint32_t magnitude[FRAME_SIZE / 2];
+  uint32_t magnitude_copy[FRAME_SIZE / 2];
+  uint32_t old_magnitude[FRAME_SIZE / 2];
+  uint32_t new_magnitude[FRAME_SIZE / 2];
   uint32_t smoothed_threshold;
   uint32_t frame_count;
 
@@ -53,22 +53,19 @@ class c_cw_dsp
   void process_channels(uint32_t threshold);
   virtual void decode(uint16_t cluster, std::string text, std::string partial);
 
-  public:
-
+public:
   c_cw_dsp();
   void process_sample(int16_t sample);
   void flush();
-  float get_WPM(int channel) {
-    if(channel >= NUM_CHANNELS) return 0.0f;
+  float get_WPM(int channel)
+  {
+    if (channel >= NUM_CHANNELS)
+      return 0.0f;
     return channels[channel].decoder.get_WPM();
   }
-  uint32_t *get_magnitudes()
-  {
-    return &magnitude_copy[0];
-  }
+  uint32_t* get_magnitudes() { return &magnitude_copy[0]; }
 
   uint32_t get_buffer_percent(int channel);
-
 };
 
 #endif
