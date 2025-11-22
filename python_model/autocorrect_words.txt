@@ -4626,6 +4626,7 @@ thumbnail
 trans
 jonathan
 whenever
+whichever
 nova
 lifetime
 api
@@ -9781,3 +9782,6 @@ sidetone
 vfo
 notch
 wpm
+farnsworth
+dit
+dah

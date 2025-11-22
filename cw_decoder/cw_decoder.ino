@@ -15,17 +15,17 @@
 #define PIN_DC   11
 #define SPI_PORT spi1
 
-//#define ROTATION R0DEG
+#define ROTATION R0DEG
 //#define ROTATION R90DEG
 //#define ROTATION R180DEG
-#define ROTATION R270DEG
+//#define ROTATION R270DEG
 //#define ROTATION MIRRORED0DEG
 //#define ROTATION MIRRORED90DEG
 //#define ROTATION MIRRORED180DEG
 //#define ROTATION MIRRORED270DEG
 
-//#define INVERT_COLOURS false
-#define INVERT_COLOURS true
+#define INVERT_COLOURS false
+//#define INVERT_COLOURS true
 
 #define INVERT_DISPLAY false
 //#define INVERT_DISPLAY true
@@ -108,11 +108,15 @@ void loop() {
   while(1) {
     int16_t *samples;
 
-    //fetch a new block of 1024 samples
+    //fetch a new block of ADC_BLOCK_SIZE samples
     samples = adc_audio.input_samples();
-    for(int sample_number=0; sample_number<1024; ++sample_number)
+    for(int sample_number=0; sample_number<ADC_BLOCK_SIZE; ++sample_number)
     {
+      //uint32_t start = millis();
       cw_dsp.process_sample(samples[sample_number]);
+      //Serial.print("processing time: ");
+      //Serial.println(millis() - start);
+
 
       //Serial.println(sample_number);
       if(sample_number%256 == 0) {
