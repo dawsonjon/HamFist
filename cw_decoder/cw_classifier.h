@@ -9,7 +9,7 @@ const int BIN_MAX = 500;
 class c_morse_timing_classifier
 {
 public:
-  c_morse_timing_classifier();
+  c_morse_timing_classifier(int channel_number);
 
   // Element ON durations (dots/dashes)
   void update_on_model(const float* durations, size_t count);
@@ -26,6 +26,7 @@ public:
   void reset();
 
 private:
+  int m_channel_number;
   int on_histogram[BIN_MAX / BIN_WIDTH];
   int off_histogram[BIN_MAX / BIN_WIDTH];
   float dot_mu, dot_sigma;
