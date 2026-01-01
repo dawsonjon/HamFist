@@ -27,6 +27,8 @@ struct s_channel
   uint16_t num_observations;
   c_cw_decoder decoder;
   bool trained;
+  float snr;
+  s_channel(int channel_number) : decoder(channel_number){}
 };
 
 class c_cw_dsp
@@ -41,16 +43,19 @@ class c_cw_dsp
   uint32_t magnitude_copy[FRAME_SIZE / 2];
   uint32_t old_magnitude[FRAME_SIZE / 2];
   uint32_t new_magnitude[FRAME_SIZE / 2];
-  uint32_t smoothed_threshold;
+  uint32_t threshold[FRAME_SIZE / 2];
+  float noise_estimate[FRAME_SIZE / 2];
+  uint32_t smoothed_magnitude[FRAME_SIZE / 2];
   uint32_t frame_count;
 
   s_channel channels[7];
 
   void print_frame(const char filename[], uint32_t frame[]);
+  void print_frame_float(const char filename[], float frame[]);
   void print_element(const char filename[], uint32_t element);
   void print_bool(const char filename[], bool element);
   void process_frame();
-  void process_channels(uint32_t threshold);
+  void process_channels();
   virtual void decode(uint16_t cluster, std::string text, std::string partial);
 
 public:
@@ -66,6 +71,7 @@ public:
   uint32_t* get_magnitudes() { return &magnitude_copy[0]; }
 
   uint32_t get_buffer_percent(int channel);
+  float get_snr(int channel);
 };
 
 #endif

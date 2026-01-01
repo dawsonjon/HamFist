@@ -1,7 +1,7 @@
 #include "cw_classifier.h"
 #include <vector>
 
-// #define LOGGING
+//#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -15,8 +15,9 @@
 #define DEBUG_PRINTF(...)
 #endif
 
-c_morse_timing_classifier::c_morse_timing_classifier()
+c_morse_timing_classifier::c_morse_timing_classifier(int channel_number)
 {
+  m_channel_number = channel_number;
   reset();
 }
 
@@ -166,6 +167,7 @@ void c_morse_timing_classifier::update_on_model(const float* d, size_t n)
   }
 
   // cluster dots
+  DEBUG_PRINTF("channel %i\n", m_channel_number);
   dot_mu = histogram_mean(smoothed_histogram, 0, valley_bin, BIN_WIDTH);
   dot_sigma = histogram_stddev(dot_mu, smoothed_histogram, 0, valley_bin, BIN_WIDTH);
   DEBUG_PRINTF("dot mu %f\n", dot_mu);
@@ -183,7 +185,7 @@ void c_morse_timing_classifier::update_on_model(const float* d, size_t n)
   good_estimates = good_estimates && (dash_mu > 1.5 * dot_mu) && (dash_mu <= 5.0 * dot_mu);
   good_estimates = good_estimates && (dot_sigma < 2.0 * dot_mu) && (dash_sigma <= 2.0 * dot_mu);
   if (!good_estimates)
-    DEBUG_PRINTF("bad estimates:  %f %f\n", dot_mu, dash_mu);
+    DEBUG_PRINTF("bad estimates for channel:  %i %f %f\n", m_channel_number, dot_mu, dash_mu);
 }
 
 void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
@@ -209,6 +211,13 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
         (off_histogram[idx - 1] + off_histogram[idx] + off_histogram[idx + 1]);
   }
 
+  if(m_channel_number == 0) {
+    DEBUG_PRINTF("off histogram\n");
+    for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; idx++) {
+      DEBUG_PRINTF("%i %i\n", idx*BIN_WIDTH, smoothed_histogram[idx]);
+    }
+  }
+
   // find peaks
   std::vector<int> true_peaks;
   int idx = 1;
@@ -231,35 +240,36 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
   std::sort(true_peaks.begin(), true_peaks.end(), [&](const int a, const int b) {
     return smoothed_histogram[a] > smoothed_histogram[b];
   });
+  DEBUG_PRINTF("channel %i\n", m_channel_number);
 
   // not trimodal
-  if (true_peaks.size() < 3) {
+  if (true_peaks.size() < 2) {
+    DEBUG_PRINTF("fewer than 2 peaks, use fallback\n");
 
     // fallback to standard timings
     gap1_mu = dot_mu;
     gap1_sigma = dot_sigma;
-    // DEBUG_PRINTF("gap1 mu %f\n", gap1_mu);
-    // DEBUG_PRINTF("gap1 sigma %f\n", gap1_sigma);
+    DEBUG_PRINTF("gap1 mu %f\n", gap1_mu);
+    DEBUG_PRINTF("gap1 sigma %f\n", gap1_sigma);
 
     gap3_mu = 3 * dot_mu;
     gap3_sigma = dot_sigma;
-    // DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
-    // DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
+    DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
+    DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
 
     gap7_mu = 7 * dot_mu;
     gap7_sigma = dot_sigma;
-    // DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
-    // DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
+    DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
+    DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
 
     return;
   }
 
-  std::sort(true_peaks.begin(), true_peaks.begin() + 3,
+  std::sort(true_peaks.begin(), true_peaks.begin() + 2,
             [](const int a, const int b) { return a < b; });
 
   int peak1 = true_peaks[0];
   int peak2 = true_peaks[1];
-  int peak3 = true_peaks[2];
 
   // Find valley between peaks
   int valley1_bin = peak1;
@@ -271,33 +281,24 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
     }
   }
 
-  // Find valley between peaks
-  int valley2_bin = peak2;
-  int valley2_value = smoothed_histogram[peak2];
-  for (int idx = peak2 + 1; idx < peak3; idx++) {
-    if (smoothed_histogram[idx] < valley2_value) {
-      valley2_value = smoothed_histogram[idx];
-      valley2_bin = idx;
-    }
-  }
-
   // cluster dots
   gap1_mu = histogram_mean(smoothed_histogram, 0, valley1_bin, BIN_WIDTH);
   gap1_sigma = histogram_stddev(gap1_mu, smoothed_histogram, 0, valley1_bin, BIN_WIDTH);
   gap1_sigma = std::max(0.1f * gap1_mu, gap1_sigma);
-  // DEBUG_PRINTF("gap1 mu %f\n", gap1_mu);
-  // DEBUG_PRINTF("gap1 sigma %f\n", gap1_sigma);
+  DEBUG_PRINTF("gap1 mu %f\n", gap1_mu);
+  DEBUG_PRINTF("gap1 sigma %f\n", gap1_sigma);
 
-  gap3_mu = histogram_mean(smoothed_histogram, valley1_bin, valley2_bin, BIN_WIDTH);
-  gap3_sigma = histogram_stddev(gap3_mu, smoothed_histogram, valley1_bin, valley2_bin, BIN_WIDTH);
+  int end = std::min(peak2 * 2, BIN_MAX / BIN_WIDTH - 1);
+  gap3_mu = histogram_mean(smoothed_histogram, valley1_bin, end, BIN_WIDTH);
+  gap3_sigma = histogram_stddev(gap3_mu, smoothed_histogram, valley1_bin, end, BIN_WIDTH);
   gap3_sigma = std::min(std::max(0.1f * gap3_mu, gap3_sigma), 2 * gap1_sigma);
-  // DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
-  // DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
+  DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
+  DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
 
   gap7_mu = 7 * gap1_mu;
   gap7_sigma = gap1_sigma;
-  // DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
-  // DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
+  DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
+  DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
 }
 
 void c_morse_timing_classifier::classify_on(float d, float& logp_dot, float& logp_dash,
