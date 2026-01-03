@@ -40,12 +40,18 @@ c_cw_encoder :: c_cw_encoder(double Fs_Hz)
     m_string = NULL;
     m_samples_to_send = 0;
     m_gap_samples = 0;
+    m_cursor = 0;
 
 
     for(uint16_t idx=0; idx<1024; ++idx)
     {
       m_sin_table[idx] = round(32767.0f*sin(2.0f*idx*M_PI/1024.0f));
     }
+}
+
+uint16_t c_cw_encoder :: get_cursor()
+{
+  return m_cursor;
 }
 
 int16_t c_cw_encoder :: get_sample()

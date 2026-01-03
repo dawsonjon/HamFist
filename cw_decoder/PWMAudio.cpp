@@ -18,7 +18,7 @@ void PWMAudio::begin(const uint8_t audio_pin, const uint32_t audio_sample_rate, 
   gpio_set_drive_strength(audio_pin, GPIO_DRIVE_STRENGTH_12MA);
 
   // configure PWM
-  const uint16_t pwm_max = 4096; // 12 bit pwm at 30517Hz
+  const uint16_t pwm_max = 1024; // 10 bit
   audio_pwm_slice_num = pwm_gpio_to_slice_num(audio_pin);
   pwm_config config = pwm_get_default_config();
   pwm_config_set_clkdiv(&config, 1.f); // 125MHz

@@ -167,7 +167,7 @@ void c_cw_dsp ::process_frame()
   }
 
   for(uint16_t idx=0; idx<FRAME_SIZE/2; ++idx) {
-      if(magnitude[idx] < 2.0 * noise_estimate[idx]) {
+      if((magnitude[idx] < 2.0 * noise_estimate[idx]) || magnitude[idx] < 5) {
         noise_estimate[idx] = (0.99 * noise_estimate[idx]) + (0.01 * magnitude[idx]);
         gate_count[idx] = 0;
       } else if (gate_count[idx] > 50) {

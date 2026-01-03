@@ -3,7 +3,7 @@
 #include <cmath>
 #include <cstdint>
 
-const int BIN_WIDTH = 5;
+const int BIN_WIDTH = 10;
 const int BIN_MAX = 500;
 
 class c_morse_timing_classifier

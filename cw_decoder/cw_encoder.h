@@ -42,6 +42,7 @@ class c_cw_encoder
   void set_wpm(uint16_t wpm);
   void set_frequency_Hz(uint32_t frequency_Hz);
   bool is_done();
+  uint16_t get_cursor();
 
 };
 

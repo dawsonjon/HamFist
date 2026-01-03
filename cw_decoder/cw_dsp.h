@@ -17,7 +17,7 @@ static const uint16_t TIMEOUT = 1000;
 static const uint16_t NUM_CHANNELS = 6;
 static const uint16_t CHANNEL_SIZE = 5;
 static const float SAMPLE_FREQUENCY = 15000.0f;
-static const float FRAME_MS = 1000.0f * 64.0f / SAMPLE_FREQUENCY;
+static const float FRAME_MS = 1000.0f * 128.0f / SAMPLE_FREQUENCY;
 
 struct s_channel
 {
@@ -64,7 +64,7 @@ public:
   void flush();
   float get_WPM(int channel)
   {
-    if (channel >= NUM_CHANNELS)
+    if (channel >= NUM_CHANNELS || !channels[channel].trained)
       return 0.0f;
     return channels[channel].decoder.get_WPM();
   }

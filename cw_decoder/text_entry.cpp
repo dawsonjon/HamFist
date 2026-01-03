@@ -293,3 +293,120 @@ void c_text_entry :: run()
     }
   }
 }
+
+
+
+bool c_multi_text_entry :: is_active()
+{
+  return m_active;
+}
+
+void c_multi_text_entry :: raise()
+{
+  m_active = true;
+  m_needs_redraw = true;
+}
+
+c_multi_text_entry :: c_multi_text_entry(ILI934X *display, button &button_left, button &button_right, button &button_down, button &button_up) :
+  m_display(display),
+  text_entry(display, button_left, button_right, button_down, button_up)
+{
+  m_buttons[0] = &button_left;
+  m_buttons[1] = &button_right;
+  m_buttons[2] = &button_down;
+  m_buttons[3] = &button_up;
+}
+
+
+//layout
+const int NUM_ITEMS_ON_SCREEN = 8;
+const int ITEMS_Y = 35;
+const int PADDING = 2;
+const int ITEM_HEIGHT = 20;
+const int ITEMS_INTERVAL = ITEM_HEIGHT + 2;
+
+//COLOUR SCHEME
+static uint16_t BACKGROUND        = COLOUR_NAVY;  // very dark blue-black
+//uint16_t PANEL_BG          = COLOUR_NAVY;//display->colour565( 16,  24,  40);  // RX area background
+//uint16_t DIVIDER_LINE      = display->colour565(  0, 180, 255);  // subtle separators
+//uint16_t INACTIVE_BORDER   = display->colour565( 32,  48,  80);
+static uint16_t ACTIVE_BORDER  = COLOUR_ORANGE; //display->colour565(  0, 180, 255);  // cyan highlight
+static uint16_t TEXT_ACTIVE    = COLOUR_ORANGE; //display->colour565(  0, 180, 255);  // cyan highlight
+static uint16_t TEXT_INACTIVE  = COLOUR_AQUA; //display->colour565(220, 230, 240);  // confirmed decode
+static uint16_t TEXT_TITLE     = COLOUR_WHITE; //display->colour565(220, 230, 240);  // confirmed decode
+
+//uint16_t TEXT_RECENT       = COLOUR_AQUA; //display->colour565(  0, 180, 255);  // last decoded text
+//uint16_t TEXT_DIM          = COLOUR_GREY; //display->colour565(120, 140, 170);  // inactive channels
+//uint16_t TEXT_PARTIAL      = COLOUR_ORANGE;//display->colour565(230, 170,  90);  // tentative / partial decode
+//uint16_t TX_BORDER         = COLOUR_ORANGE;//display->colour565(255, 160,   0);   // slightly deeper amber
+//uint16_t TX_BG             = COLOUR_NAVY;//display->colour565( 32,  24,  12);   // dark warm background
+//uint16_t TX_TEXT           = COLOUR_ORANGE;//display->colour565(230, 170,  90);   // muted amber
+
+void c_multi_text_entry::run()
+{
+
+  if(!m_active) return;
+
+  
+
+  if(text_entry.is_active()) {
+    text_entry.run();
+    return;
+  }
+
+  if ((m_buttons[0]->is_pressed() || m_buttons[0]->is_held()) && m_message_idx > 0) {
+    m_message_idx--;
+    m_needs_redraw = true;
+  }
+  if ((m_buttons[1]->is_pressed() || m_buttons[1]->is_held()) && m_message_idx < NUM_MESSAGES - 1) {
+    m_message_idx++;
+    m_needs_redraw = true;
+  }
+
+  // ok
+  if (m_buttons[2]->is_pressed())
+    m_active = false;
+
+  // edit
+  if (m_buttons[3]->is_pressed()) {
+    text_entry.raise(m_messages.text[m_message_idx], 250);
+    m_needs_redraw = true;
+    return;
+  }
+
+
+  if (m_message_idx < m_message_offset)
+    m_message_offset--;
+  if (m_message_idx > m_message_offset + NUM_ITEMS_ON_SCREEN - 1)
+    m_message_offset++;
+
+  if(m_needs_redraw) {
+    m_needs_redraw = false;
+    m_display->clear(COLOUR_BLACK);
+    const char title[] = "Message Memory";
+    const uint16_t title_x = (DISPLAY_WIDTH - (12*strlen(title))) / 2;
+    m_display->drawString(title_x, 4, font_16x12, title, TEXT_TITLE, COLOUR_BLACK);
+    for (uint8_t idx = 0; idx < NUM_ITEMS_ON_SCREEN; ++idx) {
+      const uint8_t message_item_index = idx + m_message_offset;
+
+      if (message_item_index < NUM_MESSAGES) {
+        const int font_width = 12;
+        const int display_width_chars = (DISPLAY_WIDTH-10)/font_width;
+        char buffer[50];
+        memcpy(buffer, m_messages.text[message_item_index], display_width_chars);
+        buffer[display_width_chars] = 0;
+        const uint16_t text_width = strlen(buffer) * font_width;
+        const uint16_t x = (DISPLAY_WIDTH - text_width) / 2;
+        
+
+        if (m_message_idx == message_item_index) {
+          m_display->drawRect(x - 1, ITEMS_Y + (idx * ITEMS_INTERVAL), ITEM_HEIGHT, text_width + 2, ACTIVE_BORDER);
+          m_display->drawString(x, ITEMS_Y + (idx * ITEMS_INTERVAL) + 2, font_16x12, buffer, TEXT_ACTIVE, BACKGROUND);
+        } else {
+          m_display->drawString(x, ITEMS_Y + (idx * ITEMS_INTERVAL) + 2, font_16x12, buffer, TEXT_INACTIVE, BACKGROUND);
+        }
+      }
+    }
+  }
+  
+}

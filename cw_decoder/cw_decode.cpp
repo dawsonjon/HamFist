@@ -245,8 +245,6 @@ std::string c_cw_decoder ::get_text()
   }
   beam[0].text = "";
   items_in_beam = filtered_candidate_index;
-  DEBUG_PRINTF("get_text %s\n", text.c_str());
-
   autocorrect_text(text);
   replace_prosigns(text);
   return text;
