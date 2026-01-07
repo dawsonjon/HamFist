@@ -1,3 +1,17 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: sstv_encoder.h
+// description: GUI components for ILI934X
+// License: MIT
+//
+
+
 #ifndef __c_text_entry__
 #define __c_text_entry__
 

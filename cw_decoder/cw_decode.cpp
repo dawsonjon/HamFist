@@ -1,3 +1,17 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: cw_decode.cpp
+// description: CW Decoder using beam decoder with autocorrect
+// License: MIT
+//
+
+
 #include "cw_decode.h"
 #include "cw_data.h"
 #include "dictionary.h"

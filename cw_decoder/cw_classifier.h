@@ -1,3 +1,16 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: cw_classifier.h
+// description: Classifies value/duration pairs into dots and dashes
+// License: MIT
+//
+
 #pragma once
 #include <algorithm>
 #include <cmath>

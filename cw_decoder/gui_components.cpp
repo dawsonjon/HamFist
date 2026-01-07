@@ -1,3 +1,16 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: gui_components.cpp
+// description: GUI components using ili9341 and buttons
+// License: MIT
+//
+
 #include "gui_components.h"
 #include <cstdio>
 #include <cstring>
@@ -11,7 +24,7 @@
 #include "buttons.h"
 #include "frame_buffer.h"
 
-#define LOGGING
+//#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -73,7 +86,7 @@ static const char char_select[4][4][4] = {{
                                           }};
 
 
-     
+
 void draw_button_bar(ILI934X *display, const char* btn1, const char* btn2, const char* btn3, const char* btn4)
 {
   display->fillRect(0, DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT - 1, BUTTON_BAR_HEIGHT, DISPLAY_WIDTH,
@@ -341,7 +354,7 @@ void c_text_entry ::run()
       m_state = NEXT_CHAR_DRAW;
       break;
     }
-    
+
     case NEXT_CHAR_DRAW:
       DEBUG_PRINTF("m_string %s\n", m_string);
 
@@ -457,7 +470,7 @@ void c_multi_text_entry::run()
     selection_changed = true;
     m_display->clear(BACKGROUND);
     draw_heading(m_display, "MESSAGE MEMORY");
-    draw_button_bar(m_display, OK_button, EDIT_button, UP_button, DOWN_button); 
+    draw_button_bar(m_display, OK_button, EDIT_button, UP_button, DOWN_button);
   }
 
   if(offset_changed) {

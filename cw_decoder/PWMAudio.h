@@ -1,3 +1,18 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: PWMAudio.h
+// description: DMA based PWM Audio Outpus
+// License: MIT
+//
+
+
+
 #ifdef ARDUINO_ARCH_RP2040
 
 #ifndef PWM_AUDIO_H
