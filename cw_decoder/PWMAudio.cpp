@@ -2,16 +2,18 @@
 
 #include "PWMAudio.h"
 
-PWMAudio ::PWMAudio() {
-}
-
-void PWMAudio::end() 
+PWMAudio ::PWMAudio()
 {
-    dma_channel_unclaim(pwm_dma);
-    dma_timer_unclaim(dma_timer);
 }
 
-void PWMAudio::begin(const uint8_t audio_pin, const uint32_t audio_sample_rate, const uint32_t cpuFrequencyHz) 
+void PWMAudio::end()
+{
+  dma_channel_unclaim(pwm_dma);
+  dma_timer_unclaim(dma_timer);
+}
+
+void PWMAudio::begin(const uint8_t audio_pin, const uint32_t audio_sample_rate,
+                     const uint32_t cpuFrequencyHz)
 {
   // audio output pin
   gpio_set_function(audio_pin, GPIO_FUNC_PWM);
@@ -35,19 +37,17 @@ void PWMAudio::begin(const uint8_t audio_pin, const uint32_t audio_sample_rate, 
   dma_timer = dma_claim_unused_timer(true);
   dma_timer_set_fraction(dma_timer, 1, cpuFrequencyHz / audio_sample_rate);
   channel_config_set_dreq(&audio_cfg, dma_get_timer_dreq(dma_timer));
-
 }
 
-void PWMAudio ::output_samples(const uint16_t samples[], const uint16_t len) {
+void PWMAudio ::output_samples(const uint16_t samples[], const uint16_t len)
+{
 
   uint32_t start_time = time_us_32();
   dma_channel_wait_for_finish_blocking(pwm_dma);
-  uint32_t idle_time_us = time_us_32()-start_time;
-  dma_channel_configure(pwm_dma, &audio_cfg,
-                        &pwm_hw->slice[audio_pwm_slice_num].cc, samples, len,
+  uint32_t idle_time_us = time_us_32() - start_time;
+  dma_channel_configure(pwm_dma, &audio_cfg, &pwm_hw->slice[audio_pwm_slice_num].cc, samples, len,
                         true);
-  uint32_t block_time_us = (uint32_t)len * 1000000/15000;
+  uint32_t block_time_us = (uint32_t)len * 1000000 / 15000;
   uint32_t busy_time_us = block_time_us - idle_time_us;
-
 }
 #endif

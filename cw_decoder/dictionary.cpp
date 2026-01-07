@@ -4,7 +4,7 @@
 #include <cstring>
 #include <string>
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -224,10 +224,8 @@ void autocorrect(std::string& word)
   }
 }
 
-std::string suggestion(std::string& word, std::string &second, std::string &third)
+std::string suggestion(std::string& word, std::string& second, std::string& third)
 {
-
-
 
   std::string best_word = "";
   int best_ranking = INT_MAX;
@@ -235,7 +233,9 @@ std::string suggestion(std::string& word, std::string &second, std::string &thir
   int second_best_ranking = INT_MAX;
   std::string third_best_word = "";
   int third_best_ranking = INT_MAX;
-  if(word.size()<1) return "";
+  second = third = "";
+  if (word.size() < 1)
+    return "";
 
   // 1️ Find the insertion point via binary search
   int idx = binary_search_prefix_index(AUTOCORRECT_WORDS, NUM_AUTOCORRECT_WORDS, word);
@@ -253,7 +253,7 @@ std::string suggestion(std::string& word, std::string &second, std::string &thir
 
     if (is_prefix) {
 
-      if(RANKINGS[i] < best_ranking) {
+      if (RANKINGS[i] < best_ranking) {
         third_best_word = second_best_word;
         third_best_ranking = second_best_ranking;
         second_best_word = best_word;
@@ -262,23 +262,21 @@ std::string suggestion(std::string& word, std::string &second, std::string &thir
         best_ranking = RANKINGS[i];
       }
 
-      else if(RANKINGS[i] < second_best_ranking) {
+      else if (RANKINGS[i] < second_best_ranking) {
         third_best_word = second_best_word;
         third_best_ranking = second_best_ranking;
         second_best_word = candidate;
         second_best_ranking = RANKINGS[i];
       }
 
-      else if(RANKINGS[i] < third_best_ranking) {
+      else if (RANKINGS[i] < third_best_ranking) {
         third_best_word = candidate;
         third_best_ranking = RANKINGS[i];
       }
-
     }
   }
 
   second = second_best_word;
   third = third_best_word;
   return best_word;
-
 }

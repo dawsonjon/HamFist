@@ -9,7 +9,7 @@
 #include "utils.h"
 #include <algorithm>
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -52,8 +52,9 @@ void c_cw_dsp ::decode(uint16_t channel, std::string text, std::string partial)
   DEBUG_PRINTF("decode on channel %u %s\n", channel, text.c_str());
 }
 
-static void max_magnitude(uint32_t magnitude[], uint32_t threshold[], uint8_t start_bin, uint8_t stop_bin,
-                          uint16_t& max_bin, uint32_t& max, uint32_t &max_threshold)
+static void max_magnitude(uint32_t magnitude[], uint32_t threshold[], uint8_t start_bin,
+                          uint8_t stop_bin, uint16_t& max_bin, uint32_t& max,
+                          uint32_t& max_threshold)
 {
   max = 0;
   max_bin = 0;
@@ -96,15 +97,19 @@ void c_cw_dsp ::process_channels()
     uint32_t max;
     uint32_t max_threshold;
     max_magnitude(magnitude, threshold, start_bin, stop_bin, max_bin, max, max_threshold);
-    DEBUG_PRINTF("channel: %u magnitude: %u threshold: %u noise: %f snr: %f\n value %u", channel, magnitude[max_bin], max_threshold, noise_estimate[max_bin], get_snr(channel), channels[channel].value);
+    DEBUG_PRINTF("channel: %u magnitude: %u threshold: %u noise: %f snr: %f\n value %u", channel,
+                 magnitude[max_bin], max_threshold, noise_estimate[max_bin], get_snr(channel),
+                 channels[channel].value);
 
     // measure signal present periods
     bool value;
-    if(channels[channel].value) {
-      channels[channel].snr = (0.99*channels[channel].snr) + (0.01*max/noise_estimate[max_bin]);
-      value = max > (0.7*max_threshold);
+    if (channels[channel].value) {
+      channels[channel].snr =
+          (0.99 * channels[channel].snr) + (0.01 * max / noise_estimate[max_bin]);
+      value = max > (0.7 * max_threshold);
     } else {
-      channels[channel].snr = (0.999*channels[channel].snr) + (0.001*max/noise_estimate[max_bin]);
+      channels[channel].snr =
+          (0.999 * channels[channel].snr) + (0.001 * max / noise_estimate[max_bin]);
       value = max > max_threshold;
     }
     channels[channel].duration++;
@@ -117,7 +122,8 @@ void c_cw_dsp ::process_channels()
 
     // timeout
     if (channels[channel].duration == TIMEOUT) {
-      if (channels[channel].trained && channels[channel].num_observations > OBSERVATION_BURST_SIZE) {
+      if (channels[channel].trained &&
+          channels[channel].num_observations > OBSERVATION_BURST_SIZE) {
         print_element("decode_bins", channel * CHANNEL_SIZE);
         channels[channel].decoder.decode(channels[channel].observations,
                                          channels[channel].num_observations);
@@ -139,8 +145,8 @@ void c_cw_dsp ::process_channels()
       channels[channel].decoder.decode(channels[channel].observations,
                                        channels[channel].num_observations);
 
-      //check for feasible SNR to perform decode
-      if(get_snr(channel) > 12.0f) {
+      // check for feasible SNR to perform decode
+      if (get_snr(channel) > 12.0f) {
         decode(channel, channels[channel].decoder.get_text(),
                channels[channel].decoder.get_text_partial());
         channels[channel].trained = true;
@@ -157,26 +163,26 @@ void c_cw_dsp ::process_frame()
   print_frame("magnitudes", magnitude);
 
   static bool initialised = false;
-  static uint16_t gate_count[FRAME_SIZE/2];
-  if(!initialised){
-    for(uint16_t idx=0; idx<FRAME_SIZE/2; ++idx) {
-        noise_estimate[idx] = magnitude[idx];
-        gate_count[idx] = 0;
+  static uint16_t gate_count[FRAME_SIZE / 2];
+  if (!initialised) {
+    for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
+      noise_estimate[idx] = magnitude[idx];
+      gate_count[idx] = 0;
     }
     initialised = true;
   }
 
-  for(uint16_t idx=0; idx<FRAME_SIZE/2; ++idx) {
-      if((magnitude[idx] < 2.0 * noise_estimate[idx]) || magnitude[idx] < 5) {
-        noise_estimate[idx] = (0.99 * noise_estimate[idx]) + (0.01 * magnitude[idx]);
-        gate_count[idx] = 0;
-      } else if (gate_count[idx] > 50) {
-        noise_estimate[idx] = (0.9 * noise_estimate[idx]) + (0.1 * magnitude[idx]);
-      } else {
-        gate_count[idx]++;
-      }
-      noise_estimate[idx] = std::max(noise_estimate[idx], 1.0f);
-      threshold[idx] = noise_estimate[idx] * 8;
+  for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
+    if ((magnitude[idx] < 2.0 * noise_estimate[idx]) || magnitude[idx] < 5) {
+      noise_estimate[idx] = (0.99 * noise_estimate[idx]) + (0.01 * magnitude[idx]);
+      gate_count[idx] = 0;
+    } else if (gate_count[idx] > 50) {
+      noise_estimate[idx] = (0.9 * noise_estimate[idx]) + (0.1 * magnitude[idx]);
+    } else {
+      gate_count[idx]++;
+    }
+    noise_estimate[idx] = std::max(noise_estimate[idx], 1.0f);
+    threshold[idx] = noise_estimate[idx] * 9;
   }
 
   print_frame_float("noise_estimate", noise_estimate);
@@ -187,7 +193,9 @@ void c_cw_dsp ::process_frame()
   frame_count++;
 }
 
-c_cw_dsp ::c_cw_dsp() : channels{s_channel(0), s_channel(1), s_channel(2), s_channel(3), s_channel(4), s_channel(5), s_channel(6)}
+c_cw_dsp ::c_cw_dsp()
+    : channels{s_channel(0), s_channel(1), s_channel(2), s_channel(3),
+               s_channel(4), s_channel(5), s_channel(6)}
 {
   // clear buffer
   for (uint16_t idx = 0; idx < FRAME_SIZE; idx++) {
@@ -204,7 +212,7 @@ c_cw_dsp ::c_cw_dsp() : channels{s_channel(0), s_channel(1), s_channel(2), s_cha
     channels[channel].trained = false;
   }
   generate_window(window, FRAME_SIZE);
-  for (uint16_t idx = 0; idx < FRAME_SIZE/2; idx++) {
+  for (uint16_t idx = 0; idx < FRAME_SIZE / 2; idx++) {
     threshold[idx] = 0;
     noise_estimate[idx] = 0;
   }
@@ -221,10 +229,11 @@ uint32_t c_cw_dsp ::get_buffer_percent(int channel)
 
 float c_cw_dsp ::get_snr(int channel)
 {
-  if(channels[channel].snr > 0.0001f)
+  if (channels[channel].snr > 0.0001f)
     //-6.3 converts from 117 to 500Hz bandwidth
-    return 20.0f*log10(channels[channel].snr) - 6.3f;
-  else return -99.0f;
+    return 20.0f * log10(channels[channel].snr) - 6.3f;
+  else
+    return -99.0f;
 }
 
 void c_cw_dsp ::process_sample(int16_t sample)

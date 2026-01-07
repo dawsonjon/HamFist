@@ -1,0 +1,15 @@
+python image2fbuf.py OK_button.png
+python image2fbuf.py CANCEL_button.png
+python image2fbuf.py UP_button.png
+python image2fbuf.py DOWN_button.png
+python image2fbuf.py EDIT_button.png
+python image2fbuf.py blank_button.png
+python image2fbuf.py blank_heading.png
+
+cat OK_button.h > buttons.h
+cat CANCEL_button.h >> buttons.h
+cat UP_button.h >> buttons.h
+cat DOWN_button.h >> buttons.h
+cat EDIT_button.h >> buttons.h
+cat blank_button.h >> buttons.h
+cat blank_heading.h >> buttons.h
