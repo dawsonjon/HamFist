@@ -20,11 +20,11 @@
 class c_cw_encoder
 {
 
-  private:
+private:
   double m_Fs_Hz;
   uint32_t m_phase;
   int16_t m_sin_table[1024];
-  const char * m_string;
+  const char* m_string;
   char m_char;
   uint32_t m_gap_samples;
   uint32_t m_samples_to_send;
@@ -35,15 +35,15 @@ class c_cw_encoder
   std::string m_dots_and_dashes;
   void get_tone();
 
-  public:
+public:
   c_cw_encoder(double fs_Hz);
   int16_t get_sample();
-  void set_string(const char *string);
+  void set_string(const char* string);
   void set_wpm(uint16_t wpm);
   void set_frequency_Hz(uint32_t frequency_Hz);
   bool is_done();
   uint16_t get_cursor();
-
+  void terminate();
 };
 
 #endif

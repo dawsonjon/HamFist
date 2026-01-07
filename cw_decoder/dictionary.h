@@ -1,15 +1,14 @@
 #ifndef __dictionary_h__
 #define __dictionary_h__
 
-
-//#include <algorithm>
-//#include <cassert>
-//#include <climits>
-//#include <cmath>
-//#include <cstring>
-//#include <numeric>
-//#include <string>
-//#include <vector>
+// #include <algorithm>
+// #include <cassert>
+// #include <climits>
+// #include <cmath>
+// #include <cstring>
+// #include <numeric>
+// #include <string>
+// #include <vector>
 
 // #define LOGGING
 
@@ -30,7 +29,7 @@ bool binary_search_prefix(const char* words[], int num_words, const std::string&
 int binary_search_insertion_point(const char* words[], int num_words, const std::string& key);
 int binary_search_ranking(const char* words[], int num_words, const std::string& target);
 int levenshtein_distance_1(const char* a, const char* b);
-std::string suggestion(std::string& word, std::string &second, std::string &third);
+std::string suggestion(std::string& word, std::string& second, std::string& third);
 void autocorrect(std::string& word);
 
 #endif

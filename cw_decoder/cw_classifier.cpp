@@ -1,7 +1,7 @@
 #include "cw_classifier.h"
 #include <vector>
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -211,10 +211,10 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
         (off_histogram[idx - 1] + off_histogram[idx] + off_histogram[idx + 1]);
   }
 
-  if(m_channel_number == 0) {
+  if (m_channel_number == 0) {
     DEBUG_PRINTF("off histogram\n");
     for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; idx++) {
-      DEBUG_PRINTF("%i %i\n", idx*BIN_WIDTH, smoothed_histogram[idx]);
+      DEBUG_PRINTF("%i %i\n", idx * BIN_WIDTH, smoothed_histogram[idx]);
     }
   }
 

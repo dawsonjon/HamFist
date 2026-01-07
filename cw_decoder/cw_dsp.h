@@ -28,7 +28,7 @@ struct s_channel
   c_cw_decoder decoder;
   bool trained;
   float snr;
-  s_channel(int channel_number) : decoder(channel_number){}
+  s_channel(int channel_number) : decoder(channel_number) {}
 };
 
 class c_cw_dsp
