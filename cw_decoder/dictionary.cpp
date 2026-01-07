@@ -1,3 +1,16 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: dictionary.cpp
+// description: Dictionary lookup functionality including autocorrect and autocomplete
+// License: MIT
+//
+
 #include "cw_data.h"
 #include <cassert>
 #include <climits>

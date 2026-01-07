@@ -6,8 +6,8 @@
 //                                  |___/
 //
 // Copyright (c) Jonathan P Dawson 2025
-// filename: sstv_encoder.h
-// description: class to encode letters into morse code audio
+// filename: cw_encoder.h
+// description: class to encode morse code audio
 // License: MIT
 //
 

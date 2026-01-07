@@ -1,3 +1,16 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: cw_dsp.cpp
+// description: Multi-Channel FFT-based DSP functionality for CW decoder
+// License: MIT
+//
+
 #include <cassert>
 #include <cmath>
 #include <cstdint>

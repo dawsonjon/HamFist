@@ -1,14 +1,18 @@
+//  _  ___  _   _____ _     _
+// / |/ _ \/ | |_   _| |__ (_)_ __   __ _ ___
+// | | | | | |   | | | '_ \| | '_ \ / _` / __|
+// | | |_| | |   | | | | | | | | | | (_| \__ \.
+// |_|\___/|_|   |_| |_| |_|_|_| |_|\__, |___/
+//                                  |___/
+//
+// Copyright (c) Jonathan P Dawson 2025
+// filename: dictionary.h
+// description: dictionary related functions
+// License: MIT
+//
+
 #ifndef __dictionary_h__
 #define __dictionary_h__
-
-// #include <algorithm>
-// #include <cassert>
-// #include <climits>
-// #include <cmath>
-// #include <cstring>
-// #include <numeric>
-// #include <string>
-// #include <vector>
 
 // #define LOGGING
 
