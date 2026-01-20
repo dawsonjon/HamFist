@@ -1,0 +1,1564 @@
+duration: 2636.800049 symbol: -32096.931641 letter: -7429.366211 space: 0.000000
+0 symbol_gap "" ""  -32096.931641
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+1 dot "" "" . -32128.849609
+1 dash "" "" - -32097.050781
+1 dotdash "" "" .- -32140.912109
+1 dashdot "" "" -. -32140.912109
+1 dashdash "" "" -- -32263.201172
+1 dotdot "" "" .. -32099.068359
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+2 symbol_gap "" "" - -32097.097656
+2 letter_gap "" "T"  -32109.246094
+language bonus0.000000
+2 word_gap "T " ""  -32617.814453
+2 symbol_gap "" "" .. -32099.115234
+2 letter_gap "" "I"  -32111.263672
+language bonus4.000000
+2 word_gap "I " ""  -32615.832031
+2 symbol_gap "" "" . -32128.896484
+2 letter_gap "" "E"  -32141.044922
+language bonus4.000000
+2 word_gap "E " ""  -32645.613281
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+3 dot "" "" -. -32097.197266
+3 dash "" "" -- -32141.082031
+3 dotdash "" "" -.- -32282.306641
+3 dashdot "" "" --. -32282.306641
+3 dashdash "" "" --- -32491.990234
+3 dotdot "" "" -.. -32153.068359
+3 dot "" "" ... -32099.214844
+3 dash "" "" ..- -32143.099609
+3 dotdash "" "" ...- -32284.324219
+3 dashdot "" "" ..-. -32284.324219
+3 dashdash "" "" ..-- -32494.007812
+3 dotdot "" "" .... -32155.085938
+3 dot "" "T" . -32109.345703
+3 dash "" "T" - -32153.230469
+3 dotdash "" "T" .- -32294.455078
+3 dashdot "" "T" -. -32294.455078
+3 dashdash "" "T" -- -32504.138672
+3 dotdot "" "T" .. -32165.216797
+duration: 59.733337 symbol: -0.141713 letter: -10.214973 space: -494.095917
+4 symbol_gap "" "" -. -32097.339844
+4 letter_gap "" "N"  -32107.412109
+language bonus0.000000
+4 word_gap "N " ""  -32591.292969
+4 symbol_gap "" "" ... -32099.357422
+4 letter_gap "" "S"  -32109.429688
+language bonus4.000000
+4 word_gap "S " ""  -32589.310547
+4 symbol_gap "" "T" . -32109.488281
+4 letter_gap "" "TE"  -32118.560547
+language bonus0.000000
+4 word_gap "TE " ""  -32603.441406
+duration: 34.133335 dot: -0.660914 dash: -52.035797
+5 dot "" "" -.. -32098.000000
+5 dash "" "" -.- -32149.375000
+5 dotdash "" "" -..- -32298.712891
+5 dashdot "" "" -.-. -32298.712891
+5 dashdash "" "" -.-- -32515.679688
+5 dotdot "" "" -... -32162.191406
+5 dot "" "" .... -32100.017578
+5 dash "" "" ...- -32151.392578
+5 dotdash "" "" ....- -32300.730469
+5 dashdot "" "S" -. -32300.730469
+5 dashdash "" "" ...-- -32517.697266
+5 dotdot "" "" ..... -32164.208984
+5 dot "" "N" . -32108.072266
+5 dash "" "N" - -32159.447266
+5 dotdash "" "N" .- -32308.785156
+5 dashdot "" "N" -. -32308.785156
+5 dashdash "" "N" -- -32525.751953
+5 dotdot "" "N" .. -32172.263672
+duration: 119.466675 symbol: -20.433552 letter: -1.263684 space: -327.044342
+6 symbol_gap "" "" -.. -32118.433594
+6 letter_gap "" "D"  -32099.263672
+language bonus0.000000
+6 word_gap "D " ""  -32425.044922
+6 symbol_gap "" "" .... -32120.451172
+6 letter_gap "" "H"  -32101.281250
+language bonus0.000000
+6 word_gap "H " ""  -32427.062500
+6 symbol_gap "" "N" . -32128.505859
+6 letter_gap "" "NE"  -32108.335938
+language bonus4.000000
+6 word_gap "NE " ""  -32431.117188
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+7 dot "" "D" . -32099.296875
+7 dash "" "D" - -32135.875000
+7 dotdash "" "D" .- -32268.986328
+7 dashdot "" "D" -. -32268.986328
+7 dashdash "" "D" -- -32471.384766
+7 dotdot "" "D" .. -32147.029297
+7 dot "" "H" . -32101.314453
+7 dash "" "H" - -32137.892578
+7 dotdash "" "H" .- -32271.003906
+7 dashdot "" "H" -. -32271.003906
+7 dashdash "" "H" -- -32473.402344
+7 dotdot "" "H" .. -32149.046875
+7 dot "" "NE" . -32108.369141
+7 dash "" "NE" - -32144.947266
+7 dotdash "" "NE" .- -32278.058594
+7 dashdot "" "NE" -. -32278.058594
+7 dashdash "" "NE" -- -32480.457031
+7 dotdot "" "NE" .. -32156.101562
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+8 symbol_gap "" "D" . -32099.343750
+8 letter_gap "" "DE"  -32110.492188
+language bonus4.000000
+8 word_gap "DE " ""  -32616.060547
+8 symbol_gap "" "H" . -32101.361328
+8 letter_gap "" "HE"  -32112.509766
+language bonus4.000000
+8 word_gap "HE " ""  -32618.078125
+8 symbol_gap "" "NE" . -32108.416016
+8 letter_gap "" "NEE"  -32119.564453
+language bonus0.000000
+8 word_gap "NEE " ""  -32629.132812
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+9 dot "" "D" .. -32125.892578
+9 dash "" "D" .- -32099.400391
+9 dotdash "" "D" ..- -32151.375000
+9 dashdot "" "D" .-. -32151.375000
+9 dashdash "" "D" .-- -32280.945312
+9 dotdot "" "D" ... -32102.248047
+9 dot "" "H" .. -32127.910156
+9 dash "" "H" .- -32101.417969
+9 dotdash "" "H" ..- -32153.392578
+9 dashdot "" "H" .-. -32153.392578
+9 dashdash "" "H" .-- -32282.962891
+9 dotdot "" "H" ... -32104.265625
+9 dot "" "NE" .. -32134.964844
+9 dash "" "NE" .- -32108.472656
+9 dotdash "" "NE" ..- -32160.447266
+9 dashdot "" "NE" .-. -32160.447266
+9 dashdash "" "NE" .-- -32290.017578
+9 dotdot "" "NE" ... -32111.320312
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+10 symbol_gap "" "D" .- -32099.447266
+10 letter_gap "" "DA"  -32110.595703
+language bonus0.000000
+10 word_gap "DA " ""  -32620.164062
+10 symbol_gap "" "H" .- -32101.464844
+10 letter_gap "" "HA"  -32112.613281
+language bonus4.000000
+10 word_gap "HA " ""  -32618.181641
+10 symbol_gap "" "D" ... -32102.294922
+10 letter_gap "" "DS"  -32113.443359
+language bonus0.000000
+10 word_gap "DS " ""  -32623.011719
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+11 dot "" "D" .-. -32099.480469
+11 dash "" "D" .-- -32136.058594
+11 dotdash "" "D" .-.- -32269.169922
+11 dashdot "" "D" .--. -32269.169922
+11 dashdash "" "D" .--- -32471.568359
+11 dotdot "" "D" .-.. -32147.212891
+11 dot "" "H" .-. -32101.498047
+11 dash "" "H" .-- -32138.076172
+11 dotdash "" "H" .-.- -32271.187500
+11 dashdot "" "H" .--. -32271.187500
+11 dashdash "" "H" .--- -32473.585938
+11 dotdot "" "H" .-.. -32149.230469
+11 dot "" "D" .... -32102.328125
+11 dash "" "D" ...- -32138.906250
+11 dotdash "" "D" ....- -32272.017578
+11 dashdot "" "DS" -. -32272.017578
+11 dashdash "" "D" ...-- -32474.416016
+11 dotdot "" "D" ..... -32150.060547
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+12 symbol_gap "" "D" .-. -32099.527344
+12 letter_gap "" "DR"  -32110.675781
+language bonus4.000000
+12 word_gap "DR " ""  -32616.244141
+12 symbol_gap "" "H" .-. -32101.544922
+12 letter_gap "" "HR"  -32112.693359
+language bonus0.000000
+12 word_gap "HR " ""  -32622.261719
+12 symbol_gap "" "D" .... -32102.375000
+12 letter_gap "" "DH"  -32114.523438
+language bonus0.000000
+12 word_gap "DH " ""  -32623.091797
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+13 dot "" "D" .-.. -32099.626953
+13 dash "" "D" .-.- -32143.511719
+13 dotdash "" "DR" .- -32284.736328
+13 dashdot "" "D" .-.-. -32284.736328
+13 dashdash "" "DR" -- -32494.419922
+13 dotdot "" "DR" .. -32155.498047
+13 dot "" "H" .-.. -32101.644531
+13 dash "" "H" .-.- -32145.529297
+13 dotdash "" "HR" .- -32286.753906
+13 dashdot "" "H" .-.-. -32286.753906
+13 dashdash "" "HR" -- -32496.437500
+13 dotdot "" "HR" .. -32157.515625
+13 dot "" "D" ..... -32102.474609
+13 dash "" "D" ....- -32146.359375
+13 dotdash "" "DH" .- -32287.583984
+13 dashdot "" "DH" -. -32287.583984
+13 dashdash "" "DH" -- -32497.267578
+13 dotdot "" "DH" .. -32158.345703
+duration: 145.066681 symbol: -39.643482 letter: -0.055771 space: -265.964233
+14 symbol_gap "" "D" .-.. -32139.269531
+14 letter_gap "" "DL"  -32099.683594
+language bonus0.000000
+14 word_gap "DL " ""  -32365.591797
+14 symbol_gap "" "H" .-.. -32141.287109
+14 letter_gap "" "HL"  -32101.701172
+language bonus0.000000
+14 word_gap "HL " ""  -32367.609375
+14 symbol_gap "" "D" ..... -32142.117188
+14 letter_gap "" "D5"  -32102.531250
+language bonus0.000000
+14 word_gap "D5 " ""  -32368.439453
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+15 dot "" "DL" . -32131.601562
+15 dash "" "DL" - -32099.802734
+15 dotdash "" "DL" .- -32143.664062
+15 dashdot "" "DL" -. -32143.664062
+15 dashdash "" "DL" -- -32265.953125
+15 dotdot "" "DL" .. -32101.820312
+15 dot "" "HL" . -32133.619141
+15 dash "" "HL" - -32101.820312
+15 dotdash "" "HL" .- -32145.681641
+15 dashdot "" "HL" -. -32145.681641
+15 dashdash "" "HL" -- -32267.970703
+15 dotdot "" "HL" .. -32103.837891
+15 dot "" "D5" . -32134.449219
+15 dash "" "D5" - -32102.650391
+15 dotdash "" "D5" .- -32146.511719
+15 dashdot "" "D5" -. -32146.511719
+15 dashdash "" "D5" -- -32268.800781
+15 dotdot "" "D5" .. -32104.667969
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+16 symbol_gap "" "DL" - -32099.849609
+16 letter_gap "" "DLT"  -32111.998047
+language bonus0.000000
+16 word_gap "DLT " ""  -32620.566406
+16 symbol_gap "" "HL" - -32101.867188
+16 letter_gap "" "HLT"  -32114.015625
+language bonus0.000000
+16 word_gap "HLT " ""  -32622.583984
+16 symbol_gap "" "DL" .. -32101.867188
+16 letter_gap "" "DLI"  -32114.015625
+language bonus0.000000
+16 word_gap "DLI " ""  -32622.583984
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+17 dot "" "DL" -. -32131.767578
+17 dash "" "DL" -- -32099.968750
+17 dotdash "" "DL" -.- -32143.830078
+17 dashdot "" "DL" --. -32143.830078
+17 dashdash "" "DL" --- -32266.119141
+17 dotdot "" "DL" -.. -32101.986328
+17 dot "" "DL" ... -32133.785156
+17 dash "" "DL" ..- -32101.986328
+17 dotdash "" "DL" ...- -32145.847656
+17 dashdot "" "DL" ..-. -32145.847656
+17 dashdash "" "DL" ..-- -32268.136719
+17 dotdot "" "DL" .... -32104.003906
+17 dot "" "HL" -. -32133.785156
+17 dash "" "HL" -- -32101.986328
+17 dotdash "" "HL" -.- -32145.847656
+17 dashdot "" "HL" --. -32145.847656
+17 dashdash "" "HL" --- -32268.136719
+17 dotdot "" "HL" -.. -32104.003906
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+18 symbol_gap "" "DL" -- -32100.015625
+18 letter_gap "" "DLM"  -32112.164062
+language bonus0.000000
+18 word_gap "DLM " ""  -32620.732422
+18 symbol_gap "" "DL" ..- -32102.033203
+18 letter_gap "" "DLU"  -32114.181641
+language bonus0.000000
+18 word_gap "DLU " ""  -32622.750000
+18 symbol_gap "" "DL" -.. -32102.033203
+18 letter_gap "" "DLD"  -32114.181641
+language bonus0.000000
+18 word_gap "DLD " ""  -32622.750000
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+19 dot "" "DL" --. -32126.564453
+19 dash "" "DL" --- -32100.072266
+19 dotdash "" "DL" --.- -32152.046875
+19 dashdot "" "DL" ---. -32152.046875
+19 dashdash "" "DL" ---- -32281.617188
+19 dotdot "" "DL" --.. -32102.919922
+19 dot "" "DL" -... -32128.582031
+19 dash "" "DL" -..- -32102.089844
+19 dotdash "" "DL" -...- -32154.064453
+19 dashdot "" "DL" -..-. -32154.064453
+19 dashdash "" "DLD" -- -32283.634766
+19 dotdot "" "DL" -.... -32104.937500
+19 dot "" "DL" ..-. -32128.582031
+19 dash "" "DL" ..-- -32102.089844
+19 dotdash "" "DLU" .- -32154.064453
+19 dashdot "" "DL" ..--. -32154.064453
+19 dashdash "" "DL" ..--- -32283.634766
+19 dotdot "" "DLU" .. -32104.937500
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+20 symbol_gap "" "DL" --- -32100.119141
+20 letter_gap "" "DLO"  -32112.267578
+language bonus0.000000
+20 word_gap "DLO " ""  -32620.835938
+20 symbol_gap "" "DL" ..-- -32102.136719
+20 symbol_gap "" "DL" -..- -32102.136719
+20 letter_gap "" "DLX"  -32114.285156
+language bonus0.000000
+20 word_gap "DLX " ""  -32622.853516
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+21 dot "" "DL" ---. -32132.037109
+21 dash "" "DL" ---- -32100.238281
+21 dotdash "" "DLO" .- -32144.099609
+21 dashdot "" "DL" ----. -32144.099609
+21 dashdash "" "DL" ----- -32266.388672
+21 dotdot "" "DL" ---.. -32102.255859
+21 dot "" "DL" -..-. -32134.054688
+21 dash2 "" "DLX" - -32102.255859
+21 dotdash "" "DLX" .- -32146.117188
+21 dashdot "" "DLX" -. -32146.117188
+21 dashdash "" "DLX" -- -32268.406250
+21 dotdot "" "DLX" .. -32104.273438
+21 dot "" "DL" ..--. -32134.054688
+21 dash "" "DL" ..--- -32102.255859
+21 dotdot "" "DL" ..--.. -32104.273438
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+22 symbol_gap "" "DL" ---- -32100.285156
+22 symbol_gap "" "DLX" - -32102.302734
+22 letter_gap "" "DLXT"  -32114.451172
+language bonus0.000000
+22 word_gap "DLXT " ""  -32623.019531
+22 symbol_gap "" "DL" ---.. -32102.302734
+22 letter_gap "" "DL8"  -32114.451172
+language bonus0.000000
+22 word_gap "DL8 " ""  -32623.019531
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+23 dot "" "DL" ----. -32100.384766
+23 dash "" "DL" ----- -32144.269531
+23 dot "" "DL" ---... -32102.402344
+23 dash2 "" "DL8" - -32146.287109
+23 dotdash "" "DL8" .- -32287.511719
+23 dashdot "" "DL8" -. -32287.511719
+23 dashdash "" "DL8" -- -32497.195312
+23 dotdot "" "DL8" .. -32158.273438
+23 dot "" "DLX" -. -32102.402344
+23 dash "" "DLX" -- -32146.287109
+23 dotdash "" "DLX" -.- -32287.511719
+23 dashdot "" "DLX" --. -32287.511719
+23 dashdash "" "DLX" --- -32497.195312
+23 dotdot "" "DLX" -.. -32158.273438
+duration: 1408.000122 symbol: -8819.127930 letter: -1898.414062 space: 0.000000
+24 symbol_gap "" "DL" ----. -40919.511719
+24 letter_gap "" "DL9"  -33998.796875
+language bonus0.000000
+24 word_gap "DL9 " ""  -32100.384766
+24 symbol_gap "" "DLX" -. -40921.531250
+24 letter_gap "" "DLXN"  -34000.816406
+language bonus0.000000
+24 word_gap "DLXN " ""  -32102.402344
+24 symbol_gap "" "DL" ---... -40921.531250
+24 letter_gap "" "DL:"  -34000.816406
+language bonus0.000000
+24 word_gap "DL: " ""  -32102.402344
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+25 dot "DL9 " "" . -32126.933594
+25 dash "DL9 " "" - -32100.441406
+25 dotdash "DL9 " "" .- -32152.416016
+25 dashdot "DL9 " "" -. -32152.416016
+25 dashdash "DL9 " "" -- -32281.986328
+25 dotdot "DL9 " "" .. -32103.289062
+25 dot "DL: " "" . -32128.951172
+25 dash "DL: " "" - -32102.458984
+25 dotdash "DL: " "" .- -32154.433594
+25 dashdot "DL: " "" -. -32154.433594
+25 dashdash "DL: " "" -- -32284.003906
+25 dotdot "DL: " "" .. -32105.306641
+25 dot "DLXN " "" . -32128.951172
+25 dash "DLXN " "" - -32102.458984
+25 dotdash "DLXN " "" .- -32154.433594
+25 dashdot "DLXN " "" -. -32154.433594
+25 dashdash "DLXN " "" -- -32284.003906
+25 dotdot "DLXN " "" .. -32105.306641
+duration: 42.666668 symbol: -0.652095 letter: -14.349498 space: -548.133057
+26 symbol_gap "DL9 " "" - -32101.093750
+26 letter_gap "DL9 " "T"  -32114.791016
+language bonus0.000000
+26 word_gap "DL9 T " ""  -32648.574219
+26 symbol_gap "DLXN " "" - -32103.111328
+26 letter_gap "DLXN " "T"  -32116.808594
+language bonus0.000000
+26 word_gap "DLXN T " ""  -32650.591797
+26 symbol_gap "DL: " "" - -32103.111328
+26 letter_gap "DL: " "T"  -32116.808594
+language bonus0.000000
+26 word_gap "DL: T " ""  -32650.591797
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+27 dot "DL9 " "" -. -32101.126953
+27 dash "DL9 " "" -- -32137.705078
+27 dotdash "DL9 " "" -.- -32270.816406
+27 dashdot "DL9 " "" --. -32270.816406
+27 dashdash "DL9 " "" --- -32473.214844
+27 dotdot "DL9 " "" -.. -32148.859375
+27 dot "DL: " "" -. -32103.144531
+27 dash "DL: " "" -- -32139.722656
+27 dotdash "DL: " "" -.- -32272.833984
+27 dashdot "DL: " "" --. -32272.833984
+27 dashdash "DL: " "" --- -32475.232422
+27 dotdot "DL: " "" -.. -32150.876953
+27 dot "DLXN " "" -. -32103.144531
+27 dash "DLXN " "" -- -32139.722656
+27 dotdash "DLXN " "" -.- -32272.833984
+27 dashdot "DLXN " "" --. -32272.833984
+27 dashdash "DLXN " "" --- -32475.232422
+27 dotdot "DLXN " "" -.. -32150.876953
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+28 symbol_gap "DL9 " "" -. -32101.173828
+28 letter_gap "DL9 " "N"  -32113.322266
+language bonus0.000000
+28 word_gap "DL9 N " ""  -32621.890625
+28 symbol_gap "DLXN " "" -. -32103.191406
+28 letter_gap "DLXN " "N"  -32115.339844
+language bonus0.000000
+28 word_gap "DLXN N " ""  -32623.908203
+28 symbol_gap "DL: " "" -. -32103.191406
+28 letter_gap "DL: " "N"  -32115.339844
+language bonus0.000000
+28 word_gap "DL: N " ""  -32623.908203
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+29 dot "DL9 " "" -.. -32127.722656
+29 dash "DL9 " "" -.- -32101.230469
+29 dotdash "DL9 " "" -..- -32153.205078
+29 dashdot "DL9 " "" -.-. -32153.205078
+29 dashdash "DL9 " "" -.-- -32282.775391
+29 dotdot "DL9 " "" -... -32104.078125
+29 dot "DL: " "" -.. -32129.740234
+29 dash "DL: " "" -.- -32103.248047
+29 dotdash "DL: " "" -..- -32155.222656
+29 dashdot "DL: " "" -.-. -32155.222656
+29 dashdash "DL: " "" -.-- -32284.792969
+29 dotdot "DL: " "" -... -32106.095703
+29 dot "DLXN " "" -.. -32129.740234
+29 dash "DLXN " "" -.- -32103.248047
+29 dotdash "DLXN " "" -..- -32155.222656
+29 dashdot "DLXN " "" -.-. -32155.222656
+29 dashdash "DLXN " "" -.-- -32284.792969
+29 dotdot "DLXN " "" -... -32106.095703
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+30 symbol_gap "DL9 " "" -.- -32101.277344
+30 letter_gap "DL9 " "K"  -32113.425781
+language bonus4.000000
+30 word_gap "DL9 K " ""  -32617.994141
+30 symbol_gap "DLXN " "" -.- -32103.294922
+30 letter_gap "DLXN " "K"  -32115.443359
+language bonus4.000000
+30 word_gap "DLXN K " ""  -32620.011719
+30 symbol_gap "DL: " "" -.- -32103.294922
+30 letter_gap "DL: " "K"  -32115.443359
+language bonus4.000000
+30 word_gap "DL: K " ""  -32620.011719
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+31 dot "DL9 " "" -.-. -32101.310547
+31 dash "DL9 " "" -.-- -32137.888672
+31 dotdash "DL9 " "K" .- -32271.000000
+31 dashdot "DL9 " "" -.--. -32271.000000
+31 dashdash "DL9 " "K" -- -32473.398438
+31 dotdot "DL9 " "K" .. -32149.042969
+31 dot "DL: " "" -.-. -32103.328125
+31 dash "DL: " "" -.-- -32139.906250
+31 dotdash "DL: " "K" .- -32273.017578
+31 dashdot "DL: " "" -.--. -32273.017578
+31 dashdash "DL: " "K" -- -32475.416016
+31 dotdot "DL: " "K" .. -32151.060547
+31 dot "DLXN " "" -.-. -32103.328125
+31 dash "DLXN " "" -.-- -32139.906250
+31 dotdash "DLXN " "K" .- -32273.017578
+31 dashdot "DLXN " "" -.--. -32273.017578
+31 dashdash "DLXN " "K" -- -32475.416016
+31 dotdot "DLXN " "K" .. -32151.060547
+duration: 153.600006 symbol: -47.448566 letter: -0.003580 space: -247.006012
+32 symbol_gap "DL9 " "" -.-. -32148.759766
+32 letter_gap "DL9 " "C"  -32101.314453
+language bonus4.000000
+32 word_gap "DL9 C " ""  -32344.316406
+32 symbol_gap "DLXN " "" -.-. -32150.777344
+32 letter_gap "DLXN " "C"  -32103.332031
+language bonus4.000000
+32 word_gap "DLXN C " ""  -32346.333984
+32 symbol_gap "DL: " "" -.-. -32150.777344
+32 letter_gap "DL: " "C"  -32103.332031
+language bonus4.000000
+32 word_gap "DL: C " ""  -32346.333984
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+33 dot "DL9 " "C" . -32133.232422
+33 dash "DL9 " "C" - -32101.433594
+33 dotdash "DL9 " "C" .- -32145.294922
+33 dashdot "DL9 " "C" -. -32145.294922
+33 dashdash "DL9 " "C" -- -32267.583984
+33 dotdot "DL9 " "C" .. -32103.451172
+33 dot "DL: " "C" . -32135.250000
+33 dash "DL: " "C" - -32103.451172
+33 dotdash "DL: " "C" .- -32147.312500
+33 dashdot "DL: " "C" -. -32147.312500
+33 dashdash "DL: " "C" -- -32269.601562
+33 dotdot "DL: " "C" .. -32105.468750
+33 dot "DLXN " "C" . -32135.250000
+33 dash "DLXN " "C" - -32103.451172
+33 dotdash "DLXN " "C" .- -32147.312500
+33 dashdot "DLXN " "C" -. -32147.312500
+33 dashdash "DLXN " "C" -- -32269.601562
+33 dotdot "DLXN " "C" .. -32105.468750
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+34 symbol_gap "DL9 " "C" - -32101.480469
+34 letter_gap "DL9 " "CT"  -32112.628906
+language bonus0.000000
+34 word_gap "DL9 CT " ""  -32622.197266
+34 symbol_gap "DL: " "C" - -32103.498047
+34 letter_gap "DL: " "CT"  -32114.646484
+language bonus0.000000
+34 word_gap "DL: CT " ""  -32624.214844
+34 symbol_gap "DL9 " "C" .. -32103.498047
+34 letter_gap "DL9 " "CI"  -32114.646484
+language bonus0.000000
+34 word_gap "DL9 CI " ""  -32624.214844
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+35 dot "DL9 " "C" -. -32128.029297
+35 dash "DL9 " "C" -- -32101.537109
+35 dotdash "DL9 " "C" -.- -32153.511719
+35 dashdot "DL9 " "C" --. -32153.511719
+35 dashdash "DL9 " "C" --- -32283.082031
+35 dotdot "DL9 " "C" -.. -32104.384766
+35 dot "DL9 " "C" ... -32130.046875
+35 dash "DL9 " "C" ..- -32103.554688
+35 dotdash "DL9 " "C" ...- -32155.529297
+35 dashdot "DL9 " "C" ..-. -32155.529297
+35 dashdash "DL9 " "C" ..-- -32285.099609
+35 dotdot "DL9 " "C" .... -32106.402344
+35 dot "DL: " "C" -. -32130.046875
+35 dash "DL: " "C" -- -32103.554688
+35 dotdash "DL: " "C" -.- -32155.529297
+35 dashdot "DL: " "C" --. -32155.529297
+35 dashdash "DL: " "C" --- -32285.099609
+35 dotdot "DL: " "C" -.. -32106.402344
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+36 symbol_gap "DL9 " "C" -- -32101.583984
+36 letter_gap "DL9 " "CM"  -32112.732422
+language bonus0.000000
+36 word_gap "DL9 CM " ""  -32622.300781
+36 symbol_gap "DL: " "C" -- -32103.601562
+36 letter_gap "DL: " "CM"  -32114.750000
+language bonus0.000000
+36 word_gap "DL: CM " ""  -32624.318359
+36 symbol_gap "DL9 " "C" ..- -32103.601562
+36 letter_gap "DL9 " "CU"  -32114.750000
+language bonus4.000000
+36 word_gap "DL9 CU " ""  -32620.318359
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+37 dot "DL9 " "C" --. -32101.617188
+37 dash "DL9 " "C" --- -32138.195312
+37 dotdash "DL9 " "C" --.- -32271.306641
+37 dashdot "DL9 " "C" ---. -32271.306641
+37 dashdash "DL9 " "C" ---- -32473.705078
+37 dotdot "DL9 " "C" --.. -32149.349609
+37 dot "DL9 " "C" ..-. -32103.634766
+37 dash "DL9 " "C" ..-- -32140.212891
+37 dotdash "DL9 " "CU" .- -32273.324219
+37 dashdot "DL9 " "C" ..--. -32273.324219
+37 dashdash "DL9 " "C" ..--- -32475.722656
+37 dotdot "DL9 " "CU" .. -32151.367188
+37 dot "DL: " "C" --. -32103.634766
+37 dash "DL: " "C" --- -32140.212891
+37 dotdash "DL: " "C" --.- -32273.324219
+37 dashdot "DL: " "C" ---. -32273.324219
+37 dashdash "DL: " "C" ---- -32475.722656
+37 dotdot "DL: " "C" --.. -32151.367188
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+38 symbol_gap "DL9 " "C" --. -32101.664062
+38 letter_gap "DL9 " "CG"  -32112.812500
+language bonus0.000000
+38 word_gap "DL9 CG " ""  -32622.380859
+38 symbol_gap "DL: " "C" --. -32103.681641
+38 letter_gap "DL: " "CG"  -32114.830078
+language bonus0.000000
+38 word_gap "DL: CG " ""  -32624.398438
+38 symbol_gap "DL9 " "C" ..-. -32103.681641
+38 letter_gap "DL9 " "CF"  -32114.830078
+language bonus0.000000
+38 word_gap "DL9 CF " ""  -32624.398438
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+39 dot "DL9 " "C" --.. -32128.212891
+39 dash "DL9 " "C" --.- -32101.720703
+39 dotdash "DL9 " "C" --..- -32153.695312
+39 dashdot "DL9 " "CG" -. -32153.695312
+39 dashdash "DL9 " "CG" -- -32283.265625
+39 dotdot "DL9 " "C" --... -32104.568359
+39 dot2 "DL9 " "CF" . -32130.230469
+39 dash2 "DL9 " "CF" - -32103.738281
+39 dotdash "DL9 " "CF" .- -32155.712891
+39 dashdot "DL9 " "CF" -. -32155.712891
+39 dashdash "DL9 " "CF" -- -32285.283203
+39 dotdot "DL9 " "CF" .. -32106.585938
+39 dot "DL: " "C" --.. -32130.230469
+39 dash "DL: " "C" --.- -32103.738281
+39 dotdash "DL: " "C" --..- -32155.712891
+39 dashdot "DL: " "CG" -. -32155.712891
+39 dashdash "DL: " "CG" -- -32285.283203
+39 dotdot "DL: " "C" --... -32106.585938
+duration: 853.333374 symbol: -3072.610352 letter: -592.009888 space: 0.000000
+40 symbol_gap "DL9 " "C" --.- -35174.332031
+40 letter_gap "DL9 " "CQ"  -32692.730469
+language bonus4.000000
+40 word_gap "DL9 CQ " ""  -32097.720703
+40 symbol_gap "DL: " "C" --.- -35176.347656
+40 letter_gap "DL: " "CQ"  -32694.748047
+language bonus4.000000
+40 word_gap "DL: CQ " ""  -32099.738281
+40 symbol_gap "DL9 " "CF" - -35176.347656
+40 letter_gap "DL9 " "CFT"  -32695.748047
+language bonus0.000000
+40 word_gap "DL9 CFT " ""  -32103.738281
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+41 dot "DL9 CQ " "" . -32129.638672
+41 dash "DL9 CQ " "" - -32097.839844
+41 dotdash "DL9 CQ " "" .- -32141.701172
+41 dashdot "DL9 CQ " "" -. -32141.701172
+41 dashdash "DL9 CQ " "" -- -32263.990234
+41 dotdot "DL9 CQ " "" .. -32099.857422
+41 dot "DL: CQ " "" . -32131.656250
+41 dash "DL: CQ " "" - -32099.857422
+41 dotdash "DL: CQ " "" .- -32143.718750
+41 dashdot "DL: CQ " "" -. -32143.718750
+41 dashdash "DL: CQ " "" -- -32266.007812
+41 dotdot "DL: CQ " "" .. -32101.875000
+41 dot "DL9 CFT " "" . -32135.656250
+41 dash "DL9 CFT " "" - -32103.857422
+41 dotdash "DL9 CFT " "" .- -32147.718750
+41 dashdot "DL9 CFT " "" -. -32147.718750
+41 dashdash "DL9 CFT " "" -- -32270.007812
+41 dotdot "DL9 CFT " "" .. -32105.875000
+duration: 42.666668 symbol: -0.652095 letter: -14.349498 space: -548.133057
+42 symbol_gap "DL9 CQ " "" - -32098.492188
+42 letter_gap "DL9 CQ " "T"  -32112.189453
+language bonus0.000000
+42 word_gap "DL9 CQ T " ""  -32645.972656
+42 symbol_gap "DL: CQ " "" - -32100.509766
+42 letter_gap "DL: CQ " "T"  -32114.207031
+language bonus0.000000
+42 word_gap "DL: CQ T " ""  -32647.990234
+42 symbol_gap "DL9 CQ " "" .. -32100.509766
+42 letter_gap "DL9 CQ " "I"  -32114.207031
+language bonus4.000000
+42 word_gap "DL9 CQ I " ""  -32643.990234
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+43 dot "DL9 CQ " "" -. -32098.525391
+43 dash "DL9 CQ " "" -- -32135.103516
+43 dotdash "DL9 CQ " "" -.- -32268.214844
+43 dashdot "DL9 CQ " "" --. -32268.214844
+43 dashdash "DL9 CQ " "" --- -32470.613281
+43 dotdot "DL9 CQ " "" -.. -32146.257812
+43 dot "DL9 CQ " "" ... -32100.542969
+43 dash "DL9 CQ " "" ..- -32137.121094
+43 dotdash "DL9 CQ " "" ...- -32270.232422
+43 dashdot "DL9 CQ " "" ..-. -32270.232422
+43 dashdash "DL9 CQ " "" ..-- -32472.630859
+43 dotdot "DL9 CQ " "" .... -32148.275391
+43 dot "DL: CQ " "" -. -32100.542969
+43 dash "DL: CQ " "" -- -32137.121094
+43 dotdash "DL: CQ " "" -.- -32270.232422
+43 dashdot "DL: CQ " "" --. -32270.232422
+43 dashdash "DL: CQ " "" --- -32472.630859
+43 dotdot "DL: CQ " "" -.. -32148.275391
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+44 symbol_gap "DL9 CQ " "" -. -32098.572266
+44 letter_gap "DL9 CQ " "N"  -32110.720703
+language bonus0.000000
+44 word_gap "DL9 CQ N " ""  -32619.289062
+44 symbol_gap "DL: CQ " "" -. -32100.589844
+44 letter_gap "DL: CQ " "N"  -32112.738281
+language bonus0.000000
+44 word_gap "DL: CQ N " ""  -32621.306641
+44 symbol_gap "DL9 CQ " "" ... -32100.589844
+44 letter_gap "DL9 CQ " "S"  -32112.738281
+language bonus4.000000
+44 word_gap "DL9 CQ S " ""  -32617.306641
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+45 dot "DL9 CQ " "" -.. -32125.121094
+45 dash "DL9 CQ " "" -.- -32098.628906
+45 dotdash "DL9 CQ " "" -..- -32150.603516
+45 dashdot "DL9 CQ " "" -.-. -32150.603516
+45 dashdash "DL9 CQ " "" -.-- -32280.173828
+45 dotdot "DL9 CQ " "" -... -32101.476562
+45 dot "DL9 CQ " "" .... -32127.138672
+45 dash "DL9 CQ " "" ...- -32100.646484
+45 dotdash "DL9 CQ " "" ....- -32152.621094
+45 dashdot "DL9 CQ " "S" -. -32152.621094
+45 dashdash "DL9 CQ " "" ...-- -32282.191406
+45 dotdot "DL9 CQ " "" ..... -32103.494141
+45 dot "DL: CQ " "" -.. -32127.138672
+45 dash "DL: CQ " "" -.- -32100.646484
+45 dotdash "DL: CQ " "" -..- -32152.621094
+45 dashdot "DL: CQ " "" -.-. -32152.621094
+45 dashdash "DL: CQ " "" -.-- -32282.191406
+45 dotdot "DL: CQ " "" -... -32103.494141
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+46 symbol_gap "DL9 CQ " "" -.- -32098.675781
+46 letter_gap "DL9 CQ " "K"  -32110.824219
+language bonus4.000000
+46 word_gap "DL9 CQ K " ""  -32615.392578
+46 symbol_gap "DL: CQ " "" -.- -32100.693359
+46 letter_gap "DL: CQ " "K"  -32112.841797
+language bonus4.000000
+46 word_gap "DL: CQ K " ""  -32617.410156
+46 symbol_gap "DL9 CQ " "" ...- -32100.693359
+46 letter_gap "DL9 CQ " "V"  -32112.841797
+language bonus0.000000
+46 word_gap "DL9 CQ V " ""  -32621.410156
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+47 dot "DL9 CQ " "" -.-. -32098.708984
+47 dash "DL9 CQ " "" -.-- -32135.287109
+47 dotdash "DL9 CQ " "K" .- -32268.398438
+47 dashdot "DL9 CQ " "" -.--. -32268.398438
+47 dashdash "DL9 CQ " "K" -- -32470.796875
+47 dotdot "DL9 CQ " "K" .. -32146.441406
+47 dot2 "DL9 CQ " "V" . -32100.726562
+47 dash "DL9 CQ " "" ...-- -32137.304688
+47 dotdash "DL9 CQ " "V" .- -32270.416016
+47 dashdot "DL9 CQ " "V" -. -32270.416016
+47 dashdash "DL9 CQ " "V" -- -32472.814453
+47 dotdot "DL9 CQ " "V" .. -32148.458984
+47 dot "DL: CQ " "" -.-. -32100.726562
+47 dash "DL: CQ " "" -.-- -32137.304688
+47 dotdash "DL: CQ " "K" .- -32270.416016
+47 dashdot "DL: CQ " "" -.--. -32270.416016
+47 dashdash "DL: CQ " "K" -- -32472.814453
+47 dotdot "DL: CQ " "K" .. -32148.458984
+duration: 162.133347 symbol: -55.954559 letter: -0.126613 space: -228.748611
+48 symbol_gap "DL9 CQ " "" -.-. -32154.664062
+48 letter_gap "DL9 CQ " "C"  -32098.835938
+language bonus4.000000
+48 word_gap "DL9 CQ C " ""  -32323.457031
+48 symbol_gap "DL: CQ " "" -.-. -32156.681641
+48 letter_gap "DL: CQ " "C"  -32100.853516
+language bonus4.000000
+48 word_gap "DL: CQ C " ""  -32325.474609
+48 symbol_gap "DL9 CQ " "V" . -32156.681641
+48 letter_gap "DL9 CQ " "VE"  -32099.853516
+language bonus0.000000
+48 word_gap "DL9 CQ VE " ""  -32329.474609
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+49 dot "DL9 CQ " "C" . -32130.753906
+49 dash "DL9 CQ " "C" - -32098.955078
+49 dotdash "DL9 CQ " "C" .- -32142.816406
+49 dashdot "DL9 CQ " "C" -. -32142.816406
+49 dashdash "DL9 CQ " "C" -- -32265.105469
+49 dotdot "DL9 CQ " "C" .. -32100.972656
+49 dot "DL9 CQ " "VE" . -32131.771484
+49 dash "DL9 CQ " "VE" - -32099.972656
+49 dotdash "DL9 CQ " "VE" .- -32143.833984
+49 dashdot "DL9 CQ " "VE" -. -32143.833984
+49 dashdash "DL9 CQ " "VE" -- -32266.123047
+49 dotdot "DL9 CQ " "VE" .. -32101.990234
+49 dot "DL: CQ " "C" . -32132.771484
+49 dash "DL: CQ " "C" - -32100.972656
+49 dotdash "DL: CQ " "C" .- -32144.833984
+49 dashdot "DL: CQ " "C" -. -32144.833984
+49 dashdash "DL: CQ " "C" -- -32267.123047
+49 dotdot "DL: CQ " "C" .. -32102.990234
+duration: 42.666668 symbol: -0.652095 letter: -14.349498 space: -548.133057
+50 symbol_gap "DL9 CQ " "C" - -32099.607422
+50 letter_gap "DL9 CQ " "CT"  -32112.304688
+language bonus0.000000
+50 word_gap "DL9 CQ CT " ""  -32647.087891
+50 symbol_gap "DL9 CQ " "VE" - -32100.625000
+50 letter_gap "DL9 CQ " "VET"  -32113.322266
+language bonus0.000000
+50 word_gap "DL9 CQ VET " ""  -32648.105469
+50 symbol_gap "DL9 CQ " "C" .. -32101.625000
+50 letter_gap "DL9 CQ " "CI"  -32114.322266
+language bonus0.000000
+50 word_gap "DL9 CQ CI " ""  -32649.105469
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+51 dot "DL9 CQ " "C" -. -32131.525391
+51 dash "DL9 CQ " "C" -- -32099.726562
+51 dotdash "DL9 CQ " "C" -.- -32143.587891
+51 dashdot "DL9 CQ " "C" --. -32143.587891
+51 dashdash "DL9 CQ " "C" --- -32265.876953
+51 dotdot "DL9 CQ " "C" -.. -32101.744141
+51 dot "DL9 CQ " "VE" -. -32132.542969
+51 dash "DL9 CQ " "VE" -- -32100.744141
+51 dotdash "DL9 CQ " "VE" -.- -32144.605469
+51 dashdot "DL9 CQ " "VE" --. -32144.605469
+51 dashdash "DL9 CQ " "VE" --- -32266.894531
+51 dotdot "DL9 CQ " "VE" -.. -32102.761719
+51 dot "DL9 CQ " "C" ... -32133.542969
+51 dash "DL9 CQ " "C" ..- -32101.744141
+51 dotdash "DL9 CQ " "C" ...- -32145.605469
+51 dashdot "DL9 CQ " "C" ..-. -32145.605469
+51 dashdash "DL9 CQ " "C" ..-- -32267.894531
+51 dotdot "DL9 CQ " "C" .... -32103.761719
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+52 symbol_gap "DL9 CQ " "C" -- -32099.773438
+52 letter_gap "DL9 CQ " "CM"  -32110.921875
+language bonus0.000000
+52 word_gap "DL9 CQ CM " ""  -32620.490234
+52 symbol_gap "DL9 CQ " "VE" -- -32100.791016
+52 letter_gap "DL9 CQ " "VEM"  -32112.939453
+language bonus0.000000
+52 word_gap "DL9 CQ VEM " ""  -32621.507812
+52 symbol_gap "DL9 CQ " "C" -.. -32101.791016
+52 letter_gap "DL9 CQ " "CD"  -32112.939453
+language bonus4.000000
+52 word_gap "DL9 CQ CD " ""  -32618.507812
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+53 dot "DL9 CQ " "C" --. -32099.873047
+53 dash "DL9 CQ " "C" --- -32143.757812
+53 dotdash "DL9 CQ " "C" --.- -32284.982422
+53 dashdot "DL9 CQ " "C" ---. -32284.982422
+53 dashdash "DL9 CQ " "C" ---- -32494.666016
+53 dotdot "DL9 CQ " "C" --.. -32155.744141
+53 dot "DL9 CQ " "VE" --. -32100.890625
+53 dash "DL9 CQ " "VE" --- -32144.775391
+53 dotdash "DL9 CQ " "VE" --.- -32286.000000
+53 dashdot "DL9 CQ " "VE" ---. -32286.000000
+53 dashdash "DL9 CQ " "VE" ---- -32495.683594
+53 dotdot "DL9 CQ " "VE" --.. -32156.761719
+53 dot "DL9 CQ " "C" -... -32101.890625
+53 dash "DL9 CQ " "C" -..- -32145.775391
+53 dotdash "DL9 CQ " "C" -...- -32287.000000
+53 dashdot "DL9 CQ " "C" -..-. -32287.000000
+53 dashdash "DL9 CQ " "CD" -- -32496.683594
+53 dotdot "DL9 CQ " "C" -.... -32157.761719
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+54 symbol_gap "DL9 CQ " "C" --. -32099.919922
+54 letter_gap "DL9 CQ " "CG"  -32111.068359
+language bonus0.000000
+54 word_gap "DL9 CQ CG " ""  -32620.636719
+54 symbol_gap "DL9 CQ " "VE" --. -32100.937500
+54 letter_gap "DL9 CQ " "VEG"  -32112.085938
+language bonus0.000000
+54 word_gap "DL9 CQ VEG " ""  -32621.654297
+54 symbol_gap "DL9 CQ " "C" -... -32101.937500
+54 letter_gap "DL9 CQ " "CB"  -32113.085938
+language bonus0.000000
+54 word_gap "DL9 CQ CB " ""  -32622.654297
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+55 dot "DL9 CQ " "C" --.. -32131.837891
+55 dash "DL9 CQ " "C" --.- -32100.039062
+55 dotdash "DL9 CQ " "C" --..- -32143.900391
+55 dashdot "DL9 CQ " "CG" -. -32143.900391
+55 dashdash "DL9 CQ " "CG" -- -32266.189453
+55 dotdot "DL9 CQ " "C" --... -32102.056641
+55 dot "DL9 CQ " "VE" --.. -32132.855469
+55 dash "DL9 CQ " "VE" --.- -32101.056641
+55 dotdash "DL9 CQ " "VE" --..- -32144.917969
+55 dashdot "DL9 CQ " "VEG" -. -32144.917969
+55 dashdash "DL9 CQ " "VEG" -- -32267.207031
+55 dotdot "DL9 CQ " "VE" --... -32103.074219
+55 dot "DL9 CQ " "C" -.... -32133.855469
+55 dash "DL9 CQ " "C" -...- -32102.056641
+55 dotdash "DL9 CQ " "C" -....- -32145.917969
+55 dashdot "DL9 CQ " "CB" -. -32145.917969
+55 dashdash "DL9 CQ " "CB" -- -32268.207031
+55 dotdot "DL9 CQ " "CB" .. -32104.074219
+duration: 870.400024 symbol: -3205.269531 letter: -621.167786 space: 0.000000
+56 symbol_gap "DL9 CQ " "C" --.- -35305.308594
+56 letter_gap "DL9 CQ " "CQ"  -32720.207031
+language bonus4.000000
+56 word_gap "DL9 CQ CQ " ""  -32096.039062
+56 symbol_gap "DL9 CQ " "VE" --.- -35306.328125
+56 letter_gap "DL9 CQ " "VEQ"  -32722.224609
+language bonus0.000000
+56 word_gap "DL9 CQ VEQ " ""  -32101.056641
+56 symbol_gap "DL9 CQ " "C" --... -35307.328125
+56 letter_gap "DL9 CQ " "C7"  -32723.224609
+language bonus0.000000
+56 word_gap "DL9 CQ C7 " ""  -32102.056641
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+57 dot "DL9 CQ CQ " "" . -32127.957031
+57 dash "DL9 CQ CQ " "" - -32096.158203
+57 dotdash "DL9 CQ CQ " "" .- -32140.019531
+57 dashdot "DL9 CQ CQ " "" -. -32140.019531
+57 dashdash "DL9 CQ CQ " "" -- -32262.308594
+57 dotdot "DL9 CQ CQ " "" .. -32098.175781
+57 dot "DL9 CQ VEQ " "" . -32132.974609
+57 dash "DL9 CQ VEQ " "" - -32101.175781
+57 dotdash "DL9 CQ VEQ " "" .- -32145.037109
+57 dashdot "DL9 CQ VEQ " "" -. -32145.037109
+57 dashdash "DL9 CQ VEQ " "" -- -32267.326172
+57 dotdot "DL9 CQ VEQ " "" .. -32103.193359
+57 dot "DL9 CQ C7 " "" . -32133.974609
+57 dash "DL9 CQ C7 " "" - -32102.175781
+57 dotdash "DL9 CQ C7 " "" .- -32146.037109
+57 dashdot "DL9 CQ C7 " "" -. -32146.037109
+57 dashdash "DL9 CQ C7 " "" -- -32268.326172
+57 dotdot "DL9 CQ C7 " "" .. -32104.193359
+duration: 42.666668 symbol: -0.652095 letter: -14.349498 space: -548.133057
+58 symbol_gap "DL9 CQ CQ " "" - -32096.810547
+58 letter_gap "DL9 CQ CQ " "T"  -32110.507812
+language bonus0.000000
+58 word_gap "DL9 CQ CQ T " ""  -32644.291016
+58 symbol_gap "DL9 CQ CQ " "" .. -32098.828125
+58 letter_gap "DL9 CQ CQ " "I"  -32112.525391
+language bonus4.000000
+58 word_gap "DL9 CQ CQ I " ""  -32642.308594
+58 symbol_gap "DL9 CQ VEQ " "" - -32101.828125
+58 letter_gap "DL9 CQ VEQ " "T"  -32115.525391
+language bonus0.000000
+58 word_gap "DL9 CQ VEQ T " ""  -32649.308594
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+59 dot "DL9 CQ CQ " "" -. -32096.843750
+59 dash "DL9 CQ CQ " "" -- -32133.421875
+59 dotdash "DL9 CQ CQ " "" -.- -32266.533203
+59 dashdot "DL9 CQ CQ " "" --. -32266.533203
+59 dashdash "DL9 CQ CQ " "" --- -32468.931641
+59 dotdot "DL9 CQ CQ " "" -.. -32144.576172
+59 dot "DL9 CQ CQ " "" ... -32098.861328
+59 dash "DL9 CQ CQ " "" ..- -32135.439453
+59 dotdash "DL9 CQ CQ " "" ...- -32268.550781
+59 dashdot "DL9 CQ CQ " "" ..-. -32268.550781
+59 dashdash "DL9 CQ CQ " "" ..-- -32470.949219
+59 dotdot "DL9 CQ CQ " "" .... -32146.593750
+59 dot "DL9 CQ VEQ " "" -. -32101.861328
+59 dash "DL9 CQ VEQ " "" -- -32138.439453
+59 dotdash "DL9 CQ VEQ " "" -.- -32271.550781
+59 dashdot "DL9 CQ VEQ " "" --. -32271.550781
+59 dashdash "DL9 CQ VEQ " "" --- -32473.949219
+59 dotdot "DL9 CQ VEQ " "" -.. -32149.593750
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+60 symbol_gap "DL9 CQ CQ " "" -. -32096.890625
+60 letter_gap "DL9 CQ CQ " "N"  -32109.039062
+language bonus0.000000
+60 word_gap "DL9 CQ CQ N " ""  -32617.607422
+60 symbol_gap "DL9 CQ CQ " "" ... -32098.908203
+60 letter_gap "DL9 CQ CQ " "S"  -32111.056641
+language bonus4.000000
+60 word_gap "DL9 CQ CQ S " ""  -32615.625000
+60 symbol_gap "DL9 CQ VEQ " "" -. -32101.908203
+60 letter_gap "DL9 CQ VEQ " "N"  -32114.056641
+language bonus0.000000
+60 word_gap "DL9 CQ VEQ N " ""  -32622.625000
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+61 dot "DL9 CQ CQ " "" -.. -32123.439453
+61 dash "DL9 CQ CQ " "" -.- -32096.947266
+61 dotdash "DL9 CQ CQ " "" -..- -32148.921875
+61 dashdot "DL9 CQ CQ " "" -.-. -32148.921875
+61 dashdash "DL9 CQ CQ " "" -.-- -32278.492188
+61 dotdot "DL9 CQ CQ " "" -... -32099.794922
+61 dot "DL9 CQ CQ " "" .... -32125.457031
+61 dash "DL9 CQ CQ " "" ...- -32098.964844
+61 dotdash "DL9 CQ CQ " "" ....- -32150.939453
+61 dashdot "DL9 CQ CQ " "S" -. -32150.939453
+61 dashdash "DL9 CQ CQ " "" ...-- -32280.509766
+61 dotdot "DL9 CQ CQ " "" ..... -32101.812500
+61 dot "DL9 CQ VEQ " "" -.. -32128.457031
+61 dash "DL9 CQ VEQ " "" -.- -32101.964844
+61 dotdash "DL9 CQ VEQ " "" -..- -32153.939453
+61 dashdot "DL9 CQ VEQ " "" -.-. -32153.939453
+61 dashdash "DL9 CQ VEQ " "" -.-- -32283.509766
+61 dotdot "DL9 CQ VEQ " "" -... -32104.812500
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+62 symbol_gap "DL9 CQ CQ " "" -.- -32096.994141
+62 letter_gap "DL9 CQ CQ " "K"  -32109.142578
+language bonus4.000000
+62 word_gap "DL9 CQ CQ K " ""  -32613.710938
+62 symbol_gap "DL9 CQ CQ " "" ...- -32099.011719
+62 letter_gap "DL9 CQ CQ " "V"  -32111.160156
+language bonus0.000000
+62 word_gap "DL9 CQ CQ V " ""  -32619.728516
+62 symbol_gap "DL9 CQ CQ " "" -... -32099.841797
+62 letter_gap "DL9 CQ CQ " "B"  -32111.990234
+language bonus0.000000
+62 word_gap "DL9 CQ CQ B " ""  -32620.558594
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+63 dot "DL9 CQ CQ " "" -.-. -32097.027344
+63 dash "DL9 CQ CQ " "" -.-- -32133.605469
+63 dotdash "DL9 CQ CQ " "K" .- -32266.716797
+63 dashdot "DL9 CQ CQ " "" -.--. -32266.716797
+63 dashdash "DL9 CQ CQ " "K" -- -32469.115234
+63 dotdot "DL9 CQ CQ " "K" .. -32144.759766
+63 dot2 "DL9 CQ CQ " "V" . -32099.044922
+63 dash "DL9 CQ CQ " "" ...-- -32135.623047
+63 dotdash "DL9 CQ CQ " "V" .- -32268.734375
+63 dashdot "DL9 CQ CQ " "V" -. -32268.734375
+63 dashdash "DL9 CQ CQ " "V" -- -32471.132812
+63 dotdot "DL9 CQ CQ " "V" .. -32146.777344
+63 dot "DL9 CQ CQ " "" -.... -32099.875000
+63 dash "DL9 CQ CQ " "" -...- -32136.453125
+63 dotdash "DL9 CQ CQ " "" -....- -32269.564453
+63 dashdot "DL9 CQ CQ " "B" -. -32269.564453
+63 dashdash "DL9 CQ CQ " "B" -- -32471.962891
+63 dotdot "DL9 CQ CQ " "B" .. -32147.607422
+duration: 153.600006 symbol: -47.448566 letter: -0.003580 space: -247.006012
+64 symbol_gap "DL9 CQ CQ " "" -.-. -32144.476562
+64 letter_gap "DL9 CQ CQ " "C"  -32097.031250
+language bonus4.000000
+64 word_gap "DL9 CQ CQ C " ""  -32340.033203
+64 symbol_gap "DL9 CQ CQ " "V" . -32146.494141
+64 letter_gap "DL9 CQ CQ " "VE"  -32098.048828
+language bonus0.000000
+64 word_gap "DL9 CQ CQ VE " ""  -32346.050781
+64 symbol_gap "DL9 CQ CQ " "" -.... -32147.324219
+64 letter_gap "DL9 CQ CQ " "6"  -32099.878906
+language bonus0.000000
+64 word_gap "DL9 CQ CQ 6 " ""  -32346.880859
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+65 dot "DL9 CQ CQ " "C" . -32128.949219
+65 dash "DL9 CQ CQ " "C" - -32097.150391
+65 dotdash "DL9 CQ CQ " "C" .- -32141.011719
+65 dashdot "DL9 CQ CQ " "C" -. -32141.011719
+65 dashdash "DL9 CQ CQ " "C" -- -32263.300781
+65 dotdot "DL9 CQ CQ " "C" .. -32099.167969
+65 dot "DL9 CQ CQ " "VE" . -32129.966797
+65 dash "DL9 CQ CQ " "VE" - -32098.167969
+65 dotdash "DL9 CQ CQ " "VE" .- -32142.029297
+65 dashdot "DL9 CQ CQ " "VE" -. -32142.029297
+65 dashdash "DL9 CQ CQ " "VE" -- -32264.318359
+65 dotdot "DL9 CQ CQ " "VE" .. -32100.185547
+65 dot "DL9 CQ CQ " "6" . -32131.796875
+65 dash "DL9 CQ CQ " "6" - -32099.998047
+65 dotdash "DL9 CQ CQ " "6" .- -32143.859375
+65 dashdot "DL9 CQ CQ " "6" -. -32143.859375
+65 dashdash "DL9 CQ CQ " "6" -- -32266.148438
+65 dotdot "DL9 CQ CQ " "6" .. -32102.015625
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+66 symbol_gap "DL9 CQ CQ " "C" - -32097.197266
+66 letter_gap "DL9 CQ CQ " "CT"  -32108.345703
+language bonus0.000000
+66 word_gap "DL9 CQ CQ CT " ""  -32617.914062
+66 symbol_gap "DL9 CQ CQ " "VE" - -32098.214844
+66 letter_gap "DL9 CQ CQ " "VET"  -32109.363281
+language bonus0.000000
+66 word_gap "DL9 CQ CQ VET " ""  -32618.931641
+66 symbol_gap "DL9 CQ CQ " "C" .. -32099.214844
+66 letter_gap "DL9 CQ CQ " "CI"  -32110.363281
+language bonus0.000000
+66 word_gap "DL9 CQ CQ CI " ""  -32619.931641
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+67 dot "DL9 CQ CQ " "C" -. -32129.115234
+67 dash "DL9 CQ CQ " "C" -- -32097.316406
+67 dotdash "DL9 CQ CQ " "C" -.- -32141.177734
+67 dashdot "DL9 CQ CQ " "C" --. -32141.177734
+67 dashdash "DL9 CQ CQ " "C" --- -32263.466797
+67 dotdot "DL9 CQ CQ " "C" -.. -32099.333984
+67 dot "DL9 CQ CQ " "VE" -. -32130.132812
+67 dash "DL9 CQ CQ " "VE" -- -32098.333984
+67 dotdash "DL9 CQ CQ " "VE" -.- -32142.195312
+67 dashdot "DL9 CQ CQ " "VE" --. -32142.195312
+67 dashdash "DL9 CQ CQ " "VE" --- -32264.484375
+67 dotdot "DL9 CQ CQ " "VE" -.. -32100.351562
+67 dot "DL9 CQ CQ " "C" ... -32131.132812
+67 dash "DL9 CQ CQ " "C" ..- -32099.333984
+67 dotdash "DL9 CQ CQ " "C" ...- -32143.195312
+67 dashdot "DL9 CQ CQ " "C" ..-. -32143.195312
+67 dashdash "DL9 CQ CQ " "C" ..-- -32265.484375
+67 dotdot "DL9 CQ CQ " "C" .... -32101.351562
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+68 symbol_gap "DL9 CQ CQ " "C" -- -32097.363281
+68 letter_gap "DL9 CQ CQ " "CM"  -32108.511719
+language bonus0.000000
+68 word_gap "DL9 CQ CQ CM " ""  -32618.080078
+68 symbol_gap "DL9 CQ CQ " "VE" -- -32098.380859
+68 letter_gap "DL9 CQ CQ " "VEM"  -32110.529297
+language bonus0.000000
+68 word_gap "DL9 CQ CQ VEM " ""  -32619.097656
+68 symbol_gap "DL9 CQ CQ " "C" -.. -32099.380859
+68 letter_gap "DL9 CQ CQ " "CD"  -32110.529297
+language bonus4.000000
+68 word_gap "DL9 CQ CQ CD " ""  -32616.097656
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+69 dot "DL9 CQ CQ " "C" --. -32097.462891
+69 dash "DL9 CQ CQ " "C" --- -32141.347656
+69 dotdash "DL9 CQ CQ " "C" --.- -32282.572266
+69 dashdot "DL9 CQ CQ " "C" ---. -32282.572266
+69 dashdash "DL9 CQ CQ " "C" ---- -32492.255859
+69 dotdot "DL9 CQ CQ " "C" --.. -32153.333984
+69 dot "DL9 CQ CQ " "VE" --. -32098.480469
+69 dash "DL9 CQ CQ " "VE" --- -32142.365234
+69 dotdash "DL9 CQ CQ " "VE" --.- -32283.589844
+69 dashdot "DL9 CQ CQ " "VE" ---. -32283.589844
+69 dashdash "DL9 CQ CQ " "VE" ---- -32493.273438
+69 dotdot "DL9 CQ CQ " "VE" --.. -32154.351562
+69 dot "DL9 CQ CQ " "C" -... -32099.480469
+69 dash "DL9 CQ CQ " "C" -..- -32143.365234
+69 dotdash "DL9 CQ CQ " "C" -...- -32284.589844
+69 dashdot "DL9 CQ CQ " "C" -..-. -32284.589844
+69 dashdash "DL9 CQ CQ " "CD" -- -32494.273438
+69 dotdot "DL9 CQ CQ " "C" -.... -32155.351562
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+70 symbol_gap "DL9 CQ CQ " "C" --. -32097.509766
+70 letter_gap "DL9 CQ CQ " "CG"  -32108.658203
+language bonus0.000000
+70 word_gap "DL9 CQ CQ CG " ""  -32618.226562
+70 symbol_gap "DL9 CQ CQ " "VE" --. -32098.527344
+70 letter_gap "DL9 CQ CQ " "VEG"  -32109.675781
+language bonus0.000000
+70 word_gap "DL9 CQ CQ VEG " ""  -32619.244141
+70 symbol_gap "DL9 CQ CQ " "C" -... -32099.527344
+70 letter_gap "DL9 CQ CQ " "CB"  -32110.675781
+language bonus0.000000
+70 word_gap "DL9 CQ CQ CB " ""  -32620.244141
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+71 dot "DL9 CQ CQ " "C" --.. -32124.058594
+71 dash "DL9 CQ CQ " "C" --.- -32097.566406
+71 dotdash "DL9 CQ CQ " "C" --..- -32149.541016
+71 dashdot "DL9 CQ CQ " "CG" -. -32149.541016
+71 dashdash "DL9 CQ CQ " "CG" -- -32279.111328
+71 dotdot "DL9 CQ CQ " "C" --... -32100.414062
+71 dot "DL9 CQ CQ " "VE" --.. -32125.076172
+71 dash "DL9 CQ CQ " "VE" --.- -32098.583984
+71 dotdash "DL9 CQ CQ " "VE" --..- -32150.558594
+71 dashdot "DL9 CQ CQ " "VEG" -. -32150.558594
+71 dashdash "DL9 CQ CQ " "VEG" -- -32280.128906
+71 dotdot "DL9 CQ CQ " "VE" --... -32101.431641
+71 dot "DL9 CQ CQ " "C" -.... -32126.076172
+71 dash "DL9 CQ CQ " "C" -...- -32099.583984
+71 dotdash "DL9 CQ CQ " "C" -....- -32151.558594
+71 dashdot "DL9 CQ CQ " "CB" -. -32151.558594
+71 dashdash "DL9 CQ CQ " "CB" -- -32281.128906
+71 dotdot "DL9 CQ CQ " "CB" .. -32102.431641
+duration: 2278.400146 symbol: -23806.257812 letter: -5440.843262 space: 0.000000
+72 symbol_gap "DL9 CQ CQ " "C" --.- -55903.824219
+72 letter_gap "DL9 CQ CQ " "CQ"  -37537.410156
+language bonus4.000000
+72 word_gap "DL9 CQ CQ CQ " ""  -32093.566406
+72 symbol_gap "DL9 CQ CQ " "VE" --.- -55904.843750
+72 letter_gap "DL9 CQ CQ " "VEQ"  -37539.425781
+language bonus0.000000
+72 word_gap "DL9 CQ CQ VEQ " ""  -32098.583984
+72 symbol_gap "DL9 CQ CQ " "C" -...- -55905.843750
+72 letter_gap "DL9 CQ CQ " "C="  -37540.425781
+language bonus0.000000
+72 word_gap "DL9 CQ CQ C= " ""  -32099.583984
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+73 dot "DL9 CQ CQ CQ " "" . -32093.666016
+73 dash "DL9 CQ CQ CQ " "" - -32137.550781
+73 dotdash "DL9 CQ CQ CQ " "" .- -32278.775391
+73 dashdot "DL9 CQ CQ CQ " "" -. -32278.775391
+73 dashdash "DL9 CQ CQ CQ " "" -- -32488.458984
+73 dotdot "DL9 CQ CQ CQ " "" .. -32149.537109
+73 dot "DL9 CQ CQ VEQ " "" . -32098.683594
+73 dash "DL9 CQ CQ VEQ " "" - -32142.568359
+73 dotdash "DL9 CQ CQ VEQ " "" .- -32283.792969
+73 dashdot "DL9 CQ CQ VEQ " "" -. -32283.792969
+73 dashdash "DL9 CQ CQ VEQ " "" -- -32493.476562
+73 dotdot "DL9 CQ CQ VEQ " "" .. -32154.554688
+73 dot "DL9 CQ CQ C= " "" . -32099.683594
+73 dash "DL9 CQ CQ C= " "" - -32143.568359
+73 dotdash "DL9 CQ CQ C= " "" .- -32284.792969
+73 dashdot "DL9 CQ CQ C= " "" -. -32284.792969
+73 dashdash "DL9 CQ CQ C= " "" -- -32494.476562
+73 dotdot "DL9 CQ CQ C= " "" .. -32155.554688
+duration: 145.066681 symbol: -39.643482 letter: -0.055771 space: -265.964233
+74 symbol_gap "DL9 CQ CQ CQ " "" . -32133.308594
+74 letter_gap "DL9 CQ CQ CQ " "E"  -32093.722656
+language bonus4.000000
+74 word_gap "DL9 CQ CQ CQ E " ""  -32355.630859
+74 symbol_gap "DL9 CQ CQ VEQ " "" . -32138.326172
+74 letter_gap "DL9 CQ CQ VEQ " "E"  -32098.740234
+language bonus4.000000
+74 word_gap "DL9 CQ CQ VEQ E " ""  -32360.648438
+74 symbol_gap "DL9 CQ CQ C= " "" . -32139.326172
+74 letter_gap "DL9 CQ CQ C= " "E"  -32099.740234
+language bonus4.000000
+74 word_gap "DL9 CQ CQ C= E " ""  -32361.648438
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+75 dot "DL9 CQ CQ CQ " "E" . -32093.822266
+75 dash "DL9 CQ CQ CQ " "E" - -32137.707031
+75 dotdash "DL9 CQ CQ CQ " "E" .- -32278.931641
+75 dashdot "DL9 CQ CQ CQ " "E" -. -32278.931641
+75 dashdash "DL9 CQ CQ CQ " "E" -- -32488.615234
+75 dotdot "DL9 CQ CQ CQ " "E" .. -32149.693359
+75 dot "DL9 CQ CQ VEQ " "E" . -32098.839844
+75 dash "DL9 CQ CQ VEQ " "E" - -32142.724609
+75 dotdash "DL9 CQ CQ VEQ " "E" .- -32283.949219
+75 dashdot "DL9 CQ CQ VEQ " "E" -. -32283.949219
+75 dashdash "DL9 CQ CQ VEQ " "E" -- -32493.632812
+75 dotdot "DL9 CQ CQ VEQ " "E" .. -32154.710938
+75 dot "DL9 CQ CQ C= " "E" . -32099.839844
+75 dash "DL9 CQ CQ C= " "E" - -32143.724609
+75 dotdash "DL9 CQ CQ C= " "E" .- -32284.949219
+75 dashdot "DL9 CQ CQ C= " "E" -. -32284.949219
+75 dashdash "DL9 CQ CQ C= " "E" -- -32494.632812
+75 dotdot "DL9 CQ CQ C= " "E" .. -32155.710938
+duration: 59.733337 symbol: -0.141713 letter: -10.214973 space: -494.095917
+76 symbol_gap "DL9 CQ CQ CQ " "E" . -32093.964844
+76 letter_gap "DL9 CQ CQ CQ " "EE"  -32104.037109
+language bonus0.000000
+76 word_gap "DL9 CQ CQ CQ EE " ""  -32587.917969
+76 symbol_gap "DL9 CQ CQ VEQ " "E" . -32098.982422
+76 letter_gap "DL9 CQ CQ VEQ " "EE"  -32109.054688
+language bonus0.000000
+76 word_gap "DL9 CQ CQ VEQ EE " ""  -32592.935547
+76 symbol_gap "DL9 CQ CQ C= " "E" . -32099.982422
+76 letter_gap "DL9 CQ CQ C= " "EE"  -32110.054688
+language bonus0.000000
+76 word_gap "DL9 CQ CQ C= EE " ""  -32593.935547
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+77 dot "DL9 CQ CQ CQ " "E" .. -32120.513672
+77 dash "DL9 CQ CQ CQ " "E" .- -32094.021484
+77 dotdash "DL9 CQ CQ CQ " "E" ..- -32145.996094
+77 dashdot "DL9 CQ CQ CQ " "E" .-. -32145.996094
+77 dashdash "DL9 CQ CQ CQ " "E" .-- -32275.566406
+77 dotdot "DL9 CQ CQ CQ " "E" ... -32096.869141
+77 dot "DL9 CQ CQ VEQ " "E" .. -32125.531250
+77 dash "DL9 CQ CQ VEQ " "E" .- -32099.039062
+77 dotdash "DL9 CQ CQ VEQ " "E" ..- -32151.013672
+77 dashdot "DL9 CQ CQ VEQ " "E" .-. -32151.013672
+77 dashdash "DL9 CQ CQ VEQ " "E" .-- -32280.583984
+77 dotdot "DL9 CQ CQ VEQ " "E" ... -32101.886719
+77 dot "DL9 CQ CQ C= " "E" .. -32126.531250
+77 dash "DL9 CQ CQ C= " "E" .- -32100.039062
+77 dotdash "DL9 CQ CQ C= " "E" ..- -32152.013672
+77 dashdot "DL9 CQ CQ C= " "E" .-. -32152.013672
+77 dashdash "DL9 CQ CQ C= " "E" .-- -32281.583984
+77 dotdot "DL9 CQ CQ C= " "E" ... -32102.886719
+duration: 281.600006 symbol: -248.632309 letter: -20.247553 space: -46.739613
+78 symbol_gap "DL9 CQ CQ CQ " "E" .- -32342.654297
+78 letter_gap "DL9 CQ CQ CQ " "EA"  -32113.269531
+language bonus0.000000
+78 word_gap "DL9 CQ CQ CQ EA " ""  -32140.761719
+78 symbol_gap "DL9 CQ CQ CQ " "E" ... -32345.501953
+78 letter_gap "DL9 CQ CQ CQ " "ES"  -32116.117188
+language bonus0.000000
+78 word_gap "DL9 CQ CQ CQ ES " ""  -32143.609375
+78 symbol_gap "DL9 CQ CQ VEQ " "E" .- -32347.671875
+78 letter_gap "DL9 CQ CQ VEQ " "EA"  -32118.287109
+language bonus0.000000
+78 word_gap "DL9 CQ CQ VEQ EA " ""  -32145.779297
+duration: 8.533334 dot: -5.309968 dash: -80.244446
+79 dot "DL9 CQ CQ CQ " "EA" . -32118.580078
+79 dash "DL9 CQ CQ CQ " "EA" - -32193.513672
+79 dotdash "DL9 CQ CQ CQ " "EA" .- -32367.193359
+79 dashdot "DL9 CQ CQ CQ " "EA" -. -32367.193359
+79 dashdash "DL9 CQ CQ CQ " "EA" -- -32606.007812
+79 dotdot "DL9 CQ CQ CQ " "EA" .. -32208.822266
+79 dot "DL9 CQ CQ CQ " "ES" . -32121.427734
+79 dash "DL9 CQ CQ CQ " "ES" - -32196.361328
+79 dotdash "DL9 CQ CQ CQ " "ES" .- -32370.041016
+79 dashdot "DL9 CQ CQ CQ " "ES" -. -32370.041016
+79 dashdash "DL9 CQ CQ CQ " "ES" -- -32608.855469
+79 dotdot "DL9 CQ CQ CQ " "ES" .. -32211.669922
+79 dot "DL9 CQ CQ VEQ " "EA" . -32123.597656
+79 dash "DL9 CQ CQ VEQ " "EA" - -32198.531250
+79 dotdash "DL9 CQ CQ VEQ " "EA" .- -32372.210938
+79 dashdot "DL9 CQ CQ VEQ " "EA" -. -32372.210938
+79 dashdash "DL9 CQ CQ VEQ " "EA" -- -32611.025391
+79 dotdot "DL9 CQ CQ VEQ " "EA" .. -32213.839844
+duration: 119.466675 symbol: -20.433552 letter: -1.263684 space: -327.044342
+80 symbol_gap "DL9 CQ CQ CQ " "EA" . -32139.013672
+80 letter_gap "DL9 CQ CQ CQ " "EAE"  -32119.843750
+language bonus0.000000
+80 word_gap "DL9 CQ CQ CQ EAE " ""  -32445.625000
+80 symbol_gap "DL9 CQ CQ CQ " "ES" . -32141.861328
+80 letter_gap "DL9 CQ CQ CQ " "ESE"  -32122.691406
+language bonus0.000000
+80 word_gap "DL9 CQ CQ CQ ESE " ""  -32448.472656
+80 symbol_gap "DL9 CQ CQ VEQ " "EA" . -32144.031250
+80 letter_gap "DL9 CQ CQ VEQ " "EAE"  -32124.861328
+language bonus0.000000
+80 word_gap "DL9 CQ CQ VEQ EAE " ""  -32450.642578
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+81 dot "DL9 CQ CQ CQ " "EAE" . -32119.943359
+81 dash "DL9 CQ CQ CQ " "EAE" - -32163.828125
+81 dotdash "DL9 CQ CQ CQ " "EAE" .- -32305.052734
+81 dashdot "DL9 CQ CQ CQ " "EAE" -. -32305.052734
+81 dashdash "DL9 CQ CQ CQ " "EAE" -- -32514.736328
+81 dotdot "DL9 CQ CQ CQ " "EAE" .. -32175.814453
+81 dot "DL9 CQ CQ CQ " "ESE" . -32122.791016
+81 dash "DL9 CQ CQ CQ " "ESE" - -32166.675781
+81 dotdash "DL9 CQ CQ CQ " "ESE" .- -32307.900391
+81 dashdot "DL9 CQ CQ CQ " "ESE" -. -32307.900391
+81 dashdash "DL9 CQ CQ CQ " "ESE" -- -32517.583984
+81 dotdot "DL9 CQ CQ CQ " "ESE" .. -32178.662109
+81 dot "DL9 CQ CQ VEQ " "EAE" . -32124.960938
+81 dash "DL9 CQ CQ VEQ " "EAE" - -32168.845703
+81 dotdash "DL9 CQ CQ VEQ " "EAE" .- -32310.070312
+81 dashdot "DL9 CQ CQ VEQ " "EAE" -. -32310.070312
+81 dashdash "DL9 CQ CQ VEQ " "EAE" -- -32519.753906
+81 dotdot "DL9 CQ CQ VEQ " "EAE" .. -32180.832031
+duration: 68.266670 symbol: -0.937864 letter: -8.410547 space: -468.128754
+82 symbol_gap "DL9 CQ CQ CQ " "EAE" . -32120.880859
+82 letter_gap "DL9 CQ CQ CQ " "EAEE"  -32128.353516
+language bonus0.000000
+82 word_gap "DL9 CQ CQ CQ EAEE " ""  -32588.072266
+82 symbol_gap "DL9 CQ CQ CQ " "ESE" . -32123.728516
+82 letter_gap "DL9 CQ CQ CQ " "ESEE"  -32131.201172
+language bonus0.000000
+82 word_gap "DL9 CQ CQ CQ ESEE " ""  -32590.919922
+82 symbol_gap "DL9 CQ CQ VEQ " "EAE" . -32125.898438
+82 letter_gap "DL9 CQ CQ VEQ " "EAEE"  -32133.371094
+language bonus0.000000
+82 word_gap "DL9 CQ CQ VEQ EAEE " ""  -32593.089844
+duration: 128.000000 dot: -21.672689 dash: -0.668569
+83 dot "DL9 CQ CQ CQ " "EAE" .. -32142.552734
+83 dash "DL9 CQ CQ CQ " "EAE" .- -32121.548828
+83 dotdash "DL9 CQ CQ CQ " "EAE" ..- -32181.638672
+83 dashdot "DL9 CQ CQ CQ " "EAE" .-. -32181.638672
+83 dashdash "DL9 CQ CQ CQ " "EAE" .-- -32318.492188
+83 dotdot "DL9 CQ CQ CQ " "EAE" ... -32125.228516
+83 dot "DL9 CQ CQ CQ " "ESE" .. -32145.400391
+83 dash "DL9 CQ CQ CQ " "ESE" .- -32124.396484
+83 dotdash "DL9 CQ CQ CQ " "ESE" ..- -32184.486328
+83 dashdot "DL9 CQ CQ CQ " "ESE" .-. -32184.486328
+83 dashdash "DL9 CQ CQ CQ " "ESE" .-- -32321.339844
+83 dotdot "DL9 CQ CQ CQ " "ESE" ... -32128.076172
+83 dot "DL9 CQ CQ VEQ " "EAE" .. -32147.570312
+83 dash "DL9 CQ CQ VEQ " "EAE" .- -32126.566406
+83 dotdash "DL9 CQ CQ VEQ " "EAE" ..- -32186.656250
+83 dashdot "DL9 CQ CQ VEQ " "EAE" .-. -32186.656250
+83 dashdash "DL9 CQ CQ VEQ " "EAE" .-- -32323.509766
+83 dotdot "DL9 CQ CQ VEQ " "EAE" ... -32130.246094
+duration: 85.333336 symbol: -4.632848 letter: -5.327365 space: -418.296997
+84 symbol_gap "DL9 CQ CQ CQ " "EAE" .- -32126.181641
+84 letter_gap "DL9 CQ CQ CQ " "EAEA"  -32126.876953
+language bonus0.000000
+84 word_gap "DL9 CQ CQ CQ EAEA " ""  -32539.845703
+84 symbol_gap "DL9 CQ CQ CQ " "ESE" .- -32129.029297
+84 letter_gap "DL9 CQ CQ CQ " "ESEA"  -32129.724609
+language bonus0.000000
+84 word_gap "DL9 CQ CQ CQ ESEA " ""  -32542.693359
+84 symbol_gap "DL9 CQ CQ CQ " "EAE" ... -32129.861328
+84 letter_gap "DL9 CQ CQ CQ " "EAES"  -32130.556641
+language bonus0.000000
+84 word_gap "DL9 CQ CQ CQ EAES " ""  -32543.525391
+duration: 8.533334 dot: -5.309968 dash: -80.244446
+85 dot "DL9 CQ CQ CQ " "EAE" .-. -32131.492188
+85 dash "DL9 CQ CQ CQ " "EAE" .-- -32206.425781
+85 dotdash "DL9 CQ CQ CQ " "EAE" .-.- -32380.105469
+85 dashdot "DL9 CQ CQ CQ " "EAE" .--. -32380.105469
+85 dashdash "DL9 CQ CQ CQ " "EAE" .--- -32618.919922
+85 dotdot "DL9 CQ CQ CQ " "EAE" .-.. -32221.734375
+85 dot "DL9 CQ CQ CQ " "EAEA" . -32132.187500
+85 dash "DL9 CQ CQ CQ " "EAEA" - -32207.121094
+85 dotdash "DL9 CQ CQ CQ " "EAEA" .- -32380.800781
+85 dashdot "DL9 CQ CQ CQ " "EAEA" -. -32380.800781
+85 dashdash "DL9 CQ CQ CQ " "EAEA" -- -32619.615234
+85 dotdot "DL9 CQ CQ CQ " "EAEA" .. -32222.429688
+85 dot "DL9 CQ CQ CQ " "ESE" .-. -32134.339844
+85 dash "DL9 CQ CQ CQ " "ESE" .-- -32209.273438
+85 dotdash "DL9 CQ CQ CQ " "ESE" .-.- -32382.953125
+85 dashdot "DL9 CQ CQ CQ " "ESE" .--. -32382.953125
+85 dashdash "DL9 CQ CQ CQ " "ESE" .--- -32621.767578
+85 dotdot "DL9 CQ CQ CQ " "ESE" .-.. -32224.582031
+duration: 59.733337 symbol: -0.141713 letter: -10.214973 space: -494.095917
+86 symbol_gap "DL9 CQ CQ CQ " "EAE" .-. -32131.634766
+86 letter_gap "DL9 CQ CQ CQ " "EAER"  -32141.707031
+language bonus0.000000
+86 word_gap "DL9 CQ CQ CQ EAER " ""  -32625.587891
+86 symbol_gap "DL9 CQ CQ CQ " "EAEA" . -32132.330078
+86 letter_gap "DL9 CQ CQ CQ " "EAEAE"  -32142.402344
+language bonus0.000000
+86 word_gap "DL9 CQ CQ CQ EAEAE " ""  -32626.283203
+86 symbol_gap "DL9 CQ CQ CQ " "ESE" .-. -32134.482422
+86 letter_gap "DL9 CQ CQ CQ " "ESER"  -32144.554688
+language bonus0.000000
+86 word_gap "DL9 CQ CQ CQ ESER " ""  -32628.435547
+duration: 34.133335 dot: -0.660914 dash: -52.035797
+87 dot "DL9 CQ CQ CQ " "EAE" .-.. -32132.294922
+87 dash "DL9 CQ CQ CQ " "EAE" .-.- -32183.669922
+87 dotdash "DL9 CQ CQ CQ " "EAER" .- -32333.007812
+87 dashdot "DL9 CQ CQ CQ " "EAE" .-.-. -32333.007812
+87 dashdash "DL9 CQ CQ CQ " "EAER" -- -32549.974609
+87 dotdot "DL9 CQ CQ CQ " "EAER" .. -32196.486328
+87 dot "DL9 CQ CQ CQ " "EAEA" .. -32132.990234
+87 dash "DL9 CQ CQ CQ " "EAEA" .- -32184.365234
+87 dotdash "DL9 CQ CQ CQ " "EAEA" ..- -32333.703125
+87 dashdot "DL9 CQ CQ CQ " "EAEA" .-. -32333.703125
+87 dashdash "DL9 CQ CQ CQ " "EAEA" .-- -32550.669922
+87 dotdot "DL9 CQ CQ CQ " "EAEA" ... -32197.181641
+87 dot "DL9 CQ CQ CQ " "ESE" .-.. -32135.142578
+87 dash "DL9 CQ CQ CQ " "ESE" .-.- -32186.517578
+87 dotdash "DL9 CQ CQ CQ " "ESER" .- -32335.855469
+87 dashdot "DL9 CQ CQ CQ " "ESE" .-.-. -32335.855469
+87 dashdash "DL9 CQ CQ CQ " "ESER" -- -32552.822266
+87 dotdot "DL9 CQ CQ CQ " "ESER" .. -32199.333984
+duration: 162.133347 symbol: -55.954559 letter: -0.126613 space: -228.748611
+88 symbol_gap "DL9 CQ CQ CQ " "EAE" .-.. -32188.250000
+88 letter_gap "DL9 CQ CQ CQ " "EAEL"  -32132.421875
+language bonus0.000000
+88 word_gap "DL9 CQ CQ CQ EAEL " ""  -32361.042969
+88 symbol_gap "DL9 CQ CQ CQ " "EAEA" .. -32188.945312
+88 letter_gap "DL9 CQ CQ CQ " "EAEAI"  -32133.117188
+language bonus0.000000
+88 word_gap "DL9 CQ CQ CQ EAEAI " ""  -32361.738281
+88 symbol_gap "DL9 CQ CQ CQ " "ESE" .-.. -32191.097656
+88 letter_gap "DL9 CQ CQ CQ " "ESEL"  -32135.269531
+language bonus0.000000
+88 word_gap "DL9 CQ CQ CQ ESEL " ""  -32363.890625
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+89 dot "DL9 CQ CQ CQ " "EAEL" . -32164.339844
+89 dash "DL9 CQ CQ CQ " "EAEL" - -32132.541016
+89 dotdash "DL9 CQ CQ CQ " "EAEL" .- -32176.402344
+89 dashdot "DL9 CQ CQ CQ " "EAEL" -. -32176.402344
+89 dashdash "DL9 CQ CQ CQ " "EAEL" -- -32298.691406
+89 dotdot "DL9 CQ CQ CQ " "EAEL" .. -32134.558594
+89 dot "DL9 CQ CQ CQ " "EAEAI" . -32165.035156
+89 dash "DL9 CQ CQ CQ " "EAEAI" - -32133.236328
+89 dotdash "DL9 CQ CQ CQ " "EAEAI" .- -32177.097656
+89 dashdot "DL9 CQ CQ CQ " "EAEAI" -. -32177.097656
+89 dashdash "DL9 CQ CQ CQ " "EAEAI" -- -32299.386719
+89 dotdot "DL9 CQ CQ CQ " "EAEAI" .. -32135.253906
+89 dot "DL9 CQ CQ CQ " "ESEL" . -32167.187500
+89 dash "DL9 CQ CQ CQ " "ESEL" - -32135.388672
+89 dotdash "DL9 CQ CQ CQ " "ESEL" .- -32179.250000
+89 dashdot "DL9 CQ CQ CQ " "ESEL" -. -32179.250000
+89 dashdash "DL9 CQ CQ CQ " "ESEL" -- -32301.539062
+89 dotdot "DL9 CQ CQ CQ " "ESEL" .. -32137.406250
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+90 symbol_gap "DL9 CQ CQ CQ " "EAEL" - -32132.587891
+90 letter_gap "DL9 CQ CQ CQ " "EAELT"  -32144.736328
+language bonus0.000000
+90 word_gap "DL9 CQ CQ CQ EAELT " ""  -32653.304688
+90 symbol_gap "DL9 CQ CQ CQ " "EAEAI" - -32133.283203
+90 letter_gap "DL9 CQ CQ CQ " "EAEAIT"  -32145.431641
+language bonus0.000000
+90 word_gap "DL9 CQ CQ CQ EAEAIT " ""  -32654.000000
+90 symbol_gap "DL9 CQ CQ CQ " "EAEL" .. -32134.605469
+90 letter_gap "DL9 CQ CQ CQ " "EAELI"  -32146.753906
+language bonus0.000000
+90 word_gap "DL9 CQ CQ CQ EAELI " ""  -32655.322266
+duration: 136.533340 dot: -26.548437 dash: -0.055796
+91 dot "DL9 CQ CQ CQ " "EAEL" -. -32159.136719
+91 dash "DL9 CQ CQ CQ " "EAEL" -- -32132.644531
+91 dotdash "DL9 CQ CQ CQ " "EAEL" -.- -32184.619141
+91 dashdot "DL9 CQ CQ CQ " "EAEL" --. -32184.619141
+91 dashdash "DL9 CQ CQ CQ " "EAEL" --- -32314.189453
+91 dotdot "DL9 CQ CQ CQ " "EAEL" -.. -32135.492188
+91 dot "DL9 CQ CQ CQ " "EAEAI" -. -32159.832031
+91 dash "DL9 CQ CQ CQ " "EAEAI" -- -32133.339844
+91 dotdash "DL9 CQ CQ CQ " "EAEAI" -.- -32185.314453
+91 dashdot "DL9 CQ CQ CQ " "EAEAI" --. -32185.314453
+91 dashdash "DL9 CQ CQ CQ " "EAEAI" --- -32314.884766
+91 dotdot "DL9 CQ CQ CQ " "EAEAI" -.. -32136.187500
+91 dot "DL9 CQ CQ CQ " "EAEL" ... -32161.154297
+91 dash "DL9 CQ CQ CQ " "EAEL" ..- -32134.662109
+91 dotdash "DL9 CQ CQ CQ " "EAEL" ...- -32186.636719
+91 dashdot "DL9 CQ CQ CQ " "EAEL" ..-. -32186.636719
+91 dashdash "DL9 CQ CQ CQ " "EAEL" ..-- -32316.207031
+91 dotdot "DL9 CQ CQ CQ " "EAEL" .... -32137.509766
+duration: 819.200073 symbol: -2815.701904 letter: -535.796753 space: 0.000000
+92 symbol_gap "DL9 CQ CQ CQ " "EAEL" -- -34948.347656
+92 letter_gap "DL9 CQ CQ CQ " "EAELM"  -32668.441406
+language bonus0.000000
+92 word_gap "DL9 CQ CQ CQ EAELM " ""  -32132.644531
+92 symbol_gap "DL9 CQ CQ CQ " "EAEAI" -- -34949.042969
+92 letter_gap "DL9 CQ CQ CQ " "EAEAIM"  -32669.136719
+language bonus0.000000
+92 word_gap "DL9 CQ CQ CQ EAEAIM " ""  -32133.339844
+92 symbol_gap "DL9 CQ CQ CQ " "EAEL" ..- -34950.363281
+92 letter_gap "DL9 CQ CQ CQ " "EAELU"  -32670.458984
+language bonus0.000000
+92 word_gap "DL9 CQ CQ CQ EAELU " ""  -32134.662109
+duration: 145.066681 dot: -31.918447 dash: -0.119188
+93 dot "DL9 CQ CQ CQ EAELM " "" . -32164.562500
+93 dash "DL9 CQ CQ CQ EAELM " "" - -32132.763672
+93 dotdash "DL9 CQ CQ CQ EAELM " "" .- -32176.625000
+93 dashdot "DL9 CQ CQ CQ EAELM " "" -. -32176.625000
+93 dashdash "DL9 CQ CQ CQ EAELM " "" -- -32298.914062
+93 dotdot "DL9 CQ CQ CQ EAELM " "" .. -32134.781250
+93 dot "DL9 CQ CQ CQ EAEAIM " "" . -32165.257812
+93 dash "DL9 CQ CQ CQ EAEAIM " "" - -32133.458984
+93 dotdash "DL9 CQ CQ CQ EAEAIM " "" .- -32177.320312
+93 dashdot "DL9 CQ CQ CQ EAEAIM " "" -. -32177.320312
+93 dashdash "DL9 CQ CQ CQ EAEAIM " "" -- -32299.609375
+93 dotdot "DL9 CQ CQ CQ EAEAIM " "" .. -32135.476562
+93 dot "DL9 CQ CQ CQ EAELU " "" . -32166.580078
+93 dash "DL9 CQ CQ CQ EAELU " "" - -32134.781250
+93 dotdash "DL9 CQ CQ CQ EAELU " "" .- -32178.642578
+93 dashdot "DL9 CQ CQ CQ EAELU " "" -. -32178.642578
+93 dashdash "DL9 CQ CQ CQ EAELU " "" -- -32300.931641
+93 dotdot "DL9 CQ CQ CQ EAELU " "" .. -32136.798828
+duration: 42.666668 symbol: -0.652095 letter: -14.349498 space: -548.133057
+94 symbol_gap "DL9 CQ CQ CQ EAELM " "" - -32133.416016
+94 letter_gap "DL9 CQ CQ CQ EAELM " "T"  -32147.113281
+language bonus0.000000
+94 word_gap "DL9 CQ CQ CQ EAELM T " ""  -32680.896484
+94 symbol_gap "DL9 CQ CQ CQ EAEAIM " "" - -32134.111328
+94 letter_gap "DL9 CQ CQ CQ EAEAIM " "T"  -32147.808594
+language bonus0.000000
+94 word_gap "DL9 CQ CQ CQ EAEAIM T " ""  -32681.591797
+94 symbol_gap "DL9 CQ CQ CQ EAELM " "" .. -32135.433594
+94 letter_gap "DL9 CQ CQ CQ EAELM " "I"  -32149.130859
+language bonus4.000000
+94 word_gap "DL9 CQ CQ CQ EAELM I " ""  -32678.914062
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+95 dot "DL9 CQ CQ CQ EAELM " "" -. -32133.449219
+95 dash "DL9 CQ CQ CQ EAELM " "" -- -32170.027344
+95 dotdash "DL9 CQ CQ CQ EAELM " "" -.- -32303.138672
+95 dashdot "DL9 CQ CQ CQ EAELM " "" --. -32303.138672
+95 dashdash "DL9 CQ CQ CQ EAELM " "" --- -32505.537109
+95 dotdot "DL9 CQ CQ CQ EAELM " "" -.. -32181.181641
+95 dot "DL9 CQ CQ CQ EAEAIM " "" -. -32134.144531
+95 dash "DL9 CQ CQ CQ EAEAIM " "" -- -32170.722656
+95 dotdash "DL9 CQ CQ CQ EAEAIM " "" -.- -32303.833984
+95 dashdot "DL9 CQ CQ CQ EAEAIM " "" --. -32303.833984
+95 dashdash "DL9 CQ CQ CQ EAEAIM " "" --- -32506.232422
+95 dotdot "DL9 CQ CQ CQ EAEAIM " "" -.. -32181.876953
+95 dot "DL9 CQ CQ CQ EAELM " "" ... -32135.466797
+95 dash "DL9 CQ CQ CQ EAELM " "" ..- -32172.044922
+95 dotdash "DL9 CQ CQ CQ EAELM " "" ...- -32305.156250
+95 dashdot "DL9 CQ CQ CQ EAELM " "" ..-. -32305.156250
+95 dashdash "DL9 CQ CQ CQ EAELM " "" ..-- -32507.554688
+95 dotdot "DL9 CQ CQ CQ EAELM " "" .... -32183.199219
+duration: 51.200005 symbol: -0.046457 letter: -12.194624 space: -520.763977
+96 symbol_gap "DL9 CQ CQ CQ EAELM " "" -. -32133.496094
+96 letter_gap "DL9 CQ CQ CQ EAELM " "N"  -32145.644531
+language bonus0.000000
+96 word_gap "DL9 CQ CQ CQ EAELM N " ""  -32654.212891
+96 symbol_gap "DL9 CQ CQ CQ EAEAIM " "" -. -32134.191406
+96 letter_gap "DL9 CQ CQ CQ EAEAIM " "N"  -32146.339844
+language bonus0.000000
+96 word_gap "DL9 CQ CQ CQ EAEAIM N " ""  -32654.908203
+96 symbol_gap "DL9 CQ CQ CQ EAELM " "" ... -32135.513672
+96 letter_gap "DL9 CQ CQ CQ EAELM " "S"  -32147.662109
+language bonus4.000000
+96 word_gap "DL9 CQ CQ CQ EAELM S " ""  -32652.230469
+duration: 42.666668 dot: -0.099756 dash: -43.985226
+97 dot "DL9 CQ CQ CQ EAELM " "" -.. -32133.595703
+97 dash "DL9 CQ CQ CQ EAELM " "" -.- -32177.480469
+97 dotdash "DL9 CQ CQ CQ EAELM " "" -..- -32318.705078
+97 dashdot "DL9 CQ CQ CQ EAELM " "" -.-. -32318.705078
+97 dashdash "DL9 CQ CQ CQ EAELM " "" -.-- -32528.388672
+97 dotdot "DL9 CQ CQ CQ EAELM " "" -... -32189.466797
+97 dot "DL9 CQ CQ CQ EAEAIM " "" -.. -32134.291016
+97 dash "DL9 CQ CQ CQ EAEAIM " "" -.- -32178.175781
+97 dotdash "DL9 CQ CQ CQ EAEAIM " "" -..- -32319.400391
+97 dashdot "DL9 CQ CQ CQ EAEAIM " "" -.-. -32319.400391
+97 dashdash "DL9 CQ CQ CQ EAEAIM " "" -.-- -32529.083984
+97 dotdot "DL9 CQ CQ CQ EAEAIM " "" -... -32190.162109
+97 dot "DL9 CQ CQ CQ EAELM " "" .... -32135.613281
+97 dash "DL9 CQ CQ CQ EAELM " "" ...- -32179.498047
+97 dotdash "DL9 CQ CQ CQ EAELM " "" ....- -32320.722656
+97 dashdot "DL9 CQ CQ CQ EAELM " "S" -. -32320.722656
+97 dashdash "DL9 CQ CQ CQ EAELM " "" ...-- -32530.406250
+97 dotdot "DL9 CQ CQ CQ EAELM " "" ..... -32191.484375
+duration: 119.466675 symbol: -20.433552 letter: -1.263684 space: -327.044342
+98 symbol_gap "DL9 CQ CQ CQ EAELM " "" -.. -32154.029297
+98 letter_gap "DL9 CQ CQ CQ EAELM " "D"  -32134.859375
+language bonus0.000000
+98 word_gap "DL9 CQ CQ CQ EAELM D " ""  -32460.640625
+98 symbol_gap "DL9 CQ CQ CQ EAEAIM " "" -.. -32154.724609
+98 letter_gap "DL9 CQ CQ CQ EAEAIM " "D"  -32135.554688
+language bonus0.000000
+98 word_gap "DL9 CQ CQ CQ EAEAIM D " ""  -32461.335938
+98 symbol_gap "DL9 CQ CQ CQ EAELM " "" .... -32156.046875
+98 letter_gap "DL9 CQ CQ CQ EAELM " "H"  -32136.876953
+language bonus0.000000
+98 word_gap "DL9 CQ CQ CQ EAELM H " ""  -32462.658203
+duration: 51.200005 dot: -0.032863 dash: -36.610832
+99 dot "DL9 CQ CQ CQ EAELM " "D" . -32134.892578
+99 dash "DL9 CQ CQ CQ EAELM " "D" - -32171.470703
+99 dotdash "DL9 CQ CQ CQ EAELM " "D" .- -32304.582031
+99 dashdot "DL9 CQ CQ CQ EAELM " "D" -. -32304.582031
+99 dashdash "DL9 CQ CQ CQ EAELM " "D" -- -32506.980469
+99 dotdot "DL9 CQ CQ CQ EAELM " "D" .. -32182.625000
+99 dot "DL9 CQ CQ CQ EAEAIM " "D" . -32135.587891
+99 dash "DL9 CQ CQ CQ EAEAIM " "D" - -32172.166016
+99 dotdash "DL9 CQ CQ CQ EAEAIM " "D" .- -32305.277344
+99 dashdot "DL9 CQ CQ CQ EAEAIM " "D" -. -32305.277344
+99 dashdash "DL9 CQ CQ CQ EAEAIM " "D" -- -32507.675781
+99 dotdot "DL9 CQ CQ CQ EAEAIM " "D" .. -32183.320312
+99 dot "DL9 CQ CQ CQ EAELM " "H" . -32136.910156
+99 dash "DL9 CQ CQ CQ EAELM " "H" - -32173.488281
+99 dotdash "DL9 CQ CQ CQ EAELM " "H" .- -32306.599609
+99 dashdot "DL9 CQ CQ CQ EAELM " "H" -. -32306.599609
+99 dashdash "DL9 CQ CQ CQ EAELM " "H" -- -32508.998047
+99 dotdot "DL9 CQ CQ CQ EAELM " "H" .. -32184.642578

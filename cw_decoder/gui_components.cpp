@@ -189,6 +189,8 @@ void c_text_entry ::run()
   std::string string_word = std::string(m_string).substr(0, m_cursor);
   std::string last_word_of_string = last_word(string_word);
   m_autocomplete_suggestion = suggestion(last_word_of_string, m_second, m_third);
+  uint32_t t0;
+
 
   switch (m_state) {
 
@@ -205,9 +207,9 @@ void c_text_entry ::run()
       uint16_t cursor_y = m_cursor / chars_per_row;
       uint16_t cursor_x = m_cursor % chars_per_row;
 
+      uint16_t chars_left = m_n;  
       m_display->clear(COLOUR_BLACK);
-      m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_NAVY);
-      uint16_t chars_left = m_n;
+      m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_BLUE);
       for (uint8_t row = 0; row < rows; row++) {
         char buffer[chars_per_row + 1];
         uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
@@ -229,6 +231,7 @@ void c_text_entry ::run()
     }
 
     case GETCHAR1_DRAW:
+      t0 = millis();
       m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
       for (uint8_t i = 0; i < 4; i++) {
         for (uint8_t j = 0; j < 4; j++) {
@@ -252,13 +255,12 @@ void c_text_entry ::run()
       break;
 
     case GETCHAR2_DRAW:
+    t0 = millis();
       m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
       for (uint8_t i = 0; i < 4; i++) {
-        DEBUG_PRINTF("%i\n", i);
         char disp[20];
         snprintf(disp, 20, " %c%c%c%c", char_select[m_sel1][i][0], char_select[m_sel1][i][1],
                 char_select[m_sel1][i][2], char_select[m_sel1][i][3]);
-        DEBUG_PRINTF("%c\n", char_select[m_sel1][i][3]);
         m_display->drawString(10 + i * 75, 120, font_16x12, disp, colours[i], COLOUR_BLACK);
       }
       m_state = GETCHAR2_GET;
@@ -274,6 +276,7 @@ void c_text_entry ::run()
       break;
 
     case GETCHAR3_DRAW:
+      t0 = millis();
       m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
       if (m_sel2 == 3 && m_sel1 == 3) {
         m_display->drawString(16, 120, font_16x12, " LEFT RIGHT ENTER BKSPC", COLOUR_WHITE,
@@ -282,7 +285,6 @@ void c_text_entry ::run()
         for (uint8_t i = 0; i < 4; i++) {
           char disp[20];
           snprintf(disp, 20, "%c", char_select[m_sel1][m_sel2][i]);
-          DEBUG_PRINTF("%c\n", char_select[m_sel1][m_sel2][i]);
           m_display->drawString(10 + i * 75, 120, font_16x12, disp, colours[i], COLOUR_BLACK);
         }
       }
@@ -356,7 +358,8 @@ void c_text_entry ::run()
     }
 
     case NEXT_CHAR_DRAW:
-      DEBUG_PRINTF("m_string %s\n", m_string);
+
+      t0 = millis();
 
       uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
       uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
@@ -389,6 +392,7 @@ void c_text_entry ::run()
       m_state = GETCHAR1_DRAW;
       break;
   }
+  t_last = millis();
 }
 
 bool c_multi_text_entry ::is_active()
