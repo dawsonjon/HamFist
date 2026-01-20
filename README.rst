@@ -1,9 +1,7 @@
 Hamfist – A CW Decoder for Pi Pico
 ==================================
 
-.. raw:: html↲
-
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/rBRf3QOt4wc?si=XPfc2_HHIXxXaS6k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-    in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>↲
+.. images:: images/full_circuit.png
 
 
 Features
