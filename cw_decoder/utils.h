@@ -11,7 +11,6 @@
 // License: MIT
 //
 
-
 #ifndef _utils_
 #define _utils_
 

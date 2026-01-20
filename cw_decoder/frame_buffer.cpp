@@ -13,7 +13,7 @@
 
 #include "frame_buffer.h"
 #include <cmath>
-//#include "Arduino.h"
+// #include "Arduino.h"
 
 void c_frame_buffer ::set_pixel(uint16_t x, uint16_t y, uint16_t colour, uint16_t alpha)
 {
@@ -23,16 +23,15 @@ void c_frame_buffer ::set_pixel(uint16_t x, uint16_t y, uint16_t colour, uint16_
   m_buffer[y * m_width + x] = alpha_blend(old_colour, colour, alpha);
 }
 
-//void c_frame_buffer ::print()
+// void c_frame_buffer ::print()
 //{
-  //Serial.println("frame");
-  //for(uint16_t x=0; x<m_width; ++x){
-    //for(uint16_t y=0; y<m_height; ++y){
-      //Serial.printf("%x\n", m_buffer[y * m_width + x]);
-    //}
-  //}
+// Serial.println("frame");
+// for(uint16_t x=0; x<m_width; ++x){
+// for(uint16_t y=0; y<m_height; ++y){
+// Serial.printf("%x\n", m_buffer[y * m_width + x]);
 //}
-
+//}
+//}
 
 float ipart(float x)
 {

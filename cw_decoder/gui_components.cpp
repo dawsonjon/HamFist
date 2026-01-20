@@ -16,15 +16,15 @@
 #include <cstring>
 #include <string>
 
+#include "buttons.h"
 #include "colours.h"
 #include "dictionary.h"
 #include "font_16x12.h"
 #include "font_8x5.h"
-#include "utils.h"
-#include "buttons.h"
 #include "frame_buffer.h"
+#include "utils.h"
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -37,7 +37,6 @@
 #else
 #define DEBUG_PRINTF(...)
 #endif
-
 
 // COLOUR SCHEME
 static uint16_t BACKGROUND = COLOUR_BLACK;
@@ -85,12 +84,11 @@ static const char char_select[4][4][4] = {{
                                               {LEFT, RIGHT, ENTER, BACKSPACE},
                                           }};
 
-
-
-void draw_button_bar(ILI934X *display, const char* btn1, const char* btn2, const char* btn3, const char* btn4)
+void draw_button_bar(ILI934X* display, const char* btn1, const char* btn2, const char* btn3,
+                     const char* btn4)
 {
   display->fillRect(0, DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT - 1, BUTTON_BAR_HEIGHT, DISPLAY_WIDTH,
-                      BACKGROUND);
+                    BACKGROUND);
   const uint16_t button_width = 60;
   const uint16_t button_height = 14;
   const uint16_t padding = (DISPLAY_WIDTH - (4 * button_width)) / 5;
@@ -101,29 +99,32 @@ void draw_button_bar(ILI934X *display, const char* btn1, const char* btn2, const
     static uint16_t button_image[button_width * button_height];
     c_frame_buffer button_frame_buffer(button_image, button_width, button_height);
     button_frame_buffer.draw_image(0, 0, button_width, button_height, blank_button);
-    button_frame_buffer.draw_string(((button_width - (6 * strlen(btn_txt[idx]))) / 2), 4, font_8x5, btn_txt[idx], BUTTON_TEXT);
-    display->writeImage(button_x,  DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT + 2, button_width, button_height, button_image);
+    button_frame_buffer.draw_string(((button_width - (6 * strlen(btn_txt[idx]))) / 2), 4, font_8x5,
+                                    btn_txt[idx], BUTTON_TEXT);
+    display->writeImage(button_x, DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT + 2, button_width,
+                        button_height, button_image);
     button_x += button_width + padding;
   }
 }
 
-void draw_button_bar(ILI934X *display, const uint16_t* btn1, const uint16_t* btn2, const uint16_t* btn3,
-                                   const uint16_t* btn4)
+void draw_button_bar(ILI934X* display, const uint16_t* btn1, const uint16_t* btn2,
+                     const uint16_t* btn3, const uint16_t* btn4)
 {
   display->fillRect(0, DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT - 1, BUTTON_BAR_HEIGHT, DISPLAY_WIDTH,
-                      BACKGROUND);
+                    BACKGROUND);
   const uint16_t button_width = 60;
   const uint16_t button_height = 14;
   const uint16_t padding = (DISPLAY_WIDTH - (4 * button_width)) / 5;
   const uint16_t* btn_img[] = {btn1, btn2, btn3, btn4};
   uint16_t button_x = padding;
   for (uint8_t idx = 0; idx < 4; ++idx) {
-    display->writeImage(button_x,  DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT + 2, button_width, button_height, btn_img[idx]);
+    display->writeImage(button_x, DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT + 2, button_width,
+                        button_height, btn_img[idx]);
     button_x += button_width + padding;
   }
 }
 
-void draw_heading(ILI934X *display, const char title[])
+void draw_heading(ILI934X* display, const char title[])
 {
   const uint16_t heading_width = 280;
   const uint16_t heading_height = 20;
@@ -133,7 +134,8 @@ void draw_heading(ILI934X *display, const char title[])
   c_frame_buffer heading_frame_buffer(heading_image, heading_width, heading_height);
   heading_frame_buffer.draw_image(0, 0, heading_width, heading_height, blank_heading);
   heading_frame_buffer.draw_string((heading_width - width) / 2, 2, font_16x12, title, BUTTON_TEXT);
-  display->writeImage((DISPLAY_WIDTH - heading_width) / 2,  2, heading_width, heading_height, heading_image);
+  display->writeImage((DISPLAY_WIDTH - heading_width) / 2, 2, heading_width, heading_height,
+                      heading_image);
 }
 
 bool c_text_entry ::is_active()
@@ -191,206 +193,206 @@ void c_text_entry ::run()
   m_autocomplete_suggestion = suggestion(last_word_of_string, m_second, m_third);
   uint32_t t0;
 
-
   switch (m_state) {
 
-    case INACTIVE:
-      break;
+  case INACTIVE:
+    break;
 
-    case INITIALISE: {
-      m_cursor = strlen(m_string);
-      uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
-      uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
-      uint16_t string_width = chars_per_row * 6;
-      uint16_t y = 20;
-      uint16_t x = (DISPLAY_WIDTH - string_width) / 2;
-      uint16_t cursor_y = m_cursor / chars_per_row;
-      uint16_t cursor_x = m_cursor % chars_per_row;
+  case INITIALISE: {
+    m_cursor = strlen(m_string);
+    uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
+    uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
+    uint16_t string_width = chars_per_row * 6;
+    uint16_t y = 20;
+    uint16_t x = (DISPLAY_WIDTH - string_width) / 2;
+    uint16_t cursor_y = m_cursor / chars_per_row;
+    uint16_t cursor_x = m_cursor % chars_per_row;
 
-      uint16_t chars_left = m_n;  
-      m_display->clear(COLOUR_BLACK);
-      m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_BLUE);
-      for (uint8_t row = 0; row < rows; row++) {
-        char buffer[chars_per_row + 1];
-        uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
-        chars_left -= chars_per_row;
-        strncpy(buffer, m_string + (row * chars_per_row), chars_to_copy);
-        buffer[chars_per_row] = 0;
+    uint16_t chars_left = m_n;
+    m_display->clear(COLOUR_BLACK);
+    m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_BLUE);
+    for (uint8_t row = 0; row < rows; row++) {
+      char buffer[chars_per_row + 1];
+      uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
+      chars_left -= chars_per_row;
+      strncpy(buffer, m_string + (row * chars_per_row), chars_to_copy);
+      buffer[chars_per_row] = 0;
 
-        m_display->drawString(x, y, font_8x5, buffer, COLOUR_WHITE, COLOUR_NAVY);
-        if (row == cursor_y)
-          m_display->drawRect(x + cursor_x * 6, y, 8, 5, COLOUR_RED);
-        y += 10;
-      }
-      m_display->drawString(x, y + 5, font_8x5, m_autocomplete_suggestion.c_str(), colours[0],
-                            COLOUR_BLACK);
-      m_display->drawString(x, y + 15, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
-      m_display->drawString(x, y + 25, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
-      m_state = GETCHAR1_DRAW;
-      break;
+      m_display->drawString(x, y, font_8x5, buffer, COLOUR_WHITE, COLOUR_NAVY);
+      if (row == cursor_y)
+        m_display->drawRect(x + cursor_x * 6, y, 8, 5, COLOUR_RED);
+      y += 10;
     }
+    m_display->drawString(x, y + 5, font_8x5, m_autocomplete_suggestion.c_str(), colours[0],
+                          COLOUR_BLACK);
+    m_display->drawString(x, y + 15, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
+    m_display->drawString(x, y + 25, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
+    m_state = GETCHAR1_DRAW;
+    break;
+  }
 
-    case GETCHAR1_DRAW:
-      t0 = millis();
-      m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
-      for (uint8_t i = 0; i < 4; i++) {
-        for (uint8_t j = 0; j < 4; j++) {
-          char disp[20];
-          snprintf(disp, 20, " %c%c%c%c", char_select[i][j][0], char_select[i][j][1],
-                  char_select[i][j][2], char_select[i][j][3]);
-          m_display->drawString(10 + i * 75, 120 + j * 20, font_16x12, disp, colours[i],
-                                COLOUR_BLACK);
-        }
-      }
-      m_state = GETCHAR1_GET;
-      break;
-
-    case GETCHAR1_GET:
-      for (uint8_t i = 0; i < 4; i++) {
-        if (m_buttons[i]->is_pressed()) {
-          m_sel1 = i;
-          m_state = GETCHAR2_DRAW;
-        }
-      }
-      break;
-
-    case GETCHAR2_DRAW:
+  case GETCHAR1_DRAW:
     t0 = millis();
-      m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
+    m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
+    for (uint8_t i = 0; i < 4; i++) {
+      for (uint8_t j = 0; j < 4; j++) {
+        char disp[20];
+        snprintf(disp, 20, " %c%c%c%c", char_select[i][j][0], char_select[i][j][1],
+                 char_select[i][j][2], char_select[i][j][3]);
+        m_display->drawString(10 + i * 75, 120 + j * 20, font_16x12, disp, colours[i],
+                              COLOUR_BLACK);
+      }
+    }
+    m_state = GETCHAR1_GET;
+    break;
+
+  case GETCHAR1_GET:
+    for (uint8_t i = 0; i < 4; i++) {
+      if (m_buttons[i]->is_pressed()) {
+        m_sel1 = i;
+        m_state = GETCHAR2_DRAW;
+      }
+    }
+    break;
+
+  case GETCHAR2_DRAW:
+    t0 = millis();
+    m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
+    for (uint8_t i = 0; i < 4; i++) {
+      char disp[20];
+      snprintf(disp, 20, " %c%c%c%c", char_select[m_sel1][i][0], char_select[m_sel1][i][1],
+               char_select[m_sel1][i][2], char_select[m_sel1][i][3]);
+      m_display->drawString(10 + i * 75, 120, font_16x12, disp, colours[i], COLOUR_BLACK);
+    }
+    m_state = GETCHAR2_GET;
+    break;
+
+  case GETCHAR2_GET:
+    for (uint8_t i = 0; i < 4; i++) {
+      if (m_buttons[i]->is_pressed()) {
+        m_sel2 = i;
+        m_state = GETCHAR3_DRAW;
+      }
+    }
+    break;
+
+  case GETCHAR3_DRAW:
+    t0 = millis();
+    m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
+    if (m_sel2 == 3 && m_sel1 == 3) {
+      m_display->drawString(16, 120, font_16x12, " LEFT RIGHT ENTER BKSPC", COLOUR_WHITE,
+                            COLOUR_BLACK);
+    } else {
       for (uint8_t i = 0; i < 4; i++) {
         char disp[20];
-        snprintf(disp, 20, " %c%c%c%c", char_select[m_sel1][i][0], char_select[m_sel1][i][1],
-                char_select[m_sel1][i][2], char_select[m_sel1][i][3]);
+        snprintf(disp, 20, "%c", char_select[m_sel1][m_sel2][i]);
         m_display->drawString(10 + i * 75, 120, font_16x12, disp, colours[i], COLOUR_BLACK);
       }
-      m_state = GETCHAR2_GET;
-      break;
-
-    case GETCHAR2_GET:
-      for (uint8_t i = 0; i < 4; i++) {
-        if (m_buttons[i]->is_pressed()) {
-          m_sel2 = i;
-          m_state = GETCHAR3_DRAW;
-        }
-      }
-      break;
-
-    case GETCHAR3_DRAW:
-      t0 = millis();
-      m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
-      if (m_sel2 == 3 && m_sel1 == 3) {
-        m_display->drawString(16, 120, font_16x12, " LEFT RIGHT ENTER BKSPC", COLOUR_WHITE,
-                              COLOUR_BLACK);
-      } else {
-        for (uint8_t i = 0; i < 4; i++) {
-          char disp[20];
-          snprintf(disp, 20, "%c", char_select[m_sel1][m_sel2][i]);
-          m_display->drawString(10 + i * 75, 120, font_16x12, disp, colours[i], COLOUR_BLACK);
-        }
-      }
-      if (m_sel2 == 2 && m_sel1 == 0) {
-        m_display->drawString(10 + 0 * 75, 140, font_8x5, m_autocomplete_suggestion.c_str(),
-                              colours[0], COLOUR_BLACK);
-        m_display->drawString(10 + 1 * 75, 140, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
-        m_display->drawString(10 + 2 * 75, 140, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
-      }
-      m_state = GETCHAR3_GET;
-      break;
-
-    case GETCHAR3_GET:
-      for (uint8_t i = 0; i < 4; i++) {
-        if (m_buttons[i]->is_pressed()) {
-          m_sel3 = i;
-          m_state = NEXT_CHAR;
-        }
-      }
-      break;
-
-    case NEXT_CHAR: {
-      char entry = char_select[m_sel1][m_sel2][m_sel3];
-      if (entry == LEFT) {
-        m_cursor--;
-      } else if (entry == RIGHT) {
-        m_cursor++;
-      } else if (entry == BACKSPACE) {
-        size_t len = strlen(m_string);
-
-        if(m_cursor > 0 && m_cursor <= len) {
-          memmove(&m_string[m_cursor-1], &m_string[m_cursor], len - m_cursor);
-          m_string[len-1]=0;
-          m_cursor--;
-        }
-      } else if (entry == ENTER) {
-        m_display->clear(COLOUR_BLACK);
-        m_state = INACTIVE;
-        break;
-      } else if (entry == AUTOCOMPLETE) {
-        std::string completion;
-
-        if (m_sel3 == 0 && m_autocomplete_suggestion.size())
-          completion = m_autocomplete_suggestion.substr(last_word_of_string.size(), m_autocomplete_suggestion.size() - 1);
-        else if (m_sel3 == 1 && m_second.size())
-          completion = m_second.substr(last_word_of_string.size(), m_second.size() - 1);
-        else if (m_sel3 == 2 && m_third.size())
-          completion = m_third.substr(last_word_of_string.size(), m_third.size() - 1);
-
-        str_insert(m_string, m_n, m_cursor, completion.c_str());
-        m_cursor += completion.size();
-
-        m_cursor = strnlen(m_string, m_n);
-      } else if (entry == CLEAR) {
-        for (uint8_t i = 0; i < m_n; i++)
-          m_string[i] = 0;
-        m_cursor = 0;
-      } else if (entry == '_') {
-        str_insert(m_string, m_n, m_cursor, " ");
-        m_cursor++;
-      } else {
-        const char new_text[2] = {entry, 0};
-        str_insert(m_string, m_n, m_cursor, new_text);
-        m_cursor++;
-      }
-      if (m_cursor > strnlen(m_string, m_n)) {
-        m_cursor = strnlen(m_string, m_n);
-      }
-      m_state = NEXT_CHAR_DRAW;
-      break;
     }
+    if (m_sel2 == 2 && m_sel1 == 0) {
+      m_display->drawString(10 + 0 * 75, 140, font_8x5, m_autocomplete_suggestion.c_str(),
+                            colours[0], COLOUR_BLACK);
+      m_display->drawString(10 + 1 * 75, 140, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
+      m_display->drawString(10 + 2 * 75, 140, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
+    }
+    m_state = GETCHAR3_GET;
+    break;
 
-    case NEXT_CHAR_DRAW:
-
-      t0 = millis();
-
-      uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
-      uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
-      uint16_t string_width = chars_per_row * 6;
-      uint16_t y = 20;
-      uint16_t x = (DISPLAY_WIDTH - string_width) / 2;
-      uint16_t cursor_y = m_cursor / chars_per_row;
-      uint16_t cursor_x = m_cursor % chars_per_row;
-
-      m_display->clear(COLOUR_BLACK);
-      m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_NAVY);
-      uint16_t chars_left = m_n;
-      for (uint8_t row = 0; row < rows; row++) {
-        char buffer[chars_per_row + 1];
-        uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
-        chars_left -= chars_per_row;
-        strncpy(buffer, m_string + (row * chars_per_row), chars_to_copy);
-        buffer[chars_per_row] = 0;
-
-        m_display->drawString(x, y, font_8x5, buffer, COLOUR_WHITE, COLOUR_NAVY);
-        if (row == cursor_y)
-          m_display->drawRect(x + cursor_x * 6, y, 8, 5, COLOUR_RED);
-        y += 10;
+  case GETCHAR3_GET:
+    for (uint8_t i = 0; i < 4; i++) {
+      if (m_buttons[i]->is_pressed()) {
+        m_sel3 = i;
+        m_state = NEXT_CHAR;
       }
-      m_display->drawString(x, y + 5, font_8x5, m_autocomplete_suggestion.c_str(), colours[0],
-                            COLOUR_BLACK);
-      m_display->drawString(x, y + 15, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
-      m_display->drawString(x, y + 25, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
+    }
+    break;
 
-      m_state = GETCHAR1_DRAW;
+  case NEXT_CHAR: {
+    char entry = char_select[m_sel1][m_sel2][m_sel3];
+    if (entry == LEFT) {
+      m_cursor--;
+    } else if (entry == RIGHT) {
+      m_cursor++;
+    } else if (entry == BACKSPACE) {
+      size_t len = strlen(m_string);
+
+      if (m_cursor > 0 && m_cursor <= len) {
+        memmove(&m_string[m_cursor - 1], &m_string[m_cursor], len - m_cursor);
+        m_string[len - 1] = 0;
+        m_cursor--;
+      }
+    } else if (entry == ENTER) {
+      m_display->clear(COLOUR_BLACK);
+      m_state = INACTIVE;
       break;
+    } else if (entry == AUTOCOMPLETE) {
+      std::string completion;
+
+      if (m_sel3 == 0 && m_autocomplete_suggestion.size())
+        completion = m_autocomplete_suggestion.substr(last_word_of_string.size(),
+                                                      m_autocomplete_suggestion.size() - 1);
+      else if (m_sel3 == 1 && m_second.size())
+        completion = m_second.substr(last_word_of_string.size(), m_second.size() - 1);
+      else if (m_sel3 == 2 && m_third.size())
+        completion = m_third.substr(last_word_of_string.size(), m_third.size() - 1);
+
+      str_insert(m_string, m_n, m_cursor, completion.c_str());
+      m_cursor += completion.size();
+
+      m_cursor = strnlen(m_string, m_n);
+    } else if (entry == CLEAR) {
+      for (uint8_t i = 0; i < m_n; i++)
+        m_string[i] = 0;
+      m_cursor = 0;
+    } else if (entry == '_') {
+      str_insert(m_string, m_n, m_cursor, " ");
+      m_cursor++;
+    } else {
+      const char new_text[2] = {entry, 0};
+      str_insert(m_string, m_n, m_cursor, new_text);
+      m_cursor++;
+    }
+    if (m_cursor > strnlen(m_string, m_n)) {
+      m_cursor = strnlen(m_string, m_n);
+    }
+    m_state = NEXT_CHAR_DRAW;
+    break;
+  }
+
+  case NEXT_CHAR_DRAW:
+
+    t0 = millis();
+
+    uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
+    uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
+    uint16_t string_width = chars_per_row * 6;
+    uint16_t y = 20;
+    uint16_t x = (DISPLAY_WIDTH - string_width) / 2;
+    uint16_t cursor_y = m_cursor / chars_per_row;
+    uint16_t cursor_x = m_cursor % chars_per_row;
+
+    m_display->clear(COLOUR_BLACK);
+    m_display->drawRect(x, y, rows * 10, chars_per_row * 6, COLOUR_NAVY);
+    uint16_t chars_left = m_n;
+    for (uint8_t row = 0; row < rows; row++) {
+      char buffer[chars_per_row + 1];
+      uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
+      chars_left -= chars_per_row;
+      strncpy(buffer, m_string + (row * chars_per_row), chars_to_copy);
+      buffer[chars_per_row] = 0;
+
+      m_display->drawString(x, y, font_8x5, buffer, COLOUR_WHITE, COLOUR_NAVY);
+      if (row == cursor_y)
+        m_display->drawRect(x + cursor_x * 6, y, 8, 5, COLOUR_RED);
+      y += 10;
+    }
+    m_display->drawString(x, y + 5, font_8x5, m_autocomplete_suggestion.c_str(), colours[0],
+                          COLOUR_BLACK);
+    m_display->drawString(x, y + 15, font_8x5, m_second.c_str(), colours[1], COLOUR_BLACK);
+    m_display->drawString(x, y + 25, font_8x5, m_third.c_str(), colours[2], COLOUR_BLACK);
+
+    m_state = GETCHAR1_DRAW;
+    break;
   }
   t_last = millis();
 }
@@ -460,11 +462,11 @@ void c_multi_text_entry::run()
     m_needs_redraw = true;
     return;
   }
-  if (m_message_idx < m_message_offset){
+  if (m_message_idx < m_message_offset) {
     m_message_offset--;
     offset_changed = true;
   }
-  if (m_message_idx > m_message_offset + NUM_ITEMS_ON_SCREEN - 1){
+  if (m_message_idx > m_message_offset + NUM_ITEMS_ON_SCREEN - 1) {
     m_message_offset++;
     offset_changed = true;
   }
@@ -477,13 +479,13 @@ void c_multi_text_entry::run()
     draw_button_bar(m_display, OK_button, EDIT_button, UP_button, DOWN_button);
   }
 
-  if(offset_changed) {
+  if (offset_changed) {
     for (uint8_t idx = 0; idx < NUM_ITEMS_ON_SCREEN; ++idx) {
       m_display->fillRect(0, ITEMS_Y + (idx * ITEMS_INTERVAL) + 2, 16, DISPLAY_WIDTH, BACKGROUND);
     }
   }
 
-  if(selection_changed) {
+  if (selection_changed) {
     for (uint8_t idx = 0; idx < NUM_ITEMS_ON_SCREEN; ++idx) {
       const uint8_t message_item_index = idx + m_message_offset;
 
@@ -506,7 +508,6 @@ void c_multi_text_entry::run()
       }
     }
   }
-
 }
 
 c_menu ::c_menu(ILI934X* display, button& button_left, button& button_right, button& button_down,
@@ -579,24 +580,24 @@ void c_menu ::run()
     change_active_item = true;
   }
 
-  if(offset_changed) {
+  if (offset_changed) {
     for (uint8_t idx = 0; idx < num_items_on_screen; ++idx) {
-        m_display->fillRect(0, 32 + ((idx) * 25), DISPLAY_WIDTH, 12, BACKGROUND);
+      m_display->fillRect(0, 32 + ((idx) * 25), DISPLAY_WIDTH, 12, BACKGROUND);
     }
   }
 
-  if(change_active_item) {
+  if (change_active_item) {
     for (uint8_t idx = 0; idx < num_items_on_screen; ++idx) {
       const uint8_t menu_item_index = idx + m_offset;
       if (menu_item_index < m_num_selections) {
         const bool active = m_menu_item == menu_item_index;
-        uint16_t width = 12*strlen(m_menu_items[menu_item_index]);
-        m_display->drawString((DISPLAY_WIDTH-width)/2, 32 + ((idx) * 25), font_16x12, m_menu_items[menu_item_index],
-                              active ? MENU_ACTIVE : MENU_INACTIVE, BACKGROUND);
+        uint16_t width = 12 * strlen(m_menu_items[menu_item_index]);
+        m_display->drawString((DISPLAY_WIDTH - width) / 2, 32 + ((idx) * 25), font_16x12,
+                              m_menu_items[menu_item_index], active ? MENU_ACTIVE : MENU_INACTIVE,
+                              BACKGROUND);
       }
     }
   }
-
 }
 
 c_int_entry ::c_int_entry(ILI934X* display, button& button_left, button& button_right,
@@ -663,4 +664,3 @@ void c_int_entry ::run()
     m_needs_redraw = false;
   }
 }
-

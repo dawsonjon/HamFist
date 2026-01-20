@@ -11,7 +11,6 @@
 // License: MIT
 //
 
-
 #include "cw_data.h"
 const int NUM_AUTOCORRECT_WORDS = 9787;
 const int NUM_MORSE_LETTERS = 46;
