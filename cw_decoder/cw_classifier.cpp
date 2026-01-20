@@ -14,7 +14,7 @@
 #include "cw_classifier.h"
 #include <vector>
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO

@@ -11,7 +11,6 @@
 // License: MIT
 //
 
-
 #include "cw_decode.h"
 #include "cw_data.h"
 #include "dictionary.h"

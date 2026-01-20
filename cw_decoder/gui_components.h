@@ -11,7 +11,6 @@
 // License: MIT
 //
 
-
 #ifndef __c_text_entry__
 #define __c_text_entry__
 
@@ -40,8 +39,10 @@ struct s_messages
   char text[16][251];
 };
 
-void draw_button_bar(ILI934X *display, const char* btn1, const char* btn2, const char* btn3, const char* btn4);
-void draw_button_bar(ILI934X *display, const uint16_t* btn1, const uint16_t* btn2, const uint16_t* btn3, const uint16_t* btn4);
+void draw_button_bar(ILI934X* display, const char* btn1, const char* btn2, const char* btn3,
+                     const char* btn4);
+void draw_button_bar(ILI934X* display, const uint16_t* btn1, const uint16_t* btn2,
+                     const uint16_t* btn3, const uint16_t* btn4);
 
 const uint8_t NUM_MESSAGES = 16;
 

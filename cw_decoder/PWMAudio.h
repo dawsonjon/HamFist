@@ -11,8 +11,6 @@
 // License: MIT
 //
 
-
-
 #ifdef ARDUINO_ARCH_RP2040
 
 #ifndef PWM_AUDIO_H
