@@ -14,7 +14,7 @@
 #include "cw_classifier.h"
 #include <vector>
 
-// #define LOGGING
+//#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -139,6 +139,10 @@ void c_morse_timing_classifier::update_on_model(const float* d, size_t n)
   for (int idx = 1; idx < BIN_MAX / BIN_WIDTH - 1; idx++) {
     smoothed_histogram[idx] = (on_histogram[idx - 1] + on_histogram[idx] + on_histogram[idx + 1]);
   }
+  DEBUG_PRINTF("channel %u on histogram\n", m_channel_number);
+  for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; idx++) {
+    DEBUG_PRINTF("%i %i\n", idx * BIN_WIDTH, smoothed_histogram[idx]);
+  }
 
   // find peaks
   std::vector<int> true_peaks;
@@ -204,6 +208,7 @@ void c_morse_timing_classifier::update_on_model(const float* d, size_t n)
 void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
 {
   if (n < 2) {
+    DEBUG_PRINTF("channel %i not enough samples\n", m_channel_number);
     return;
   } // not enough samples
 
@@ -223,12 +228,9 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
     smoothed_histogram[idx] =
         (off_histogram[idx - 1] + off_histogram[idx] + off_histogram[idx + 1]);
   }
-
-  if (m_channel_number == 0) {
-    DEBUG_PRINTF("off histogram\n");
-    for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; idx++) {
-      DEBUG_PRINTF("%i %i\n", idx * BIN_WIDTH, smoothed_histogram[idx]);
-    }
+  DEBUG_PRINTF("channel %i off histogram\n", m_channel_number);
+  for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; idx++) {
+    DEBUG_PRINTF("%i %i\n", idx * BIN_WIDTH, smoothed_histogram[idx]);
   }
 
   // find peaks
@@ -267,13 +269,13 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
 
     gap3_mu = 3 * dot_mu;
     gap3_sigma = dot_sigma;
-    DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
-    DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
+    DEBUG_PRINTF("gap3 mu %f\n", gap3_mu);
+    DEBUG_PRINTF("gap3 sigma %f\n", gap3_sigma);
 
     gap7_mu = 7 * dot_mu;
     gap7_sigma = dot_sigma;
-    DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
-    DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
+    DEBUG_PRINTF("gap7 mu %f\n", gap7_mu);
+    DEBUG_PRINTF("gap7 sigma %f\n", gap7_sigma);
 
     return;
   }
@@ -305,13 +307,13 @@ void c_morse_timing_classifier::update_off_model(const float* d, size_t n)
   gap3_mu = histogram_mean(smoothed_histogram, valley1_bin, end, BIN_WIDTH);
   gap3_sigma = histogram_stddev(gap3_mu, smoothed_histogram, valley1_bin, end, BIN_WIDTH);
   gap3_sigma = std::min(std::max(0.1f * gap3_mu, gap3_sigma), 2 * gap1_sigma);
-  DEBUG_PRINTF("gap3_mu %f\n", gap3_mu);
-  DEBUG_PRINTF("gap3_sigma %f\n", gap3_sigma);
+  DEBUG_PRINTF("gap3 mu %f\n", gap3_mu);
+  DEBUG_PRINTF("gap3 sigma %f\n", gap3_sigma);
 
   gap7_mu = 7 * gap1_mu;
   gap7_sigma = gap1_sigma;
-  DEBUG_PRINTF("gap7_mu %f\n", gap7_mu);
-  DEBUG_PRINTF("gap7_sigma %f\n", gap7_sigma);
+  DEBUG_PRINTF("gap7 mu %f\n", gap7_mu);
+  DEBUG_PRINTF("gap7 sigma %f\n", gap7_sigma);
 }
 
 void c_morse_timing_classifier::classify_on(float d, float& logp_dot, float& logp_dash,

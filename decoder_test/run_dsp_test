@@ -38,7 +38,7 @@ rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test4.wav
-##python draw_plots.py
+#python draw_plots.py
 #
 echo
 echo "********** TEST5 **********"

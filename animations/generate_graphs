@@ -1,0 +1,5 @@
+mmdc -b white -i plot0.mmd -o plot0.png -w 3840 -H 2160
+mmdc -i plot1.mmd -o plot1.png -b white -w 3840 -H 2160
+mmdc -i plot2.mmd -o plot2.png -b white -w 3840 -H 2160
+mmdc -i plot3.mmd -o plot3.png -b white -w 3840 -H 2160
+mmdc -i plot4.mmd -o plot4.png -b white -w 3840 -H 2160

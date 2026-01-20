@@ -135,17 +135,24 @@ void loop() {
   while(1) {
     static uint16_t output_buffer[2*ADC_BLOCK_SIZE];
     send_cw(audio_output, output_buffer, cw_encoder);
-
     int16_t *samples = adc_audio.input_samples();
+
     uint32_t start1 = millis();
     for(int sample_number=0; sample_number<ADC_BLOCK_SIZE; ++sample_number)
     {
       cw_dsp.process_sample(samples[sample_number]);
       if(enable_waterfall && sample_number%256 == 0) draw_waterfall(cw_dsp);
     }
-    update_ui(cw_dsp, cw_encoder, enable_waterfall);    
     //Serial.print("processing time: ");
     //Serial.println(millis() - start1);
+
+    update_ui(cw_dsp, cw_encoder, enable_waterfall);
+    while(1) {
+      if((millis() - start1) > 67 && (millis() - start1) < 69) update_ui(cw_dsp, cw_encoder, enable_waterfall);
+      sleep_ms(1);
+      if((millis() - start1) >= 69) break;
+    }
+
   }
 }
 
