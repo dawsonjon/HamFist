@@ -34,5 +34,4 @@ A 3D printed enclosure can be found `here <https://github.com/dawsonjon/HamFist/
 Credits
 -------
 
-Many thanks to Franciscu Capuzzi IS0JSV for implementing additional modes and the waterfall feature.
 This project uses the ILI934X display driver by Darren Horrocks.
