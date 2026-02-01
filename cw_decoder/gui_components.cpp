@@ -232,7 +232,6 @@ void c_text_entry ::run()
   }
 
   case GETCHAR1_DRAW:
-    t0 = millis();
     m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
     for (uint8_t i = 0; i < 4; i++) {
       for (uint8_t j = 0; j < 4; j++) {
@@ -256,7 +255,6 @@ void c_text_entry ::run()
     break;
 
   case GETCHAR2_DRAW:
-    t0 = millis();
     m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
     for (uint8_t i = 0; i < 4; i++) {
       char disp[20];
@@ -277,7 +275,6 @@ void c_text_entry ::run()
     break;
 
   case GETCHAR3_DRAW:
-    t0 = millis();
     m_display->fillRect(0, 120, 120, 320, COLOUR_BLACK);
     if (m_sel2 == 3 && m_sel1 == 3) {
       m_display->drawString(16, 120, font_16x12, " LEFT RIGHT ENTER BKSPC", COLOUR_WHITE,
@@ -361,8 +358,6 @@ void c_text_entry ::run()
 
   case NEXT_CHAR_DRAW:
 
-    t0 = millis();
-
     uint16_t chars_per_row = DISPLAY_WIDTH / 6 - 2;
     uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
     uint16_t string_width = chars_per_row * 6;
@@ -394,7 +389,6 @@ void c_text_entry ::run()
     m_state = GETCHAR1_DRAW;
     break;
   }
-  t_last = millis();
 }
 
 bool c_multi_text_entry ::is_active()
