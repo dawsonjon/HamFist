@@ -268,7 +268,7 @@ static void pre_filter_observations(s_observation signal[], int& num_observation
 {
 
   // set some hard limits on minimum and maximum sizes
-  float dot_min_ms = 15.0f;
+  float dot_min_ms = 30.0f;
   float dash_max_ms = 720.0f;
   float min_hard = std::max(dot_min_ms * 0.5f, 8.0f);
   float max_hard = dash_max_ms * 2.0f;
