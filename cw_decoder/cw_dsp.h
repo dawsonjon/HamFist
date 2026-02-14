@@ -23,7 +23,7 @@
 
 static const uint16_t FRAME_SIZE = 64;
 // enough observations to train the decoder
-static const uint16_t OBSERVATION_BUFFER_SIZE = 50;
+static const uint16_t OBSERVATION_BUFFER_SIZE = 25;
 // enough observations to update the decoder
 static const uint16_t OBSERVATION_BURST_SIZE = 10;
 static const uint16_t TIMEOUT = 500;
