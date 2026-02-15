@@ -650,7 +650,7 @@ void c_int_entry ::run()
     }
 
     char buffer[11];
-    snprintf(buffer, 11, "%i", m_edit_value);
+    snprintf(buffer, 11, "%3i", m_edit_value);
     int16_t width = strlen(buffer) * 12;
     m_display->drawString((DISPLAY_WIDTH - width) / 2, 100, font_16x12, buffer, COLOUR_WHITE,
                           COLOUR_BLACK);

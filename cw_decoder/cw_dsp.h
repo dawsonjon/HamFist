@@ -23,7 +23,7 @@
 
 static const uint16_t FRAME_SIZE = 64;
 // enough observations to train the decoder
-static const uint16_t OBSERVATION_BUFFER_SIZE = 25;
+static const uint16_t OBSERVATION_BUFFER_SIZE = 50;
 // enough observations to update the decoder
 static const uint16_t OBSERVATION_BURST_SIZE = 10;
 static const uint16_t TIMEOUT = 500;
@@ -60,6 +60,7 @@ class c_cw_dsp
   float noise_estimate[FRAME_SIZE / 2];
   uint32_t smoothed_magnitude[FRAME_SIZE / 2];
   uint32_t frame_count;
+  float thresh_mult = 9;
 
   s_channel channels[7];
 
@@ -85,6 +86,7 @@ public:
 
   uint32_t get_buffer_percent(int channel);
   float get_snr(int channel);
+  void set_threshold(float thresh_mult){thresh_mult = thresh_mult;}
 };
 
 #endif

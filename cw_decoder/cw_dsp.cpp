@@ -135,11 +135,12 @@ void c_cw_dsp ::process_channels()
 
     // timeout
     if (channels[channel].duration == TIMEOUT) {
-      if (channels[channel].trained &&
-          channels[channel].num_observations > OBSERVATION_BURST_SIZE) {
+      if (get_snr(channel) > 12.0f) {  
         print_element("decode_bins", channel * CHANNEL_SIZE);
+        
         channels[channel].decoder.decode(channels[channel].observations,
                                          channels[channel].num_observations);
+        
         decode(channel, channels[channel].decoder.get_text(),
                channels[channel].decoder.get_text_partial());
       }
@@ -155,14 +156,19 @@ void c_cw_dsp ::process_channels()
         (channels[channel].trained &&
          channels[channel].num_observations == OBSERVATION_BURST_SIZE)) {
 
-      channels[channel].decoder.decode(channels[channel].observations,
-                                       channels[channel].num_observations);
+
 
       // check for feasible SNR to perform decode
       if (get_snr(channel) > 12.0f) {
+
+        channels[channel].decoder.decode(channels[channel].observations,
+                                  channels[channel].num_observations);
+        
         decode(channel, channels[channel].decoder.get_text(),
                channels[channel].decoder.get_text_partial());
+        
         channels[channel].trained = true;
+      
       }
 
       channels[channel].num_observations = 0;
@@ -195,7 +201,7 @@ void c_cw_dsp ::process_frame()
       gate_count[idx]++;
     }
     noise_estimate[idx] = std::max(noise_estimate[idx], 1.0f);
-    threshold[idx] = noise_estimate[idx] * 9;
+    threshold[idx] = noise_estimate[idx] * thresh_mult;
   }
 
   print_frame_float("noise_estimate", noise_estimate);
