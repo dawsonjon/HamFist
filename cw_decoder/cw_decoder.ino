@@ -58,6 +58,7 @@ struct s_settings {
   int tx_channel;
   char my_callsign[17];
   char their_callsign[17];
+  int threshold;
   s_messages messages;
 };
 
@@ -66,6 +67,7 @@ s_settings settings = {
   1, //active channel
   "XYZ123",
   "ZYX321",
+  9,
   { //messages
   "CQ CQ CQ DE @MYCALL @MYCALL @MYCALL K",
   "CQ CQ DE @MYCALL K",
@@ -221,10 +223,11 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
   static c_multi_text_entry messages(display, button_left, button_right, button_down, button_up, settings.messages);
 
   static uint8_t main_menu_selection = 0;
-  static const char* const main_menu_items[] = {"Transmit WPM", "Transmit Channel", "My Callsign", "Their Callsign"};
-  static c_menu main_menu(display, button_left, button_right, button_down, button_up, "Menu", main_menu_selection, main_menu_items, 4);
+  static const char* const main_menu_items[] = {"Transmit WPM", "Transmit Channel", "My Callsign", "Their Callsign", "Threshold"};
+  static c_menu main_menu(display, button_left, button_right, button_down, button_up, "Menu", main_menu_selection, main_menu_items, 5);
   static c_int_entry wpm_entry(display, button_left, button_right, button_down, button_up, "Transmit Speed (WPM)", settings.tx_wpm, 10, 50);
   static c_int_entry channel_entry(display, button_left, button_right, button_down, button_up, "Transmit Channel", settings.tx_channel, 0, 5);
+  static c_int_entry threshold_entry(display, button_left, button_right, button_down, button_up, "Threshold", settings.threshold, 8, 12);
   static c_text_entry my_callsign_entry(display, button_left, button_right, button_down, button_up);
   static c_text_entry their_callsign_entry(display, button_left, button_right, button_down, button_up);
 
@@ -248,6 +251,10 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
     wpm_entry.run(); 
     if(!wpm_entry.is_active() && wpm_entry.is_ok()) save(); 
   }
+  else if(threshold_entry.is_active()) { 
+    threshold_entry.run(); 
+    if(!threshold_entry.is_active() && threshold_entry.is_ok()) save(); 
+  }
   else if(channel_entry.is_active()) {
     channel_entry.run();
     if(!channel_entry.is_active() && channel_entry.is_ok()) save();
@@ -261,6 +268,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
       if(main_menu_selection == 1) channel_entry.raise();
       if(main_menu_selection == 2) my_callsign_entry.raise(settings.my_callsign, 16);
       if(main_menu_selection == 3) their_callsign_entry.raise(settings.their_callsign, 16);
+      if(main_menu_selection == 4) threshold_entry.raise();
     }
     needs_draw = true;
   } else if(text_entry.is_active()) {
@@ -317,6 +325,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
       }
     }
     cw_encoder.set_wpm(settings.tx_wpm);
+    cw_dsp.set_threshold(settings.threshold);
     cw_encoder.set_frequency_Hz(((2 * settings.tx_channel * 586)+586)/2);
     if(needs_draw){
       needs_draw = false;
@@ -462,7 +471,7 @@ void send_cw(PWMAudio &audio_output, uint16_t *output_buffer, c_cw_encoder &cw_e
 ///////////////////////////////////////////////////////////////////////////////
 //Non-Volatile Storage
 
-const int version = 300;
+const int version = 302;
 
 void load() {
   uint32_t settings_stored = 0;
