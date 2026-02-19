@@ -18,9 +18,9 @@
 
 const int BIN_WIDTH = 10;
 const int BIN_MAX = 500;
-//e.g. 4 means 3 parts historic to 1 part recent data
-//higher values adapt more slowly to change but are more tollerant of outliers.
-//smaller values adapt more quickly to change but are less tollerant to outliers.
+// e.g. 4 means 3 parts historic to 1 part recent data
+// higher values adapt more slowly to change but are more tollerant of outliers.
+// smaller values adapt more quickly to change but are less tollerant to outliers.
 const int HISTORIC_WEIGHTING = 10;
 
 class c_morse_timing_classifier

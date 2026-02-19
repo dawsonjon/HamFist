@@ -86,7 +86,7 @@ public:
 
   uint32_t get_buffer_percent(int channel);
   float get_snr(int channel);
-  void set_threshold(float thresh_mult){thresh_mult = thresh_mult;}
+  void set_threshold(float thresh_mult) { thresh_mult = thresh_mult; }
 };
 
 #endif

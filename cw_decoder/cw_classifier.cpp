@@ -14,7 +14,7 @@
 #include "cw_classifier.h"
 #include <vector>
 
-//#define LOGGING
+// #define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -55,20 +55,22 @@ void c_morse_timing_classifier::reset()
   }
 }
 
-void c_morse_timing_classifier::prescale_histograms() {
-  //for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
-  //  on_histogram[idx] *= (HISTORIC_WEIGHTING - 1);
-  //}
-  //for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
-  //  off_histogram[idx] *= (HISTORIC_WEIGHTING - 1);
-  //}
+void c_morse_timing_classifier::prescale_histograms()
+{
+  // for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
+  //   on_histogram[idx] *= (HISTORIC_WEIGHTING - 1);
+  // }
+  // for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
+  //   off_histogram[idx] *= (HISTORIC_WEIGHTING - 1);
+  // }
 }
 
-void c_morse_timing_classifier::postscale_histograms() {
-  //for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
-  //  on_histogram[idx] /= HISTORIC_WEIGHTING;
- // }
-  //for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
+void c_morse_timing_classifier::postscale_histograms()
+{
+  // for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
+  //   on_histogram[idx] /= HISTORIC_WEIGHTING;
+  // }
+  // for (int idx = 0; idx < BIN_MAX / BIN_WIDTH; ++idx) {
   //  off_histogram[idx] /= HISTORIC_WEIGHTING;
   //}
 }

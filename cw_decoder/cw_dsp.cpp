@@ -135,12 +135,12 @@ void c_cw_dsp ::process_channels()
 
     // timeout
     if (channels[channel].duration == TIMEOUT) {
-      if (get_snr(channel) > 12.0f) {  
+      if (get_snr(channel) > 12.0f) {
         print_element("decode_bins", channel * CHANNEL_SIZE);
-        
+
         channels[channel].decoder.decode(channels[channel].observations,
                                          channels[channel].num_observations);
-        
+
         decode(channel, channels[channel].decoder.get_text(),
                channels[channel].decoder.get_text_partial());
       }
@@ -156,19 +156,16 @@ void c_cw_dsp ::process_channels()
         (channels[channel].trained &&
          channels[channel].num_observations == OBSERVATION_BURST_SIZE)) {
 
-
-
       // check for feasible SNR to perform decode
       if (get_snr(channel) > 12.0f) {
 
         channels[channel].decoder.decode(channels[channel].observations,
-                                  channels[channel].num_observations);
-        
+                                         channels[channel].num_observations);
+
         decode(channel, channels[channel].decoder.get_text(),
                channels[channel].decoder.get_text_partial());
-        
+
         channels[channel].trained = true;
-      
       }
 
       channels[channel].num_observations = 0;

@@ -53,7 +53,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * Adapted and merged with ili934x library by Jon Dawson 2026
  */
- //
+//
 #ifdef ARDUINO_ARCH_RP2040
 
 #include "ili934x.h"
@@ -303,8 +303,6 @@ void ILI934X::init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_d
   _display_type = display_type;
 }
 
-
-
 void ILI934X::powerOn(bool power_on)
 {
   if (power_on) {
@@ -440,27 +438,27 @@ void ILI934X::drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 
 static uint16_t alpha_blend(uint16_t bg, uint16_t fg, uint16_t alpha)
 {
-  if(alpha >= 256) return fg;
+  if (alpha >= 256)
+    return fg;
 
   fg = (fg >> 8) | (fg << 8);
   bg = (bg >> 8) | (bg << 8);
 
-  uint16_t r_bg = (bg >> 11) & 0x1F;   // Extract red (5 bits)
-  uint16_t g_bg = (bg >> 5) & 0x3F;    // Extract green (6 bits)
-  uint16_t b_bg = bg & 0x1F;           // Extract blue (5 bits)
+  uint16_t r_bg = (bg >> 11) & 0x1F; // Extract red (5 bits)
+  uint16_t g_bg = (bg >> 5) & 0x3F;  // Extract green (6 bits)
+  uint16_t b_bg = bg & 0x1F;         // Extract blue (5 bits)
 
-  uint16_t r_fg = (fg >> 11) & 0x1F;   // Extract red (5 bits)
-  uint16_t g_fg = (fg >> 5) & 0x3F;    // Extract green (6 bits)
-  uint16_t b_fg = fg & 0x1F;           // Extract blue (5 bits)
+  uint16_t r_fg = (fg >> 11) & 0x1F; // Extract red (5 bits)
+  uint16_t g_fg = (fg >> 5) & 0x3F;  // Extract green (6 bits)
+  uint16_t b_fg = fg & 0x1F;         // Extract blue (5 bits)
 
-  const uint16_t not_alpha = 256-alpha;
-  r_bg = ((r_bg*not_alpha) + (r_fg*alpha)) >> 8;
-  g_bg = ((g_bg*not_alpha) + (g_fg*alpha)) >> 8;
-  b_bg = ((b_bg*not_alpha) + (b_fg*alpha)) >> 8;
+  const uint16_t not_alpha = 256 - alpha;
+  r_bg = ((r_bg * not_alpha) + (r_fg * alpha)) >> 8;
+  g_bg = ((g_bg * not_alpha) + (g_fg * alpha)) >> 8;
+  b_bg = ((b_bg * not_alpha) + (b_fg * alpha)) >> 8;
 
   uint16_t result = (r_bg << 11) | (g_bg << 5) | b_bg;
   return (result >> 8) | (result << 8);
-
 }
 
 #ifdef SMOMOTH_FONTS
@@ -484,7 +482,7 @@ void ILI934X::drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint
   uint8_t data = font[font_index++];
   uint8_t bits_left = 8;
 
-  //initial grayscale buffer
+  // initial grayscale buffer
   for (uint8_t xx = 0; xx < font_width; ++xx) {
     for (uint8_t yy = 0; yy < font_height; ++yy) {
       if (data & 0x01) {
@@ -501,27 +499,27 @@ void ILI934X::drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint
     }
   }
 
-  //smooth font
+  // smooth font
   for (uint8_t xx = 0; xx < font_width; ++xx) {
     for (uint8_t yy = 0; yy < font_height; ++yy) {
       uint8_t C = buffer_grayscale[yy][xx];
       uint16_t weighting = 0;
-      if(C) {
+      if (C) {
         weighting = 256;
       } else {
-        uint8_t N = yy>0?buffer_grayscale[yy-1][xx]:0;
-        uint8_t S = yy<font_height-1?buffer_grayscale[yy+1][xx]:0;
-        uint8_t W = xx>0?buffer_grayscale[yy][xx-1]:0;
-        uint8_t E = xx<font_width-1?buffer_grayscale[yy][xx+1]:0;
-        if((N && E) || (N && W) || (S && E) || (S && W)) {
+        uint8_t N = yy > 0 ? buffer_grayscale[yy - 1][xx] : 0;
+        uint8_t S = yy < font_height - 1 ? buffer_grayscale[yy + 1][xx] : 0;
+        uint8_t W = xx > 0 ? buffer_grayscale[yy][xx - 1] : 0;
+        uint8_t E = xx < font_width - 1 ? buffer_grayscale[yy][xx + 1] : 0;
+        if ((N && E) || (N && W) || (S && E) || (S && W)) {
           weighting = 96;
         }
       }
       buffer[yy][xx] = alpha_blend(bg, fg, weighting);
     }
   }
-  
-  //fill in font gap
+
+  // fill in font gap
   for (uint8_t xx = 0; xx < font_space; ++xx) {
     for (uint8_t yy = 0; yy < font_height; ++yy) {
       buffer[yy][font_width + xx] = bg;
@@ -1030,107 +1028,115 @@ void ILI934X::init_touchscreen(uint8_t cs, uint32_t touchscreen_baud_rate)
   m_touch_enabled = true;
 }
 
-static inline uint16_t spi_transfer16(spi_inst_t *spi, uint16_t tx)
+static inline uint16_t spi_transfer16(spi_inst_t* spi, uint16_t tx)
 {
-    uint8_t txbuf[2] = {
-        (uint8_t)(tx >> 8),
-        (uint8_t)(tx & 0xFF)
-    };
-    uint8_t rxbuf[2];
+  uint8_t txbuf[2] = {(uint8_t)(tx >> 8), (uint8_t)(tx & 0xFF)};
+  uint8_t rxbuf[2];
 
-    spi_write_read_blocking(spi, txbuf, rxbuf, 2);
+  spi_write_read_blocking(spi, txbuf, rxbuf, 2);
 
-    return ((uint16_t)rxbuf[0] << 8) | rxbuf[1];
+  return ((uint16_t)rxbuf[0] << 8) | rxbuf[1];
 }
 
-static int16_t besttwoavg( int16_t x , int16_t y , int16_t z ) {
+static int16_t besttwoavg(int16_t x, int16_t y, int16_t z)
+{
   int16_t da, db, dc;
   int16_t reta = 0;
-  if ( x > y ) da = x - y; else da = y - x;
-  if ( x > z ) db = x - z; else db = z - x;
-  if ( z > y ) dc = z - y; else dc = y - z;
+  if (x > y)
+    da = x - y;
+  else
+    da = y - x;
+  if (x > z)
+    db = x - z;
+  else
+    db = z - x;
+  if (z > y)
+    dc = z - y;
+  else
+    dc = y - z;
 
-  if ( da <= db && da <= dc ) reta = (x + y) >> 1;
-  else if ( db <= da && db <= dc ) reta = (x + z) >> 1;
-  else reta = (y + z) >> 1;
+  if (da <= db && da <= dc)
+    reta = (x + y) >> 1;
+  else if (db <= da && db <= dc)
+    reta = (x + z) >> 1;
+  else
+    reta = (y + z) >> 1;
   return (reta);
 }
 
 bool ILI934X::touched()
 {
-  if(!m_touch_enabled) return false;
-	update();
-	return (m_zraw >= Z_THRESHOLD);
+  if (!m_touch_enabled)
+    return false;
+  update();
+  return (m_zraw >= Z_THRESHOLD);
 }
 
-void ILI934X::getPoint(int16_t &x, int16_t &y, int16_t &z)
+void ILI934X::getPoint(int16_t& x, int16_t& y, int16_t& z)
 {
-  if(!m_touch_enabled){
+  if (!m_touch_enabled) {
     x = y = z = 0;
     return;
   }
-	update();
+  update();
 
   x = (m_ax * m_xraw + m_bx);
-  if (x < 0) x = 0;
-  if (x > _width-1) x = _width-1;
+  if (x < 0)
+    x = 0;
+  if (x > _width - 1)
+    x = _width - 1;
 
   y = (m_ay * m_yraw + m_by);
-  if (y < 0) y = 0;
-  if (y > _height-1) y = _height-1;
-  
+  if (y < 0)
+    y = 0;
+  if (y > _height - 1)
+    y = _height - 1;
+
   z = m_zraw;
 }
 
 bool ILI934X::touch_calibrate()
 {
-    static const int cal_points[4][2] = {
-        { 20, 20 },
-        { _width - 20, 20 },
-        { 20, _height - 20 },
-        { _width - 20, _height - 20 }
-    };
+  static const int cal_points[4][2] = {
+      {20, 20}, {_width - 20, 20}, {20, _height - 20}, {_width - 20, _height - 20}};
 
+  float raw_x[4], raw_y[4];
+  clear(COLOUR_BLACK);
+  for (int i = 0; i < 4; i++) {
+    drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_WHITE);
 
-    float raw_x[4], raw_y[4];
-    clear(COLOUR_BLACK);
-    for (int i = 0; i < 4; i++) {
-        drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_WHITE);
+    while (!touched())
+      tight_loop_contents();
 
-        while (!touched())
-            tight_loop_contents();
-
-        float x_total = 0.0f;
-        float y_total = 0.0f;
-        int32_t num_meas = 0;
-        while(num_meas < 1024.0f){
-          if(touched()){            
-            x_total += m_xraw;
-            y_total += m_yraw;
-            num_meas += 1;
-          }
-        }
-        raw_x[i] = x_total/1024.0f;
-        raw_y[i] = y_total/1024.0f;
-
-        drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_GREEN);
-
-        while (touched())
-            tight_loop_contents();
-
-        sleep_ms(200);
+    float x_total = 0.0f;
+    float y_total = 0.0f;
+    int32_t num_meas = 0;
+    while (num_meas < 1024.0f) {
+      if (touched()) {
+        x_total += m_xraw;
+        y_total += m_yraw;
+        num_meas += 1;
+      }
     }
+    raw_x[i] = x_total / 1024.0f;
+    raw_y[i] = y_total / 1024.0f;
 
-    // Compute scale + offset
-    m_ax = (float)(cal_points[1][0] - cal_points[0][0]) /
-              (float)(raw_x[1] - raw_x[0]);
-    m_bx = cal_points[0][0] - m_ax * raw_x[0];
+    drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_GREEN);
 
-    m_ay = (float)(cal_points[2][1] - cal_points[0][1]) /
-              (float)(raw_y[2] - raw_y[0]);
-    m_by = cal_points[0][1] - m_ay * raw_y[0];
+    while (touched())
+      tight_loop_contents();
 
-    return true;
+    sleep_ms(200);
+  }
+
+  // Compute scale + offset
+  m_ax = (float)(cal_points[1][0] - cal_points[0][0]) / (float)(raw_x[1] - raw_x[0]);
+  m_bx = cal_points[0][0] - m_ax * raw_x[0];
+
+  m_ay = (float)(cal_points[2][1] - cal_points[0][1]) / (float)(raw_y[2] - raw_y[0]);
+  m_by = cal_points[0][1] - m_ay * raw_y[0];
+
+  return true;
 }
 
 void ILI934X::update()
@@ -1154,16 +1160,16 @@ void ILI934X::update()
   z -= z2;
 
   if (z >= Z_THRESHOLD) {
-      // dummy X measure, 1st is always noisy
-      spi_transfer16(m_spi, 0x91);
-      sleep_us(20);
+    // dummy X measure, 1st is always noisy
+    spi_transfer16(m_spi, 0x91);
+    sleep_us(20);
 
-      data[0] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
-      data[1] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
-      data[2] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
-      data[3] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
+    data[0] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
+    data[1] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
+    data[2] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
+    data[3] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
   } else {
-      data[0] = data[1] = data[2] = data[3] = 0;
+    data[0] = data[1] = data[2] = data[3] = 0;
   }
 
   // Last Y touch power down
@@ -1173,58 +1179,58 @@ void ILI934X::update()
   gpio_put(m_cs_touch, 1);
   spi_set_baudrate(m_spi, m_tft_baud_rate);
 
-	if (z < 0) z = 0;
-	if (z < Z_THRESHOLD) {
-		m_zraw = 0;
-		return;
-	}
-	m_zraw = z;
-	
-	// Average pair with least distance between each measured x then y
-	int16_t x = besttwoavg( data[0], data[2], data[4] );
-	int16_t y = besttwoavg( data[1], data[3], data[5] );
+  if (z < 0)
+    z = 0;
+  if (z < Z_THRESHOLD) {
+    m_zraw = 0;
+    return;
+  }
+  m_zraw = z;
+
+  // Average pair with least distance between each measured x then y
+  int16_t x = besttwoavg(data[0], data[2], data[4]);
+  int16_t y = besttwoavg(data[1], data[3], data[5]);
 
   m_xraw = x;
-	m_yraw = y;
+  m_yraw = y;
   return;
 
-	if (z >= Z_THRESHOLD) {
-		switch (m_rotation) {
-		  case R0DEG:
-			m_xraw = y;
-			m_yraw = 4095-x;
-			break;
-		  case R90DEG:
-			m_xraw = 4095-x;
-			m_yraw = 4095-y;
-			break;
-		  case R180DEG:
-			m_xraw = 4095-y;
-			m_yraw = x;
-			break;
-		  case R270DEG:
-			m_xraw = x;
-			m_yraw = y;
+  if (z >= Z_THRESHOLD) {
+    switch (m_rotation) {
+    case R0DEG:
+      m_xraw = y;
+      m_yraw = 4095 - x;
       break;
-      case MIRRORED0DEG:
-			m_xraw = y;
-			m_yraw = x;
-			break;
-		  case MIRRORED90DEG:
-			m_xraw = 4095-x;
-			m_yraw = y;
-			break;
-		  case MIRRORED180DEG:
-			m_xraw = 4095-y;
-			m_yraw = 4095-x;
-			break;
-		  case MIRRORED270DEG:
-			m_xraw = x;
-			m_yraw = 4095-y;
+    case R90DEG:
+      m_xraw = 4095 - x;
+      m_yraw = 4095 - y;
       break;
-		}
-	}
-
+    case R180DEG:
+      m_xraw = 4095 - y;
+      m_yraw = x;
+      break;
+    case R270DEG:
+      m_xraw = x;
+      m_yraw = y;
+      break;
+    case MIRRORED0DEG:
+      m_xraw = y;
+      m_yraw = x;
+      break;
+    case MIRRORED90DEG:
+      m_xraw = 4095 - x;
+      m_yraw = y;
+      break;
+    case MIRRORED180DEG:
+      m_xraw = 4095 - y;
+      m_yraw = 4095 - x;
+      break;
+    case MIRRORED270DEG:
+      m_xraw = x;
+      m_yraw = 4095 - y;
+      break;
+    }
+  }
 }
 
 #endif
