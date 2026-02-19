@@ -32,8 +32,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef ARDUINO_ARCH_RP2040
 
-#include <cstdint>
 #include "colours.h"
+#include <cstdint>
 
 #ifndef __ILI934X_H__
 #define __ILI934X_H__
@@ -82,7 +82,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MADCTL_MH 0x04  ///< LCD refresh right to left
 
 #define _MAX_CHUNK_SIZE 256
-#define Z_THRESHOLD     300
+#define Z_THRESHOLD 300
 
 enum e_display_type
 {
@@ -104,11 +104,12 @@ enum ILI934X_ROTATION
   MIRRORED270DEG
 };
 
-struct s_touchcal {
-    float ax;
-    float bx;
-    float ay;
-    float by;
+struct s_touchcal
+{
+  float ax;
+  float bx;
+  float ay;
+  float by;
 };
 
 class ILI934X
@@ -148,12 +149,11 @@ public:
   uint16_t colour565(uint8_t r, uint8_t g, uint8_t b);
   void powerOn(bool power_on);
   bool touched();
-  void getPoint(int16_t &x, int16_t &y, int16_t &z);
+  void getPoint(int16_t& x, int16_t& y, int16_t& z);
   bool touch_calibrate();
-  bool is_touch_enabled() {
-    return m_touch_enabled;
-  }
-  s_touchcal get_touch_calibration(){
+  bool is_touch_enabled() { return m_touch_enabled; }
+  s_touchcal get_touch_calibration()
+  {
     s_touchcal retval;
     retval.ax = m_ax;
     retval.bx = m_bx;
@@ -161,7 +161,8 @@ public:
     retval.by = m_by;
     return retval;
   }
-  void set_touch_calibration(s_touchcal touchcal){
+  void set_touch_calibration(s_touchcal touchcal)
+  {
     m_ax = touchcal.ax;
     m_bx = touchcal.bx;
     m_ay = touchcal.ay;
@@ -193,9 +194,9 @@ private:
   uint8_t m_rst;
   uint16_t m_init_width;
   uint16_t m_init_height;
-  int16_t m_xraw=0, m_yraw=0, m_zraw=0;
+  int16_t m_xraw = 0, m_yraw = 0, m_zraw = 0;
   float m_ax, m_bx, m_ay, m_by;
-  uint32_t m_msraw=0x80000000;
+  uint32_t m_msraw = 0x80000000;
   uint32_t m_touch_baud_rate;
   uint32_t m_tft_baud_rate;
   ILI934X_ROTATION m_rotation;
