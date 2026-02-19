@@ -32,12 +32,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifdef ARDUINO_ARCH_RP2040
 
+#include <cstdint>
 #include "colours.h"
 
 #ifndef __ILI934X_H__
 #define __ILI934X_H__
 
-// #include "gfxfont.h"
 #include "hardware/dma.h"
 #include "hardware/spi.h"
 
@@ -82,6 +82,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MADCTL_MH 0x04  ///< LCD refresh right to left
 
 #define _MAX_CHUNK_SIZE 256
+#define Z_THRESHOLD     300
 
 enum e_display_type
 {
@@ -103,13 +104,22 @@ enum ILI934X_ROTATION
   MIRRORED270DEG
 };
 
+struct s_touchcal {
+    float ax;
+    float bx;
+    float ay;
+    float by;
+};
+
 class ILI934X
 {
 public:
   ILI934X(spi_inst_t* spi, uint8_t cs, uint8_t dc, uint16_t width = 240, uint16_t height = 320);
 
   void init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_display,
-            e_display_type display_type);
+            e_display_type display_type, uint32_t tft_baud_rate);
+  void init_touchscreen(uint8_t cs, uint32_t touch_baud_rate);
+
   void configure_ili934x();
   void configure_st7796();
   void configure_ili9488();
@@ -137,6 +147,28 @@ public:
                   uint16_t bg);
   uint16_t colour565(uint8_t r, uint8_t g, uint8_t b);
   void powerOn(bool power_on);
+  bool touched();
+  void getPoint(int16_t &x, int16_t &y, int16_t &z);
+  bool touch_calibrate();
+  bool is_touch_enabled() {
+    return m_touch_enabled;
+  }
+  s_touchcal get_touch_calibration(){
+    s_touchcal retval;
+    retval.ax = m_ax;
+    retval.bx = m_bx;
+    retval.ay = m_ay;
+    retval.by = m_by;
+    return retval;
+  }
+  void set_touch_calibration(s_touchcal touchcal){
+    m_ax = touchcal.ax;
+    m_bx = touchcal.bx;
+    m_ay = touchcal.ay;
+    m_by = touchcal.by;
+  }
+  uint16_t _width;
+  uint16_t _height;
 
 private:
   e_display_type _display_type;
@@ -148,19 +180,26 @@ private:
   void _write(uint8_t cmd, uint8_t* data = NULL, size_t dataLen = 0);
   void _writePixels(const uint16_t* data, size_t dataLen);
   void _data(uint8_t* data, size_t dataLen = 0);
+  void update();
 
   uint32_t dma_tx;
   dma_channel_config dma_config;
 
 private:
-  spi_inst_t* _spi = NULL;
-  uint8_t _cs;
-  uint8_t _dc;
-  uint8_t _rst;
-  uint16_t _width;
-  uint16_t _height;
-  uint16_t _init_width;
-  uint16_t _init_height;
+  spi_inst_t* m_spi = NULL;
+  uint8_t m_cs;
+  uint8_t m_cs_touch;
+  uint8_t m_dc;
+  uint8_t m_rst;
+  uint16_t m_init_width;
+  uint16_t m_init_height;
+  int16_t m_xraw=0, m_yraw=0, m_zraw=0;
+  float m_ax, m_bx, m_ay, m_by;
+  uint32_t m_msraw=0x80000000;
+  uint32_t m_touch_baud_rate;
+  uint32_t m_tft_baud_rate;
+  ILI934X_ROTATION m_rotation;
+  bool m_touch_enabled = false;
 };
 
 #endif //__ILI934X_H__

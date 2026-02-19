@@ -16,12 +16,14 @@
 //CONFIGURATION SECTION
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PIN_MISO 12 //not used by TFT but part of SPI bus
-#define PIN_CS   13
-#define PIN_SCK  14
-#define PIN_MOSI 15 
-#define PIN_DC   11
-#define SPI_PORT spi1
+#define PIN_MISO     12 //not used by TFT but part of SPI bus
+#define PIN_CS       13
+#define PIN_CS_TOUCH 10
+#define PIN_SCK      14
+#define PIN_MOSI     15 
+#define PIN_DC       11
+#define SPI_PORT     spi1
+#define TOUCH        1
 
 //#define ROTATION R0DEG
 //#define ROTATION R90DEG
@@ -60,6 +62,8 @@ struct s_settings {
   char their_callsign[17];
   int threshold;
   s_messages messages;
+  s_touchcal touchcal;
+  bool has_touchcal = false;
 };
 
 s_settings settings = {
@@ -85,7 +89,9 @@ s_settings settings = {
   "@CALLSIGN DE @MYCALL BK",
   "@CALLSIGN DE @MYCALL 73 ES TNX FER QSO SK",
   "73 73 DE @MYCALL SK"
-  }
+  },
+  {0.0, 0.0, 0.0, 0.0}, //touchcal
+  false //has_touchcal
 };
 
 class my_cw_dsp : public c_cw_dsp
@@ -110,11 +116,12 @@ void setup() {
   gpio_init(20); gpio_set_dir(20, GPIO_IN);  gpio_pull_up(20);
   gpio_init(21); gpio_set_dir(21, GPIO_IN);  gpio_pull_up(21);
   gpio_init(22); gpio_set_dir(22, GPIO_IN);  gpio_pull_up(22);
+  
+  EEPROM.begin(8192);
+  load();
 
   configure_display();
   fft_initialise();
-  EEPROM.begin(8192);
-  load();
   display->writeImage(0, 0, 320, 240, splash);
   sleep_ms(4000);
 }
@@ -136,24 +143,16 @@ void loop() {
   
   while(1) {
     static uint16_t output_buffer[2*ADC_BLOCK_SIZE];
-    send_cw(audio_output, output_buffer, cw_encoder);
     int16_t *samples = adc_audio.input_samples();
+    send_cw(audio_output, output_buffer, cw_encoder);
 
-    uint32_t start1 = millis();
     for(int sample_number=0; sample_number<ADC_BLOCK_SIZE; ++sample_number)
     {
       cw_dsp.process_sample(samples[sample_number]);
       if(enable_waterfall && sample_number%256 == 0) draw_waterfall(cw_dsp);
     }
-    //Serial.print("processing time: ");
-    //Serial.println(millis() - start1);
 
     update_ui(cw_dsp, cw_encoder, enable_waterfall);
-    while(1) {
-      if((millis() - start1) > 67 && (millis() - start1) < 69) update_ui(cw_dsp, cw_encoder, enable_waterfall);
-      sleep_ms(1);
-      if((millis() - start1) >= 69) break;
-    }
 
   }
 }
@@ -191,8 +190,6 @@ const uint16_t PANEL_INTERVAL = PANEL_HEIGHT + PADDING;
 const uint16_t TX_PANEL_Y = PANEL_Y+PANEL_INTERVAL*NUM_CHANNELS + 4;
 const uint16_t TX_PANEL_HEIGHT = PADDING + TEXT_HEIGHT + PADDING + TEXT_HEIGHT;
 
-
-
 void draw() {
   display->clear(BACKGROUND);
   
@@ -220,6 +217,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
   static button button_right(21);
   static button button_left(22);
   static c_text_entry text_entry(display, button_left, button_right, button_down, button_up);
+  //static c_touch_text_entry text_entry(display);
   static c_multi_text_entry messages(display, button_left, button_right, button_down, button_up, settings.messages);
 
   static uint8_t main_menu_selection = 0;
@@ -227,9 +225,10 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
   static c_menu main_menu(display, button_left, button_right, button_down, button_up, "Menu", main_menu_selection, main_menu_items, 5);
   static c_int_entry wpm_entry(display, button_left, button_right, button_down, button_up, "Transmit Speed (WPM)", settings.tx_wpm, 10, 50);
   static c_int_entry channel_entry(display, button_left, button_right, button_down, button_up, "Transmit Channel", settings.tx_channel, 0, 5);
-  static c_int_entry threshold_entry(display, button_left, button_right, button_down, button_up, "Threshold", settings.threshold, 8, 12);
+  static c_int_entry threshold_entry(display, button_left, button_right, button_down, button_up, "Threshold", settings.threshold, 8, 32);
   static c_text_entry my_callsign_entry(display, button_left, button_right, button_down, button_up);
   static c_text_entry their_callsign_entry(display, button_left, button_right, button_down, button_up);
+  static c_touch_press touchpress(display);
 
 
   static const uint16_t text_len = 250;
@@ -238,6 +237,8 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
   static bool needs_draw = true;
   static bool button_bar_active = false;
   static uint8_t button_bar_timeout = 255;
+
+  uint8_t button = button_bar_press(touchpress);
 
   if(my_callsign_entry.is_active()) { 
     my_callsign_entry.run(); 
@@ -296,16 +297,16 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
     cw_dsp.set_update_display(true);
     enable_waterfall = true;
     if(button_bar_active) {
-      if(button_left.is_pressed()) {
+      if(button == 0 || button_left.is_pressed()) {
         button_bar_active = false;
         text_entry.raise(text, text_len);
-      } else if (button_right.is_pressed()) {
+      } else if (button == 1 || button_right.is_pressed()) {
         button_bar_active = false;
         messages.raise();
-      } else if (button_up.is_pressed()) {
+      } else if (button == 3 || button_up.is_pressed()) {
         button_bar_active = false;
         main_menu.raise();
-      } else if (button_down.is_pressed()) {
+      } else if (button == 2 || button_down.is_pressed()) {
         button_bar_active = false;
         needs_draw = true;
         if(cw_encoder.is_done()) {
@@ -314,7 +315,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
       }
     } else {
 
-      if(button_left.is_pressed() || button_right.is_pressed() || button_up.is_pressed() || button_down.is_pressed()) {
+      if(button == 4 || button_left.is_pressed() || button_right.is_pressed() || button_up.is_pressed() || button_down.is_pressed()) {
         if(cw_encoder.is_done()) {
           button_bar_active = true;
           button_bar_timeout = 15;
@@ -471,7 +472,7 @@ void send_cw(PWMAudio &audio_output, uint16_t *output_buffer, c_cw_encoder &cw_e
 ///////////////////////////////////////////////////////////////////////////////
 //Non-Volatile Storage
 
-const int version = 302;
+const int version = 303;
 
 void load() {
   uint32_t settings_stored = 0;
@@ -506,7 +507,18 @@ void configure_display()
   gpio_init(PIN_DC);
   gpio_set_dir(PIN_DC, GPIO_OUT);
   display = new ILI934X(SPI_PORT, PIN_CS, PIN_DC, width, height);
-  display->init(ROTATION, INVERT_COLOURS, INVERT_DISPLAY, display_type);
+  display->init(ROTATION, INVERT_COLOURS, INVERT_DISPLAY, display_type, 75000000);
   display->powerOn(true);
   display->clear();
+  #if TOUCH
+    display->init_touchscreen(PIN_CS_TOUCH, 2000000);
+    if(settings.has_touchcal) {
+      display->set_touch_calibration(settings.touchcal);
+    } else {
+      display->touch_calibrate();
+      settings.touchcal = display->get_touch_calibration();
+      settings.has_touchcal = true;
+      save();
+    }
+  #endif
 }

@@ -20,7 +20,7 @@
 #include "hardware/dma.h"
 #include <stdio.h>
 
-const uint32_t ADC_BLOCK_SIZE = 2048;
+const uint32_t ADC_BLOCK_SIZE = 1024;
 const uint32_t ADC_DMA_SIZE = ADC_BLOCK_SIZE * 4;
 
 class ADCAudio

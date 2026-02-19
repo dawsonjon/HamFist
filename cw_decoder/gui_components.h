@@ -44,7 +44,66 @@ void draw_button_bar(ILI934X* display, const char* btn1, const char* btn2, const
 void draw_button_bar(ILI934X* display, const uint16_t* btn1, const uint16_t* btn2,
                      const uint16_t* btn3, const uint16_t* btn4);
 
+
 const uint8_t NUM_MESSAGES = 16;
+
+class c_touch_press {
+
+  const uint8_t UP       = 0;
+  const uint8_t DOWN     = 1;
+  const uint8_t PRESSED  = 2;
+
+
+  ILI934X *m_display;
+  uint8_t m_state = UP;
+  int16_t m_x=0, m_y=0;
+  bool m_pressed = false;
+  bool m_released = false;
+
+  public:
+
+  c_touch_press(ILI934X* display):m_display(display){}
+  void update_state();
+  bool is_pressed();  
+  bool is_released();
+  bool check_position(int x, int y, int w, int h);
+
+};
+
+uint8_t button_bar_press(c_touch_press &touch_press);
+
+class c_touch_text_entry {
+
+  ILI934X *m_display;
+  c_touch_press m_touch_press;
+  int16_t m_n = 0;
+  char* m_string = NULL;
+  bool m_active = false;
+  int16_t m_cursor = 0;
+  bool m_needs_draw = true;
+  bool m_needs_full_draw = true;
+  std::string m_autocomplete_suggestion;
+  std::string m_second;
+  std::string m_third;
+  const uint16_t key_colour = m_display->colour565(0x40, 0x40, 0x40);
+  const uint16_t key_colour_active = m_display->colour565(0x80, 0x80, 0x80);
+  const uint16_t text_colour = m_display->colour565(0xff, 0xff, 0xff);
+  const uint16_t key_colour_enter = m_display->colour565(0x00, 0x00, 0xff);
+  const uint16_t key_colour_enter_active = m_display->colour565(0x7f, 0x7f, 0xff);
+  
+  public:
+
+  c_touch_text_entry(ILI934X* display):m_display(display), m_touch_press(display){}
+  void draw_key(int row, int col, bool active);
+  void draw_autocorrect_bar(int col, bool active);
+  void autocorrect(int i); 
+  void draw();
+  char get_key();
+  bool is_active();
+  void raise(char* string, uint16_t n);
+  void run();
+
+};
 
 class c_text_entry
 {
@@ -64,6 +123,7 @@ private:
   e_state m_state = INACTIVE;
   uint8_t m_message_offset = 0;
   uint8_t m_message_idx = 0;
+  c_touch_text_entry m_touch_text_entry;
 
 public:
   c_text_entry(ILI934X* display, button& button_left, button& button_right, button& button_down,
@@ -86,6 +146,7 @@ private:
   bool m_needs_redraw = true;
   c_text_entry text_entry;
   s_messages& m_messages;
+  c_touch_press m_touch_press;
 
 public:
   c_multi_text_entry(ILI934X* display, button& button_left, button& button_right,
@@ -111,6 +172,7 @@ private:
   uint8_t m_menu_item = 0;
   const char* m_title;
   bool m_ok;
+  c_touch_press m_touch_press;
 
 public:
   c_menu(ILI934X* display, button& button_left, button& button_right, button& button_down,
@@ -137,6 +199,7 @@ private:
   int m_max;
   const char* m_title;
   bool m_ok;
+  c_touch_press m_touch_press;
 
 public:
   c_int_entry(ILI934X* display, button& button_left, button& button_right, button& button_down,
@@ -146,5 +209,9 @@ public:
   void raise();
   void run();
 };
+
+
+
+
 
 #endif

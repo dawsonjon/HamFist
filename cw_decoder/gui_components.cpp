@@ -24,7 +24,7 @@
 #include "frame_buffer.h"
 #include "utils.h"
 
-// #define LOGGING
+#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -56,33 +56,8 @@ static const uint16_t DISPLAY_WIDTH = 320;
 static const uint16_t DISPLAY_HEIGHT = 240;
 static const int BUTTON_BAR_HEIGHT = 25;
 
-static const char char_select[4][4][4] = {{
-                                              {'A', 'B', 'C', 'D'},
-                                              {'E', 'F', 'G', 'H'},
-                                              {AUTOCOMPLETE, AUTOCOMPLETE, AUTOCOMPLETE, '_'},
-                                              {'.', ',', '?', '/'},
-                                          },
-
-                                          {
-                                              {'I', 'J', 'K', 'L'},
-                                              {'M', 'N', 'O', 'P'},
-                                              {'Q', ' ', ' ', '_'},
-                                              {'-', '=', '(', ')'},
-                                          },
-
-                                          {
-                                              {'R', 'S', 'T', 'U'},
-                                              {'V', 'W', 'X', 'Y'},
-                                              {'Z', ' ', ' ', '_'},
-                                              {':', '@', ' ', ' '},
-                                          },
-
-                                          {
-                                              {'0', '1', '2', '3'},
-                                              {'4', '5', '6', '7'},
-                                              {'8', '9', CLEAR, '_'},
-                                              {LEFT, RIGHT, ENTER, BACKSPACE},
-                                          }};
+//Button Bar
+///////////////////////////////////////////////////////////////////////////////
 
 void draw_button_bar(ILI934X* display, const char* btn1, const char* btn2, const char* btn3,
                      const char* btn4)
@@ -124,6 +99,24 @@ void draw_button_bar(ILI934X* display, const uint16_t* btn1, const uint16_t* btn
   }
 }
 
+uint8_t button_bar_press(c_touch_press &touch_press) {
+  const uint16_t button_width = 60;
+  const uint16_t button_height = 14;
+  const uint16_t padding = (DISPLAY_WIDTH - (4 * button_width)) / 5;
+        uint16_t button_x = padding;
+  const uint16_t button_y = DISPLAY_HEIGHT - BUTTON_BAR_HEIGHT + 2; 
+
+  touch_press.update_state();
+  if(touch_press.is_pressed()) {
+    for (uint8_t idx = 0; idx < 4; ++idx) {
+      if(touch_press.check_position(button_x, button_y, button_width, button_height)) return idx;
+      button_x += button_width + padding;
+    }
+    if(touch_press.check_position(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT)) return 4;
+  }
+  return 255;
+}
+
 void draw_heading(ILI934X* display, const char title[])
 {
   const uint16_t heading_width = 280;
@@ -138,13 +131,54 @@ void draw_heading(ILI934X* display, const char title[])
                       heading_image);
 }
 
+//Button Keyboard
+///////////////////////////////////////////////////////////////////////////////
+
+static const char char_select[4][4][4] = {
+{
+    {'A', 'B', 'C', 'D'},
+    {'E', 'F', 'G', 'H'},
+    {AUTOCOMPLETE, AUTOCOMPLETE, AUTOCOMPLETE, '_'},
+    {'.', ',', '?', '/'},
+},
+
+{
+    {'I', 'J', 'K', 'L'},
+    {'M', 'N', 'O', 'P'},
+    {'Q', ' ', ' ', '_'},
+    {'-', '=', '(', ')'},
+},
+
+{
+    {'R', 'S', 'T', 'U'},
+    {'V', 'W', 'X', 'Y'},
+    {'Z', ' ', ' ', '_'},
+    {':', '@', ' ', ' '},
+},
+
+{
+    {'0', '1', '2', '3'},
+    {'4', '5', '6', '7'},
+    {'8', '9', CLEAR, '_'},
+    {LEFT, RIGHT, ENTER, BACKSPACE},
+}
+
+};
+
 bool c_text_entry ::is_active()
 {
+  if(m_display->is_touch_enabled()){
+    return m_touch_text_entry.is_active();
+  }
   return m_state != INACTIVE;
 }
 
 void c_text_entry ::raise(char* string, uint16_t n)
 {
+  if(m_display->is_touch_enabled()){
+    m_touch_text_entry.raise(string, n);
+    return;
+  }
   m_n = n;
   m_string = string;
   m_state = INITIALISE;
@@ -153,7 +187,7 @@ void c_text_entry ::raise(char* string, uint16_t n)
 
 c_text_entry ::c_text_entry(ILI934X* display, button& button_left, button& button_right,
                             button& button_down, button& button_up)
-    : m_display(display)
+    : m_display(display), m_touch_text_entry(display)
 {
   m_buttons[0] = &button_left;
   m_buttons[1] = &button_right;
@@ -186,6 +220,10 @@ static std::string last_word(const std::string& text)
 
 void c_text_entry ::run()
 {
+  if(m_display->is_touch_enabled()){
+    m_touch_text_entry.run();
+    return;
+  }
 
   // autocomplete
   std::string string_word = std::string(m_string).substr(0, m_cursor);
@@ -391,6 +429,9 @@ void c_text_entry ::run()
   }
 }
 
+//Multi Text Entry
+///////////////////////////////////////////////////////////////////////////////
+
 bool c_multi_text_entry ::is_active()
 {
   return m_active;
@@ -406,7 +447,7 @@ c_multi_text_entry ::c_multi_text_entry(ILI934X* display, button& button_left, b
                                         button& button_down, button& button_up,
                                         s_messages& messages)
     : m_display(display), text_entry(display, button_left, button_right, button_down, button_up),
-      m_messages(messages)
+      m_messages(messages), m_touch_press(display)
 {
   m_buttons[0] = &button_left;
   m_buttons[1] = &button_right;
@@ -435,23 +476,25 @@ void c_multi_text_entry::run()
   bool selection_changed = false;
   bool offset_changed = false;
 
-  if ((m_buttons[2]->is_pressed() || m_buttons[2]->is_held()) && m_message_idx > 0) {
+  uint8_t button = button_bar_press(m_touch_press);
+
+  if ((button==2 || m_buttons[2]->is_pressed() || m_buttons[2]->is_held()) && m_message_idx > 0) {
     m_message_idx--;
     selection_changed = true;
   }
-  if ((m_buttons[3]->is_pressed() || m_buttons[3]->is_held()) && m_message_idx < NUM_MESSAGES - 1) {
+  if ((button==3 || m_buttons[3]->is_pressed() || m_buttons[3]->is_held()) && m_message_idx < NUM_MESSAGES - 1) {
     m_message_idx++;
     selection_changed = true;
   }
 
   // ok
-  if (m_buttons[0]->is_pressed()) {
+  if (button==0 || m_buttons[0]->is_pressed()) {
     m_active = false;
     return;
   }
 
   // edit
-  if (m_buttons[1]->is_pressed()) {
+  if (button==1 || m_buttons[1]->is_pressed()) {
     text_entry.raise(m_messages.text[m_message_idx], 250);
     m_needs_redraw = true;
     return;
@@ -504,11 +547,14 @@ void c_multi_text_entry::run()
   }
 }
 
+//Menu
+///////////////////////////////////////////////////////////////////////////////
+
 c_menu ::c_menu(ILI934X* display, button& button_left, button& button_right, button& button_down,
                 button& button_up, const char* title, uint8_t& selection,
                 const char* const* menu_items, const uint8_t num_selections)
     : m_display(display), m_selection(selection), m_menu_items(menu_items),
-      m_num_selections(num_selections), m_title(title)
+      m_num_selections(num_selections), m_title(title), m_touch_press(display)
 {
   m_buttons[0] = &button_left;
   m_buttons[1] = &button_right;
@@ -538,22 +584,24 @@ void c_menu ::run()
   }
   bool change_active_item = false;
   bool offset_changed = false;
-  if (m_buttons[0]->is_pressed()) {
+  uint8_t button = button_bar_press(m_touch_press);
+
+  if (button == 0 || m_buttons[0]->is_pressed()) {
     m_active = false;
     m_selection = m_menu_item;
     m_ok = true;
     return; // ok
   }
-  if (m_buttons[1]->is_pressed()) {
+  if (button == 1 || m_buttons[1]->is_pressed()) {
     m_active = false;
     m_ok = false;
     return; // cancel
   }
-  if (m_buttons[2]->is_pressed() && m_menu_item > 0) {
+  if ((button == 2 || m_buttons[2]->is_pressed()) && (m_menu_item > 0)) {
     m_menu_item--;
     change_active_item = true;
   }
-  if (m_buttons[3]->is_pressed() && m_menu_item < m_num_selections - 1) {
+  if ((button == 3 || m_buttons[3]->is_pressed()) && (m_menu_item < m_num_selections - 1)) {
     m_menu_item++;
     change_active_item = true;
   }
@@ -594,10 +642,13 @@ void c_menu ::run()
   }
 }
 
+//Integer Entry
+///////////////////////////////////////////////////////////////////////////////
+
 c_int_entry ::c_int_entry(ILI934X* display, button& button_left, button& button_right,
                           button& button_down, button& button_up, const char* title, int& value,
                           int min, int max)
-    : m_display(display), m_value(value), m_min(min), m_max(max), m_title(title)
+    : m_display(display), m_value(value), m_min(min), m_max(max), m_title(title), m_touch_press(display)
 {
   m_buttons[0] = &button_left;
   m_buttons[1] = &button_right;
@@ -621,22 +672,23 @@ void c_int_entry ::raise()
 void c_int_entry ::run()
 {
 
-  if (m_buttons[0]->is_pressed()) {
+  uint8_t button = button_bar_press(m_touch_press);
+  if (button == 0 || m_buttons[0]->is_pressed()) {
     m_active = false;
     m_value = m_edit_value;
     m_ok = true;
     return; // ok
   }
-  if (m_buttons[1]->is_pressed()) {
+  if (button == 1 || m_buttons[1]->is_pressed()) {
     m_active = false;
     m_ok = true;
     return; // cancel
   }
-  if ((m_buttons[2]->is_pressed() || m_buttons[2]->is_held()) && m_edit_value < m_max) {
+  if ((button == 2 || m_buttons[2]->is_pressed() || m_buttons[2]->is_held()) && m_edit_value < m_max) {
     m_edit_value++;
     m_needs_redraw = true;
   }
-  if ((m_buttons[3]->is_pressed() || m_buttons[3]->is_held()) && m_edit_value > m_min) {
+  if ((button == 3 || m_buttons[3]->is_pressed() || m_buttons[3]->is_held()) && m_edit_value > m_min) {
     m_edit_value--;
     m_needs_redraw = true;
   }
@@ -657,4 +709,286 @@ void c_int_entry ::run()
 
     m_needs_redraw = false;
   }
+}
+
+//Touch Press State Machine
+///////////////////////////////////////////////////////////////////////////////
+
+void c_touch_press::update_state() 
+{
+
+  int16_t x, y, z;
+  m_display->getPoint(x, y, z);
+
+  m_pressed = false;
+  m_released = false;
+  if (m_state == UP) {
+    if (m_display->touched())
+    {
+      m_state = DOWN;
+    }
+  } else if (m_state == DOWN) {
+    if (m_display->touched()) {
+      int16_t z;
+      m_display->getPoint(m_x, m_y, z);
+      m_pressed = true;
+      m_state = PRESSED;
+    } else {
+      m_state == UP;
+    }
+  } else if (m_state == PRESSED) {
+    if(!m_display->touched()) {
+      m_released = true;
+      m_state = UP;
+    }
+  }
+}
+
+bool c_touch_press :: is_pressed()
+{
+  return m_pressed;
+}
+
+bool c_touch_press :: is_released()
+{
+  return m_released;
+}
+
+bool c_touch_press :: check_position(int x, int y, int w, int h) {
+  return m_x >= x && m_x <= (x+w) && m_y >= y && m_y <= (y+h);
+}
+
+
+//Touch Keyboard - Text Entry
+///////////////////////////////////////////////////////////////////////////////
+
+char kb_layout[5][12] = {
+  {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', BACKSPACE},
+  {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', ENTER},
+  {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '@'},
+  {'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', '?'},
+  {'(', ')', ' ', ' ', ' ', ' ', ' ', '-', '=', LEFT, RIGHT},
+};
+
+const uint16_t kb_y = 92;
+const uint16_t kb_x = 6;
+const uint16_t kb_d = 28;
+
+const uint16_t ac_padding = 10;
+const uint16_t ac_width = (DISPLAY_WIDTH-(2*ac_padding))/3;
+const uint16_t ac_y = kb_y-13;
+const uint8_t ac_height = 12;
+
+void c_touch_text_entry :: draw_key(int row, int col, bool active) {
+  uint16_t colour = active?key_colour_active:key_colour;
+  uint16_t enter_colour = active?key_colour_enter_active:key_colour_enter;
+  colour = (kb_layout[row][col]==ENTER)?enter_colour:colour;
+  m_display->fillRoundedRect(col*kb_d + kb_x+1, kb_y+1 + row*kb_d, kb_d-2, kb_d-2, 3, colour);
+  m_display->drawChar(col*kb_d + kb_x + 4, kb_y + row*kb_d + 4, font_16x12, kb_layout[row][col], text_colour, colour);
+  
+  //space
+  if(kb_layout[row][col]==' ') {
+    m_display->fillRoundedRect(2*kb_d + kb_x+1, kb_y+1 + 4*kb_d, kb_d-2, (5*kb_d)-2, 3, colour);
+  } else {
+    m_display->fillRoundedRect(col*kb_d + kb_x+1, kb_y+1 + row*kb_d, kb_d-2, kb_d-2, 3, colour);
+    char thechar[2] = {kb_layout[row][col], 0};
+    m_display->drawChar(col*kb_d + kb_x + 4, kb_y + row*kb_d + 4, font_16x12, kb_layout[row][col], text_colour, colour);
+  }
+}
+
+void c_touch_text_entry :: draw_autocorrect_bar(int col, bool active) {
+
+  uint16_t char_width = 6;
+  uint16_t ac_x = ac_padding + (col * (ac_width+2));
+  uint16_t colour = active?key_colour_active:key_colour;
+  m_display->fillRoundedRect(ac_x, ac_y-3, 12, ac_width-1, 2, colour);
+  if(col == 0) {
+    m_display->drawString(ac_x + (ac_width - m_autocomplete_suggestion.size()*char_width)/2, ac_y, font_8x5, m_autocomplete_suggestion.c_str(), colours[0], colour);
+  } else if(col == 1) {
+    m_display->drawString(ac_x + (ac_width - m_second.size()*char_width)/2, ac_y, font_8x5, m_second.c_str(), colours[1], colour);
+  } else {
+    m_display->drawString(ac_x + (ac_width - m_third.size()*char_width)/2, ac_y, font_8x5, m_third.c_str(), colours[2], colour);
+  }
+}
+
+void c_touch_text_entry :: draw(){
+  m_display->clear(m_display->colour565(0x20, 0x20, 0x20));
+  for(int row = 0; row < 5; row++) {
+    for(int col = 0; col < 11; col++) {
+      draw_key(row, col, false);
+    }
+  }
+  
+  for(uint8_t i=0; i<3; ++i) {
+    draw_autocorrect_bar(i, false);
+  }
+}
+
+void c_touch_text_entry :: autocorrect(int i) {
+  std::string completion;
+  std::string string_word = std::string(m_string).substr(0, m_cursor);
+  std::string last_word_of_string = last_word(string_word);
+  if (i == 0 && m_autocomplete_suggestion.size()) completion = m_autocomplete_suggestion.substr(last_word_of_string.size(), m_autocomplete_suggestion.size() - 1);
+  else if (i == 1 && m_second.size()) completion = m_second.substr(last_word_of_string.size(), m_second.size() - 1);
+  else if (i == 2 && m_third.size()) completion = m_third.substr(last_word_of_string.size(), m_third.size() - 1);
+  str_insert(m_string, m_n, m_cursor, completion.c_str());
+  m_cursor += completion.size();
+  m_needs_draw = true;
+}
+
+char c_touch_text_entry :: get_key(){
+  char retval = 0;
+  m_touch_press.update_state();
+  if(m_touch_press.is_pressed()) {
+    bool space_drawn = false;
+    for(int row = 0; row < 5; row++) {
+      for(int col = 0; col < 11; col++) {
+        if(m_touch_press.check_position(col*kb_d + kb_x, row*kb_d + kb_y, kb_d, kb_d)){
+          if(kb_layout[row][col] == ' ') {
+            if(!space_drawn) draw_key(row, col, true);
+            space_drawn = true;
+          } else {
+            draw_key(row, col, true);
+          }
+        }
+      }
+    }
+    uint16_t ac_x = ac_padding;
+    for(uint8_t i=0; i<3; ++i) {
+      if(m_touch_press.check_position(ac_x, ac_y-3, ac_width, ac_height)){
+        draw_autocorrect_bar(i, true);
+      }
+      ac_x+=ac_width;
+    }
+  } else if(m_touch_press.is_released()) {
+    bool space_drawn = false;
+    for(int row = 0; row < 5; row++) {
+      for(int col = 0; col < 11; col++) {
+        if(m_touch_press.check_position(col*kb_d + kb_x, row*kb_d + kb_y, kb_d, kb_d)){
+          retval = kb_layout[row][col];
+          if(kb_layout[row][col] == ' ') {
+            if(!space_drawn) draw_key(row, col, false);
+            space_drawn = true;
+          } else {
+            draw_key(row, col, false);
+          }
+        }
+      }
+    }
+    uint16_t ac_x = ac_padding;
+    for(uint8_t i=0; i<3; ++i) {
+      if(m_touch_press.check_position(ac_x, ac_y-3, ac_width, ac_height)){
+        autocorrect(i);
+      }
+      ac_x+=ac_width;
+    }
+  }
+  return retval;
+}
+
+bool c_touch_text_entry :: is_active()
+{
+  return m_active;
+}
+
+void c_touch_text_entry :: raise(char* string, uint16_t n)
+{
+  m_n = n;
+  m_string = string;
+  m_active = true;
+  m_needs_draw = true;
+  m_cursor = strlen(string);
+  m_needs_full_draw = true;
+  
+}
+
+void c_touch_text_entry :: run()
+{
+  uint8_t char_width = 6;
+  uint8_t char_height = 8;
+  const uint8_t *font = font_8x5;
+
+  if(m_needs_full_draw) {
+    m_needs_full_draw = false;
+    draw();
+  }
+
+  // autocomplete
+  std::string string_word = std::string(m_string).substr(0, m_cursor);
+  std::string last_word_of_string = last_word(string_word);
+  m_autocomplete_suggestion = suggestion(last_word_of_string, m_second, m_third);
+
+  //draw text area
+  if(m_needs_draw) {
+    uint16_t chars_per_row = (m_display->_width / char_width) - 3;
+    uint16_t rows = (m_n + chars_per_row - 1) / chars_per_row;
+    uint16_t y = 20;
+
+    m_needs_draw = false;
+    if(rows == 1) {
+      uint16_t string_width = m_n;
+      uint16_t x = (m_display->_width - (string_width*char_width)) / 2;
+      uint16_t cursor_x = m_cursor % chars_per_row;
+      m_display->fillRect(x-1, y-1, rows * char_height+2+2, string_width * char_width+2, key_colour);
+      m_display->drawString(x, y+1, font, m_string, COLOUR_WHITE, key_colour);
+      m_display->drawFastHline(x+cursor_x*char_width, x +cursor_x*char_width+char_width, y+char_height, text_colour);
+    } else {
+      uint16_t string_width = chars_per_row * char_width;
+      uint16_t x = (m_display->_width - string_width) / 2;
+      uint16_t cursor_y = m_cursor / chars_per_row;
+      uint16_t cursor_x = m_cursor % chars_per_row;
+      m_display->fillRect(x-1, y-1, rows * char_height+2+2, string_width+2, key_colour);
+      
+      uint16_t chars_left = strnlen(m_string, m_n);
+      for (uint8_t row = 0; row < rows; row++) {
+        char buffer[chars_per_row + 1];
+        uint16_t chars_to_copy = std::min(chars_left, chars_per_row);
+        chars_left -= chars_per_row;
+        strncpy(buffer, m_string + (row * chars_per_row), chars_to_copy);
+        buffer[chars_to_copy] = 0;
+        m_display->drawString(x, y, font, buffer, COLOUR_WHITE, key_colour);
+        if (row == cursor_y)
+          m_display->drawFastHline(x + cursor_x * char_width, x + cursor_x * char_width + char_width, y+char_height, text_colour);
+        y += char_height+2;
+      }
+    }
+    draw_autocorrect_bar(0, false);
+    draw_autocorrect_bar(1, false);
+    draw_autocorrect_bar(2, false);
+  }
+
+  char entry = get_key();
+  if(!entry) return;
+
+  if (entry == LEFT) {
+    m_cursor--;
+    m_needs_draw = true;
+  } else if (entry == RIGHT) {
+    m_cursor++;
+    m_needs_draw = true;
+  } else if (entry == BACKSPACE) {
+    size_t len = strlen(m_string);
+    if (m_cursor > 0 && m_cursor <= len) {
+      memmove(&m_string[m_cursor - 1], &m_string[m_cursor], len - m_cursor);
+      m_string[len - 1] = 0;
+      m_cursor--;
+    }
+    m_needs_draw = true;
+  } else if (entry == ENTER) {
+    m_active=false;
+  } else {
+    const char new_text[2] = {entry, 0};
+    str_insert(m_string, m_n, m_cursor, new_text);
+    m_cursor++;
+    m_needs_draw = true;
+  }
+  //don't let cursor go more than one past the active text
+  if (m_cursor > strnlen(m_string, m_n)) {
+    m_cursor = strnlen(m_string, m_n);
+  }
+  //don't let the cursor go past the end of the buffer (including null)
+  if (m_cursor >= m_n-1) {
+    m_cursor = m_n-2;
+  }
+
 }

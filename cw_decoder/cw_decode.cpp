@@ -375,12 +375,14 @@ void c_cw_decoder ::decode(s_observation signal[], int num_observations)
 
     float duration = signal[i].duration;
     float logp_dot, logp_dash, logp_dotdot, logp_dotdash, logp_dashdash;
+    classifier.prescale_histograms();
     classifier.classify_on(duration, logp_dot, logp_dash, logp_dotdot, logp_dotdash, logp_dashdash);
     if (signal[i].mark)
       DEBUG_PRINTF("duration: %f dot: %f dash: %f\n", duration, logp_dot, logp_dash);
 
     float logp[3];
     classifier.classify_off(duration, logp);
+    classifier.postscale_histograms();
     float logp_gap1 = logp[0];
     float logp_gap3 = logp[1];
     float logp_gap7 = logp[2];

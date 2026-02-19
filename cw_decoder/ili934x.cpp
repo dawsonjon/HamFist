@@ -30,6 +30,30 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* Touchscreen library for XPT2046 Touch Controller Chip
+ * Copyright (c) 2015, Paul Stoffregen, paul@pjrc.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice, development funding notice, and this permission
+ * notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * Adapted and merged with ili934x library by Jon Dawson 2026
+ */
+ //
 #ifdef ARDUINO_ARCH_RP2040
 
 #include "ili934x.h"
@@ -59,11 +83,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ILI934X::ILI934X(spi_inst_t* spi, uint8_t cs, uint8_t dc, uint16_t width, uint16_t height)
 {
-  _spi = spi;
-  _cs = cs;
-  _dc = dc;
-  _init_width = width;
-  _init_height = height;
+  m_spi = spi;
+  m_cs = cs;
+  m_dc = dc;
+  m_init_width = width;
+  m_init_height = height;
 }
 
 void ILI934X::configure_ili9488()
@@ -251,8 +275,10 @@ void ILI934X::configure_ili9341_2()
 }
 
 void ILI934X::init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_display,
-                   e_display_type display_type)
+                   e_display_type display_type, uint32_t tft_baud_rate)
 {
+  m_tft_baud_rate = tft_baud_rate;
+  spi_set_baudrate(m_spi, m_tft_baud_rate);
   sleep_ms(5);
   _write(_SWRST, NULL, 0);
   sleep_ms(150);
@@ -277,6 +303,8 @@ void ILI934X::init(ILI934X_ROTATION rotation, bool invert_colours, bool invert_d
   _display_type = display_type;
 }
 
+
+
 void ILI934X::powerOn(bool power_on)
 {
   if (power_on) {
@@ -289,48 +317,49 @@ void ILI934X::powerOn(bool power_on)
 void ILI934X::_setRotation(ILI934X_ROTATION rotation, bool invert_colours)
 {
 
+  m_rotation = rotation;
   uint8_t colour_flags = invert_colours ? MADCTL_BGR : MADCTL_RGB;
   uint8_t mode = MADCTL_MX | colour_flags;
   switch (rotation) {
   case R0DEG:
     mode = MADCTL_MX | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case R90DEG:
     mode = MADCTL_MV | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case R180DEG:
     mode = MADCTL_MY | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case R270DEG:
     mode = MADCTL_MY | MADCTL_MX | MADCTL_MV | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case MIRRORED0DEG:
     mode = MADCTL_MY | MADCTL_MX | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case MIRRORED90DEG:
     mode = MADCTL_MX | MADCTL_MV | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case MIRRORED180DEG:
     mode = colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   case MIRRORED270DEG:
     mode = MADCTL_MY | MADCTL_MV | colour_flags;
-    this->_width = this->_init_width;
-    this->_height = this->_init_height;
+    this->_width = this->m_init_width;
+    this->_height = this->m_init_height;
     break;
   }
 
@@ -409,6 +438,102 @@ void ILI934X::drawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
   }
 }
 
+static uint16_t alpha_blend(uint16_t bg, uint16_t fg, uint16_t alpha)
+{
+  if(alpha >= 256) return fg;
+
+  fg = (fg >> 8) | (fg << 8);
+  bg = (bg >> 8) | (bg << 8);
+
+  uint16_t r_bg = (bg >> 11) & 0x1F;   // Extract red (5 bits)
+  uint16_t g_bg = (bg >> 5) & 0x3F;    // Extract green (6 bits)
+  uint16_t b_bg = bg & 0x1F;           // Extract blue (5 bits)
+
+  uint16_t r_fg = (fg >> 11) & 0x1F;   // Extract red (5 bits)
+  uint16_t g_fg = (fg >> 5) & 0x3F;    // Extract green (6 bits)
+  uint16_t b_fg = fg & 0x1F;           // Extract blue (5 bits)
+
+  const uint16_t not_alpha = 256-alpha;
+  r_bg = ((r_bg*not_alpha) + (r_fg*alpha)) >> 8;
+  g_bg = ((g_bg*not_alpha) + (g_fg*alpha)) >> 8;
+  b_bg = ((b_bg*not_alpha) + (b_fg*alpha)) >> 8;
+
+  uint16_t result = (r_bg << 11) | (g_bg << 5) | b_bg;
+  return (result >> 8) | (result << 8);
+
+}
+
+#ifdef SMOMOTH_FONTS
+
+void ILI934X::drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint16_t fg,
+                       uint16_t bg)
+{
+
+  const uint8_t font_height = font[0];
+  const uint8_t font_width = font[1];
+  const uint8_t font_space = font[2];
+  const uint8_t first_char = font[3];
+  const uint8_t last_char = font[4];
+  const uint16_t bytes_per_char = (font_width * font_height + 4) / 8;
+  if (c < first_char || c > last_char)
+    return;
+
+  uint8_t buffer_grayscale[font_height][font_width];
+  uint16_t buffer[font_height][font_width + font_space];
+  uint16_t font_index = ((c - first_char) * bytes_per_char) + 5u;
+  uint8_t data = font[font_index++];
+  uint8_t bits_left = 8;
+
+  //initial grayscale buffer
+  for (uint8_t xx = 0; xx < font_width; ++xx) {
+    for (uint8_t yy = 0; yy < font_height; ++yy) {
+      if (data & 0x01) {
+        buffer_grayscale[yy][xx] = 0x0f;
+      } else {
+        buffer_grayscale[yy][xx] = 0x00;
+      }
+      data >>= 1;
+      bits_left--;
+      if (bits_left == 0) {
+        data = font[font_index++];
+        bits_left = 8;
+      }
+    }
+  }
+
+  //smooth font
+  for (uint8_t xx = 0; xx < font_width; ++xx) {
+    for (uint8_t yy = 0; yy < font_height; ++yy) {
+      uint8_t C = buffer_grayscale[yy][xx];
+      uint16_t weighting = 0;
+      if(C) {
+        weighting = 256;
+      } else {
+        uint8_t N = yy>0?buffer_grayscale[yy-1][xx]:0;
+        uint8_t S = yy<font_height-1?buffer_grayscale[yy+1][xx]:0;
+        uint8_t W = xx>0?buffer_grayscale[yy][xx-1]:0;
+        uint8_t E = xx<font_width-1?buffer_grayscale[yy][xx+1]:0;
+        if((N && E) || (N && W) || (S && E) || (S && W)) {
+          weighting = 96;
+        }
+      }
+      buffer[yy][xx] = alpha_blend(bg, fg, weighting);
+    }
+  }
+  
+  //fill in font gap
+  for (uint8_t xx = 0; xx < font_space; ++xx) {
+    for (uint8_t yy = 0; yy < font_height; ++yy) {
+      buffer[yy][font_width + xx] = bg;
+    }
+  }
+
+  _writeBlock(x, y, x + font_width + font_space - 1, y + font_height - 1);
+  _writePixels((uint16_t*)buffer, sizeof(buffer) / 2);
+}
+
+#else
+
 void ILI934X::drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint16_t fg,
                        uint16_t bg)
 {
@@ -452,6 +577,8 @@ void ILI934X::drawChar(uint32_t x, uint32_t y, const uint8_t* font, char c, uint
   _writePixels((uint16_t*)buffer, sizeof(buffer) / 2);
 }
 
+#endif
+
 void ILI934X::drawString(uint32_t x, uint32_t y, const uint8_t* font, const char* s, uint16_t fg,
                          uint16_t bg)
 {
@@ -479,33 +606,32 @@ void ILI934X::_write(uint8_t cmd, uint8_t* data, size_t dataLen)
   }
 #endif
 
-  gpio_put(_dc, 0);
-  gpio_put(_cs, 0);
+  gpio_put(m_dc, 0);
+  gpio_put(m_cs, 0);
   sleep_us(1);
 
   // spi write
   uint8_t commandBuffer[1];
   commandBuffer[0] = cmd;
-  spi_write_blocking(_spi, commandBuffer, 1);
+  spi_write_blocking(m_spi, commandBuffer, 1);
 
   // do stuff
   if (data != NULL) {
     _data(data, dataLen);
   } else {
     sleep_us(1);
-    gpio_put(_cs, 1);
+    gpio_put(m_cs, 1);
   }
 }
 
 void ILI934X::_data(uint8_t* data, size_t dataLen)
 {
-
-  gpio_put(_dc, 1);
-  gpio_put(_cs, 0);
+  gpio_put(m_dc, 1);
+  gpio_put(m_cs, 0);
   sleep_us(1);
-  spi_write_blocking(_spi, data, dataLen);
+  spi_write_blocking(m_spi, data, dataLen);
   sleep_us(1);
-  gpio_put(_cs, 1);
+  gpio_put(m_cs, 1);
 }
 
 void ILI934X::_writePixels(const uint16_t* data, size_t numPixels)
@@ -895,6 +1021,210 @@ void ILI934X::fillTriangle(int x0, int y0, int x1, int y1, int x2, int y2, uint1
     }
     drawFastHline(ax, bx, y, colour);
   }
+}
+
+void ILI934X::init_touchscreen(uint8_t cs, uint32_t touchscreen_baud_rate)
+{
+  m_touch_baud_rate = touchscreen_baud_rate;
+  m_cs_touch = cs;
+  m_touch_enabled = true;
+}
+
+static inline uint16_t spi_transfer16(spi_inst_t *spi, uint16_t tx)
+{
+    uint8_t txbuf[2] = {
+        (uint8_t)(tx >> 8),
+        (uint8_t)(tx & 0xFF)
+    };
+    uint8_t rxbuf[2];
+
+    spi_write_read_blocking(spi, txbuf, rxbuf, 2);
+
+    return ((uint16_t)rxbuf[0] << 8) | rxbuf[1];
+}
+
+static int16_t besttwoavg( int16_t x , int16_t y , int16_t z ) {
+  int16_t da, db, dc;
+  int16_t reta = 0;
+  if ( x > y ) da = x - y; else da = y - x;
+  if ( x > z ) db = x - z; else db = z - x;
+  if ( z > y ) dc = z - y; else dc = y - z;
+
+  if ( da <= db && da <= dc ) reta = (x + y) >> 1;
+  else if ( db <= da && db <= dc ) reta = (x + z) >> 1;
+  else reta = (y + z) >> 1;
+  return (reta);
+}
+
+bool ILI934X::touched()
+{
+  if(!m_touch_enabled) return false;
+	update();
+	return (m_zraw >= Z_THRESHOLD);
+}
+
+void ILI934X::getPoint(int16_t &x, int16_t &y, int16_t &z)
+{
+  if(!m_touch_enabled){
+    x = y = z = 0;
+    return;
+  }
+	update();
+
+  x = (m_ax * m_xraw + m_bx);
+  if (x < 0) x = 0;
+  if (x > _width-1) x = _width-1;
+
+  y = (m_ay * m_yraw + m_by);
+  if (y < 0) y = 0;
+  if (y > _height-1) y = _height-1;
+  
+  z = m_zraw;
+}
+
+bool ILI934X::touch_calibrate()
+{
+    static const int cal_points[4][2] = {
+        { 20, 20 },
+        { _width - 20, 20 },
+        { 20, _height - 20 },
+        { _width - 20, _height - 20 }
+    };
+
+
+    float raw_x[4], raw_y[4];
+    clear(COLOUR_BLACK);
+    for (int i = 0; i < 4; i++) {
+        drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_WHITE);
+
+        while (!touched())
+            tight_loop_contents();
+
+        float x_total = 0.0f;
+        float y_total = 0.0f;
+        int32_t num_meas = 0;
+        while(num_meas < 1024.0f){
+          if(touched()){            
+            x_total += m_xraw;
+            y_total += m_yraw;
+            num_meas += 1;
+          }
+        }
+        raw_x[i] = x_total/1024.0f;
+        raw_y[i] = y_total/1024.0f;
+
+        drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_GREEN);
+
+        while (touched())
+            tight_loop_contents();
+
+        sleep_ms(200);
+    }
+
+    // Compute scale + offset
+    m_ax = (float)(cal_points[1][0] - cal_points[0][0]) /
+              (float)(raw_x[1] - raw_x[0]);
+    m_bx = cal_points[0][0] - m_ax * raw_x[0];
+
+    m_ay = (float)(cal_points[2][1] - cal_points[0][1]) /
+              (float)(raw_y[2] - raw_y[0]);
+    m_by = cal_points[0][1] - m_ay * raw_y[0];
+
+    return true;
+}
+
+void ILI934X::update()
+{
+
+  int16_t data[6];
+  int32_t z;
+
+  spi_set_baudrate(m_spi, m_touch_baud_rate);
+  gpio_put(m_cs_touch, 0);
+
+  uint8_t cmd = 0xB1;
+  uint8_t rx;
+  spi_write_read_blocking(m_spi, &cmd, &rx, 1);
+  int16_t z1 = spi_transfer16(m_spi, 0xC1) >> 3;
+
+  z = z1 + 4095;
+
+  // int16_t z2 = _pspi->transfer16(0x91 /* X */) >> 3;
+  int16_t z2 = spi_transfer16(m_spi, 0x91) >> 3;
+  z -= z2;
+
+  if (z >= Z_THRESHOLD) {
+      // dummy X measure, 1st is always noisy
+      spi_transfer16(m_spi, 0x91);
+      sleep_us(20);
+
+      data[0] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
+      data[1] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
+      data[2] = spi_transfer16(m_spi, 0xD1 /* Y */) >> 3;
+      data[3] = spi_transfer16(m_spi, 0x91 /* X */) >> 3;
+  } else {
+      data[0] = data[1] = data[2] = data[3] = 0;
+  }
+
+  // Last Y touch power down
+  data[4] = spi_transfer16(m_spi, 0xD0 /* Y */) >> 3;
+  data[5] = spi_transfer16(m_spi, 0x0000) >> 3;
+
+  gpio_put(m_cs_touch, 1);
+  spi_set_baudrate(m_spi, m_tft_baud_rate);
+
+	if (z < 0) z = 0;
+	if (z < Z_THRESHOLD) {
+		m_zraw = 0;
+		return;
+	}
+	m_zraw = z;
+	
+	// Average pair with least distance between each measured x then y
+	int16_t x = besttwoavg( data[0], data[2], data[4] );
+	int16_t y = besttwoavg( data[1], data[3], data[5] );
+
+  m_xraw = x;
+	m_yraw = y;
+  return;
+
+	if (z >= Z_THRESHOLD) {
+		switch (m_rotation) {
+		  case R0DEG:
+			m_xraw = y;
+			m_yraw = 4095-x;
+			break;
+		  case R90DEG:
+			m_xraw = 4095-x;
+			m_yraw = 4095-y;
+			break;
+		  case R180DEG:
+			m_xraw = 4095-y;
+			m_yraw = x;
+			break;
+		  case R270DEG:
+			m_xraw = x;
+			m_yraw = y;
+      break;
+      case MIRRORED0DEG:
+			m_xraw = y;
+			m_yraw = x;
+			break;
+		  case MIRRORED90DEG:
+			m_xraw = 4095-x;
+			m_yraw = y;
+			break;
+		  case MIRRORED180DEG:
+			m_xraw = 4095-y;
+			m_yraw = 4095-x;
+			break;
+		  case MIRRORED270DEG:
+			m_xraw = x;
+			m_yraw = 4095-y;
+      break;
+		}
+	}
+
 }
 
 #endif
