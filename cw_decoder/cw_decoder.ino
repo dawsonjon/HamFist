@@ -20,10 +20,10 @@
 #define PIN_CS       13
 #define PIN_CS_TOUCH 10
 #define PIN_SCK      14
-#define PIN_MOSI     15 
+#define PIN_MOSI     15
 #define PIN_DC       11
 #define SPI_PORT     spi1
-#define TOUCH        1
+#define TOUCH        0 //Set this to 1 if you have touch screen hardware
 
 //#define ROTATION R0DEG
 //#define ROTATION R90DEG
@@ -116,7 +116,7 @@ void setup() {
   gpio_init(20); gpio_set_dir(20, GPIO_IN);  gpio_pull_up(20);
   gpio_init(21); gpio_set_dir(21, GPIO_IN);  gpio_pull_up(21);
   gpio_init(22); gpio_set_dir(22, GPIO_IN);  gpio_pull_up(22);
-  
+
   EEPROM.begin(8192);
   load();
 
@@ -127,7 +127,7 @@ void setup() {
 }
 
 void loop() {
-  
+
   //Audio input and output
   ADCAudio adc_audio;
   adc_audio.begin(28, 15000);
@@ -140,7 +140,7 @@ void loop() {
   cw_dsp.set_update_display(true);
 
   bool enable_waterfall = true;
-  
+
   while(1) {
     static uint16_t output_buffer[2*ADC_BLOCK_SIZE];
     int16_t *samples = adc_audio.input_samples();
@@ -192,22 +192,22 @@ const uint16_t TX_PANEL_HEIGHT = PADDING + TEXT_HEIGHT + PADDING + TEXT_HEIGHT;
 
 void draw() {
   display->clear(BACKGROUND);
-  
+
   for(int channel=0; channel<NUM_CHANNELS; ++channel)
   {
-    uint16_t Y = PANEL_Y + (PANEL_INTERVAL * channel); 
+    uint16_t Y = PANEL_Y + (PANEL_INTERVAL * channel);
     display->fillRect(PANEL_X, Y, PANEL_HEIGHT, PANEL_WIDTH, PANEL_BG);
   }
   for(int channel=1; channel<NUM_CHANNELS; ++channel)
   {
-    uint16_t Y = PANEL_Y + (PANEL_INTERVAL * channel) - 1; 
+    uint16_t Y = PANEL_Y + (PANEL_INTERVAL * channel) - 1;
   }
   const int active_channel = settings.tx_channel;
   display->drawRect(PANEL_X, PANEL_Y + PANEL_INTERVAL*active_channel, PANEL_HEIGHT, PANEL_WIDTH, ACTIVE_BORDER);
   display->fillRect(PANEL_X, TX_PANEL_Y, TX_PANEL_HEIGHT, PANEL_WIDTH, TX_BG);
   display->drawRect(PANEL_X, TX_PANEL_Y, TX_PANEL_HEIGHT, PANEL_WIDTH, TX_BORDER);
   display->writeImage(0, 0, 320, HEADING_HEIGHT, header);
-  
+
 }
 
 void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfall)
@@ -240,21 +240,21 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
 
   uint8_t button = button_bar_press(touchpress);
 
-  if(my_callsign_entry.is_active()) { 
-    my_callsign_entry.run(); 
-    if(!my_callsign_entry.is_active()) save(); 
+  if(my_callsign_entry.is_active()) {
+    my_callsign_entry.run();
+    if(!my_callsign_entry.is_active()) save();
   }
-  else if(their_callsign_entry.is_active()) { 
-    their_callsign_entry.run(); 
-    if(!their_callsign_entry.is_active()) save(); 
+  else if(their_callsign_entry.is_active()) {
+    their_callsign_entry.run();
+    if(!their_callsign_entry.is_active()) save();
   }
-  else if(wpm_entry.is_active()) { 
-    wpm_entry.run(); 
-    if(!wpm_entry.is_active() && wpm_entry.is_ok()) save(); 
+  else if(wpm_entry.is_active()) {
+    wpm_entry.run();
+    if(!wpm_entry.is_active() && wpm_entry.is_ok()) save();
   }
-  else if(threshold_entry.is_active()) { 
-    threshold_entry.run(); 
-    if(!threshold_entry.is_active() && threshold_entry.is_ok()) save(); 
+  else if(threshold_entry.is_active()) {
+    threshold_entry.run();
+    if(!threshold_entry.is_active() && threshold_entry.is_ok()) save();
   }
   else if(channel_entry.is_active()) {
     channel_entry.run();
@@ -278,7 +278,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
     needs_draw = true;
     text_entry.run();
     if(!text_entry.is_active()) {
-      strcpy(send_text, text);        
+      strcpy(send_text, text);
       str_replace_all(send_text, 250, "@MYCALL", settings.my_callsign);
       str_replace_all(send_text, 250, "@CALLSIGN", settings.their_callsign);
     }
@@ -338,7 +338,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
         button_bar_active = false;
         needs_draw = true;
       }
-    } else { 
+    } else {
       draw_tx_panel(send_text, cw_encoder);
     }
   }
@@ -349,9 +349,9 @@ void draw_channel_status(my_cw_dsp &cw_dsp)
   //int x = 8;
   for(int channel=0; channel<NUM_CHANNELS; ++channel)
   {
-    uint16_t TEXT_Y = PANEL_Y + (PANEL_INTERVAL * channel) + PADDING; 
+    uint16_t TEXT_Y = PANEL_Y + (PANEL_INTERVAL * channel) + PADDING;
     char buffer[50];
-    uint16_t frequency = ((2 * channel * 586)+586)/2; 
+    uint16_t frequency = ((2 * channel * 586)+586)/2;
     snprintf(buffer, 50, "chan: %u +%3uHz %3u%% %3.0fwpm %3.0fdB(500 Hz)", channel, frequency, cw_dsp.get_buffer_percent(channel), cw_dsp.get_WPM(channel), cw_dsp.get_snr(channel));
     int TEXT_X = (width - (strlen(buffer) * 6))/2;
     display->drawString(TEXT_X, TEXT_Y, font_8x5, buffer, TEXT_HEADING, PANEL_BG);
@@ -391,7 +391,7 @@ void draw_waterfall(c_cw_dsp &cw_dsp)
   static uint16_t waterfall[FRAME_SIZE/2][WATERFALL_WIDTH] = {0};
 
   uint32_t *magnitudes = cw_dsp.get_magnitudes();
-  
+
   for(uint16_t bin=0; bin<FRAME_SIZE/2; ++bin) {
     uint32_t magnitude = magnitudes[bin];
     float scaled_magnitude = std::max(0.0, 20*log10(magnitude+1)-20);
@@ -405,7 +405,7 @@ void draw_waterfall(c_cw_dsp &cw_dsp)
     refresh_count = 0;
     uint8_t channel = 0;
     uint8_t sub_y = 0;
-    for(uint16_t waterfall_y=0; waterfall_y<30; ++waterfall_y) {         
+    for(uint16_t waterfall_y=0; waterfall_y<30; ++waterfall_y) {
       uint8_t y = PANEL_Y + (channel * PANEL_INTERVAL) + PADDING+TEXT_HEIGHT+PADDING+TEXT_HEIGHT+PADDING + sub_y;
       display->writeHLine(PANEL_X + PADDING, y, WATERFALL_WIDTH - waterfall_newest - 1, &waterfall[waterfall_y][waterfall_newest + 1]);
       display->writeHLine(PANEL_X + PADDING + WATERFALL_WIDTH - waterfall_newest, y, waterfall_newest+1, waterfall[waterfall_y]);
@@ -415,7 +415,7 @@ void draw_waterfall(c_cw_dsp &cw_dsp)
       }
     }
   }
-    
+
   if(++waterfall_newest == WATERFALL_WIDTH) waterfall_newest = 0;
 }
 
@@ -441,9 +441,9 @@ void my_cw_dsp :: decode(uint16_t cluster, std::string text, std::string partial
     text.erase(0, chars_to_remove);
     excess_length -= chars_to_remove;
   }
-  
+
   if(m_update_display) {
-    const uint16_t TEXT_Y = PANEL_Y + (PANEL_INTERVAL * cluster) + PADDING + TEXT_HEIGHT + PADDING; 
+    const uint16_t TEXT_Y = PANEL_Y + (PANEL_INTERVAL * cluster) + PADDING + TEXT_HEIGHT + PADDING;
     const uint16_t TEXT_X = PANEL_X + PADDING;
     display->drawString(TEXT_X,                                                           TEXT_Y, font_8x5, decoded_text[cluster].c_str(), TEXT_PRIMARY, PANEL_BG);
     display->drawString(TEXT_X+(font_width*decoded_text[cluster].size()),                 TEXT_Y, font_8x5, text.c_str(), TEXT_RECENT, PANEL_BG);
@@ -464,7 +464,7 @@ void send_cw(PWMAudio &audio_output, uint16_t *output_buffer, c_cw_encoder &cw_e
     uint16_t scaled_sample = ((cw_encoder.get_sample() >> 2) + 32767) >> 6;
     output_buffer[ping_pong * ADC_BLOCK_SIZE + sample_number] = scaled_sample;
   }
-  
+
   audio_output.output_samples(&output_buffer[ping_pong*ADC_BLOCK_SIZE], ADC_BLOCK_SIZE);
   ping_pong ^= 1;
 }
@@ -515,6 +515,8 @@ void configure_display()
     if(settings.has_touchcal) {
       display->set_touch_calibration(settings.touchcal);
     } else {
+      display->drawString(94, 80, font_16x12, "Calibration", COLOUR_GREEN, COLOUR_BLACK);
+      display->drawString(46, 100, font_16x12, "(Touch Each Circle)", COLOUR_GREEN, COLOUR_BLACK);
       display->touch_calibrate();
       settings.touchcal = display->get_touch_calibration();
       settings.has_touchcal = true;
