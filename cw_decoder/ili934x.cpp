@@ -1101,7 +1101,6 @@ bool ILI934X::touch_calibrate()
       {20, 20}, {_width - 20, 20}, {20, _height - 20}, {_width - 20, _height - 20}};
 
   float raw_x[4], raw_y[4];
-  clear(COLOUR_BLACK);
   for (int i = 0; i < 4; i++) {
     drawCircle(cal_points[i][0], cal_points[i][1], 3, COLOUR_WHITE);
 
