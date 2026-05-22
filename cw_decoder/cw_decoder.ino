@@ -24,6 +24,7 @@
 #define PIN_DC       11
 #define SPI_PORT     spi1
 #define TOUCH        0 //Set this to 1 if you have touch screen hardware
+#define PIN_PTT      16
 
 //#define ROTATION R0DEG
 //#define ROTATION R90DEG
@@ -116,6 +117,8 @@ void setup() {
   gpio_init(20); gpio_set_dir(20, GPIO_IN);  gpio_pull_up(20);
   gpio_init(21); gpio_set_dir(21, GPIO_IN);  gpio_pull_up(21);
   gpio_init(22); gpio_set_dir(22, GPIO_IN);  gpio_pull_up(22);
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(PIN_PTT, OUTPUT);
 
   EEPROM.begin(8192);
   load();
@@ -310,6 +313,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
         button_bar_active = false;
         needs_draw = true;
         if(cw_encoder.is_done()) {
+          enable_tx();
           cw_encoder.set_string(send_text);
         }
       }
@@ -333,6 +337,7 @@ void update_ui(my_cw_dsp &cw_dsp, c_cw_encoder &cw_encoder, bool &enable_waterfa
       draw();
     }
     draw_channel_status(cw_dsp);
+    if(cw_encoder.is_done()) disable_tx();
     if(button_bar_active) {
       if(!button_bar_timeout--){
         button_bar_active = false;
@@ -467,6 +472,23 @@ void send_cw(PWMAudio &audio_output, uint16_t *output_buffer, c_cw_encoder &cw_e
 
   audio_output.output_samples(&output_buffer[ping_pong*ADC_BLOCK_SIZE], ADC_BLOCK_SIZE);
   ping_pong ^= 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//PTT Control
+
+void enable_tx()
+{
+  Serial.println("enable TX");
+  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(PIN_PTT, HIGH);
+}
+
+void disable_tx()
+{
+  Serial.println("disable TX");
+  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(PIN_PTT, LOW);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
