@@ -74,6 +74,13 @@ Touch screen operation can be enabled by setting the `TOUCH` macro to 1.
 
 Once enabled follow on-screen instructions to calibrate touch controller.
 
+Automated PTT Switching
+-----------------------
+
+The firmware now includes automatic Transmit control using the transceiver's PTT input. PTT switching can be enabled using the following circuit.
+
+ .. image:: images/ptt_circuit.png
+
 Credits
 -------
 

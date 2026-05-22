@@ -627,7 +627,7 @@ void c_menu ::run()
 
   if (offset_changed) {
     for (uint8_t idx = 0; idx < num_items_on_screen; ++idx) {
-      m_display->fillRect(0, 32 + ((idx) * 25), DISPLAY_WIDTH, 12, BACKGROUND);
+      m_display->fillRect(0, 32 + ((idx) * 25), 25, DISPLAY_WIDTH, BACKGROUND);
     }
   }
 
