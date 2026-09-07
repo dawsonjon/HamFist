@@ -45,7 +45,6 @@ void generate_window(int32_t* window, int size)
   }
 }
 
-// apply a flat-topped window to reduce scalloping loss
 void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
 {
   for (uint16_t idx = 0; idx < n; ++idx) {
@@ -65,7 +64,7 @@ void c_cw_dsp ::decode(uint16_t channel, std::string text, std::string partial)
   DEBUG_PRINTF("decode on channel %u %s\n", channel, text.c_str());
 }
 
-static void max_magnitude(uint32_t magnitude[], uint32_t threshold[], uint8_t start_bin,
+static void max_power(uint32_t power[], uint32_t threshold[], uint8_t start_bin,
                           uint8_t stop_bin, uint16_t& max_bin, uint32_t& max,
                           uint32_t& max_threshold)
 {
@@ -75,9 +74,9 @@ static void max_magnitude(uint32_t magnitude[], uint32_t threshold[], uint8_t st
   for (uint16_t idx = start_bin; idx < stop_bin; ++idx) {
     assert(idx >= 0);
     assert(idx < FRAME_SIZE / 2);
-    if (magnitude[idx] > max) {
+    if (power[idx] > max) {
       max_bin = idx;
-      max = magnitude[idx];
+      max = power[idx];
     }
     if (threshold[idx] > max_threshold) {
       max_threshold = threshold[idx];
@@ -109,9 +108,9 @@ void c_cw_dsp ::process_channels()
     uint16_t max_bin;
     uint32_t max;
     uint32_t max_threshold;
-    max_magnitude(magnitude, threshold, start_bin, stop_bin, max_bin, max, max_threshold);
-    DEBUG_PRINTF("channel: %u magnitude: %u threshold: %u noise: %f snr: %f\n value %u", channel,
-                 magnitude[max_bin], max_threshold, noise_estimate[max_bin], get_snr(channel),
+    max_power(power, threshold, start_bin, stop_bin, max_bin, max, max_threshold);
+    DEBUG_PRINTF("channel: %u power: %u threshold: %u noise: %f snr: %f\n value %u", channel,
+                 power[max_bin], max_threshold, noise_estimate[max_bin], get_snr(channel),
                  channels[channel].value);
 
     // measure signal present periods
@@ -176,24 +175,24 @@ void c_cw_dsp ::process_channels()
 
 void c_cw_dsp ::process_frame()
 {
-  print_frame("magnitudes", magnitude);
+  print_frame("power", power);
 
   static bool initialised = false;
   static uint16_t gate_count[FRAME_SIZE / 2];
   if (!initialised) {
     for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
-      noise_estimate[idx] = magnitude[idx];
+      noise_estimate[idx] = power[idx];
       gate_count[idx] = 0;
     }
     initialised = true;
   }
 
   for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
-    if ((magnitude[idx] < 2.0 * noise_estimate[idx]) || magnitude[idx] < 5) {
-      noise_estimate[idx] = (0.99 * noise_estimate[idx]) + (0.01 * magnitude[idx]);
+    if ((power[idx] < 7.0 * noise_estimate[idx]) || power[idx] < 5) {
+      noise_estimate[idx] = (0.995 * noise_estimate[idx]) + (0.005 * power[idx]);
       gate_count[idx] = 0;
     } else if (gate_count[idx] > 50) {
-      noise_estimate[idx] = (0.9 * noise_estimate[idx]) + (0.1 * magnitude[idx]);
+      noise_estimate[idx] = (0.9 * noise_estimate[idx]) + (0.1 * power[idx]);
     } else {
       gate_count[idx]++;
     }
@@ -247,9 +246,21 @@ float c_cw_dsp ::get_snr(int channel)
 {
   if (channels[channel].snr > 0.0001f)
     //-6.3 converts from 117 to 500Hz bandwidth
-    return 20.0f * log10(channels[channel].snr) - 6.3f;
+    return 10.0f * log10(channels[channel].snr) - 6.3f;
   else
     return -99.0f;
+}
+
+float interpolate_peak(float ym1, float y0, float yp1)
+{
+    float denominator = ym1 - 2.0f * y0 + yp1;
+
+    if (fabsf(denominator) < 1e-12f)
+        return y0;
+
+    float delta = 0.5f * (ym1 - yp1) / denominator;
+
+    return y0 - 0.25f * (ym1 - yp1) * delta;
 }
 
 void c_cw_dsp ::process_sample(int16_t sample)
@@ -271,9 +282,12 @@ void c_cw_dsp ::process_sample(int16_t sample)
     fixed_fft(i, q, 6);
 
     for (uint16_t idx = 0; idx < FRAME_SIZE / 2; idx++) {
-      magnitude[idx] = rectangular_2_magnitude(i[idx], q[idx]);
+      power[idx] = i[idx]*i[idx] + q[idx]*q[idx];
+      if(idx > 0)
+        power[idx] += i[idx-1]*i[idx-1] + q[idx-1]*q[idx-1];
+      power[idx] += i[idx+1]*i[idx+1] + q[idx+1]*q[idx+1];
     }
-    memcpy(magnitude_copy, magnitude, sizeof(magnitude));
+    memcpy(power_copy, power, sizeof(power));
     process_frame();
   }
 }

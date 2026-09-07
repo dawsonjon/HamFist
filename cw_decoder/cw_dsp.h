@@ -52,15 +52,14 @@ class c_cw_dsp
   int16_t i[FRAME_SIZE];
   int16_t q[FRAME_SIZE];
   int32_t window[FRAME_SIZE];
-  uint32_t magnitude[FRAME_SIZE / 2];
-  uint32_t magnitude_copy[FRAME_SIZE / 2];
-  uint32_t old_magnitude[FRAME_SIZE / 2];
-  uint32_t new_magnitude[FRAME_SIZE / 2];
+  uint32_t power[FRAME_SIZE / 2];
+  uint32_t power_copy[FRAME_SIZE / 2];
+  uint32_t old_power[FRAME_SIZE / 2];
+  uint32_t new_power[FRAME_SIZE / 2];
   uint32_t threshold[FRAME_SIZE / 2];
   float noise_estimate[FRAME_SIZE / 2];
-  uint32_t smoothed_magnitude[FRAME_SIZE / 2];
   uint32_t frame_count;
-  float thresh_mult = 9;
+  float thresh_mult = 12;
 
   s_channel channels[7];
 
@@ -82,7 +81,7 @@ public:
       return 0.0f;
     return channels[channel].decoder.get_WPM();
   }
-  uint32_t* get_magnitudes() { return &magnitude_copy[0]; }
+  uint32_t* get_power() { return &power_copy[0]; }
 
   uint32_t get_buffer_percent(int channel);
   float get_snr(int channel);

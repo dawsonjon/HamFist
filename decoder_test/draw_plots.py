@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-with open("magnitudes") as inf:
+with open("power") as inf:
   data = inf.read()
 data = data.splitlines()
 data = [line.split() for line in data]
@@ -42,7 +42,7 @@ for bin in set(decode_bins):
   bin_magnitude = np.array([x[bin+y] for x, y in zip(data, max_bins)])
   plt.plot(bin_magnitude, label="magnitude")
 
-  plt.plot(1000*(bin_magnitude > bin_threshold), label="signal")
+  plt.plot(1e8*(bin_magnitude > bin_threshold), label="signal")
   plt.legend()
   plt.show()
 

@@ -3,7 +3,7 @@ g++ -DLOG_TO_FILE ../cw_decoder/cw_dsp.cpp ../cw_decoder/utils.cpp ../cw_decoder
 echo
 echo "********** TEST1 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -13,27 +13,27 @@ rm decode_bins
 echo
 echo "********** TEST2 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test2.wav
-#python draw_plots.py
+python draw_plots.py
 
 echo
 echo "********** TEST3 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test3.wav
-#python draw_plots.py
+python draw_plots.py
 
 echo
 echo "********** TEST4 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -43,7 +43,7 @@ rm decode_bins
 echo
 echo "********** TEST5 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -53,7 +53,7 @@ rm decode_bins
 echo
 echo "********** TEST6 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -63,7 +63,7 @@ rm decode_bins
 echo
 echo "********** TEST7 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -73,7 +73,7 @@ rm decode_bins
 echo
 echo "********** TEST8 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -83,17 +83,17 @@ rm decode_bins
 echo
 echo "********** TEST9 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test9.wav
-##python draw_plots.py
+python draw_plots.py
 #
 echo
 echo "********** TEST10 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -104,7 +104,7 @@ rm decode_bins
 echo
 echo "********** TEST11 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -114,7 +114,7 @@ rm decode_bins
 echo
 echo "********** TEST12 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -124,7 +124,7 @@ rm decode_bins
 echo
 echo "********** TEST13 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -134,7 +134,7 @@ rm decode_bins
 echo
 echo "********** TEST14 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -144,7 +144,7 @@ rm decode_bins
 echo
 echo "********** TEST15 **********"
 echo
-rm magnitudes
+rm power
 rm noise_estimate
 rm threshold
 rm decode_bins
@@ -154,7 +154,7 @@ rm decode_bins
 #echo
 #echo "********** TEST16 **********"
 #echo
-#rm magnitudes
+#rm power
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
@@ -164,7 +164,7 @@ rm decode_bins
 #echo
 #echo "********** TEST17 **********"
 #echo
-#rm magnitudes
+#rm power
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
@@ -174,7 +174,7 @@ rm decode_bins
 #echo
 #echo "********** TEST18 **********"
 #echo
-#rm magnitudes
+#rm power
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
@@ -184,7 +184,7 @@ rm decode_bins
 #echo
 #echo "********** TEST19 **********"
 #echo
-#rm magnitudes
+#rm power
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
@@ -194,7 +194,7 @@ rm decode_bins
 #echo
 #echo "********** TEST20 **********"
 #echo
-#rm magnitudes
+#rm power
 #rm noise_estimate
 #rm threshold
 #rm decode_bins
@@ -204,7 +204,7 @@ rm decode_bins
 echo
 echo "********** TEST23 **********"
 echo
-rm magnitudes
+rm power
 rm smoothed_magnitude
 rm noise_estimate
 rm threshold

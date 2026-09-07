@@ -6,10 +6,10 @@
 
 class my_cw_dsp : public c_cw_dsp
 {
-  std::string decoded_text[7]; 
+  std::string decoded_text[7];
   virtual void decode(uint16_t cluster, std::string text, std::string partial)
   {
-    decoded_text[cluster]+=text; 
+    decoded_text[cluster]+=text;
   }
 
   public:
@@ -39,7 +39,7 @@ int main(int argc, char ** argv)
   {
     int16_t sample;
     int success = fread(&sample, sizeof(int16_t), 1, inf);
-    if(!success){ 
+    if(!success){
       cw_dsp.flush();
       cw_dsp.print_decodes();
       return 1;
