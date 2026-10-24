@@ -22,7 +22,7 @@
 #include "utils.h"
 #include <algorithm>
 
-// #define LOGGING
+//#define LOGGING
 
 #ifdef LOGGING
 #ifdef ARDUINO
@@ -61,16 +61,20 @@ void apply_window(int16_t i[], int16_t q[], int32_t window[], const uint16_t n)
 
 void c_cw_dsp ::decode(uint16_t channel, std::string text, std::string partial)
 {
+  (void) channel;
+  (void) text;
+  (void) partial;
   DEBUG_PRINTF("decode on channel %u %s\n", channel, text.c_str());
 }
 
-static void max_power(uint32_t power[], uint32_t threshold[], uint8_t start_bin,
+static void max_power(uint32_t power[], uint32_t threshold[], float noise_estimate[], uint8_t start_bin,
                           uint8_t stop_bin, uint16_t& max_bin, uint32_t& max,
-                          uint32_t& max_threshold)
+                          uint32_t& max_threshold, float &max_noise_estimate)
 {
   max = 0;
   max_bin = 0;
   max_threshold = 0;
+  max_noise_estimate = 0.0f;
   for (uint16_t idx = start_bin; idx < stop_bin; ++idx) {
     assert(idx >= 0);
     assert(idx < FRAME_SIZE / 2);
@@ -80,6 +84,9 @@ static void max_power(uint32_t power[], uint32_t threshold[], uint8_t start_bin,
     }
     if (threshold[idx] > max_threshold) {
       max_threshold = threshold[idx];
+    }
+    if (noise_estimate[idx] > max_noise_estimate) {
+      max_noise_estimate = noise_estimate[idx];
     }
   }
 }
@@ -108,21 +115,24 @@ void c_cw_dsp ::process_channels()
     uint16_t max_bin;
     uint32_t max;
     uint32_t max_threshold;
-    max_power(power, threshold, start_bin, stop_bin, max_bin, max, max_threshold);
+    float max_noise_estimate;
+    max_power(power, threshold, noise_estimate, start_bin, stop_bin, max_bin, max, max_threshold, max_noise_estimate);
+    //if(channel == 0){
     DEBUG_PRINTF("channel: %u power: %u threshold: %u noise: %f snr: %f\n value %u", channel,
-                 power[max_bin], max_threshold, noise_estimate[max_bin], get_snr(channel),
+                 max, max_threshold, max_noise_estimate, get_snr(channel),
                  channels[channel].value);
+    //}
 
     // measure signal present periods
     bool value;
     if (channels[channel].value) {
       channels[channel].snr =
-          (0.99 * channels[channel].snr) + (0.01 * max / noise_estimate[max_bin]);
-      value = max > (0.7 * max_threshold);
+          (0.6 * channels[channel].snr) + (0.4 * max / max_noise_estimate);
+      value = max > (0.7 * max_threshold) && get_snr(channel) > (MIN_SNR - 1.0f);
     } else {
       channels[channel].snr =
-          (0.999 * channels[channel].snr) + (0.001 * max / noise_estimate[max_bin]);
-      value = max > max_threshold;
+          (0.995 * channels[channel].snr) + (0.005 * max / max_noise_estimate);
+      value = max > max_threshold && get_snr(channel) > MIN_SNR;
     }
     channels[channel].duration++;
     if (value != channels[channel].value) {
@@ -134,19 +144,15 @@ void c_cw_dsp ::process_channels()
 
     // timeout
     if (channels[channel].duration == TIMEOUT) {
-      if (get_snr(channel) > 12.0f) {
-        print_element("decode_bins", channel * CHANNEL_SIZE);
-
-        channels[channel].decoder.decode(channels[channel].observations,
-                                         channels[channel].num_observations);
-
-        decode(channel, channels[channel].decoder.get_text(),
-               channels[channel].decoder.get_text_partial());
-      }
+      print_element("decode_bins", channel * CHANNEL_SIZE);
+      channels[channel].decoder.decode(channels[channel].observations,
+        channels[channel].num_observations);
+      decode(channel, channels[channel].decoder.get_text(),
+        channels[channel].decoder.get_text_partial());
       channels[channel].num_observations = 0;
       channels[channel].duration = 0;
       channels[channel].trained = false; // treat this as the end of a communication and retrain
-      channels[channel].snr = 0;
+      //channels[channel].snr = 0;
       channels[channel].decoder.reset();
     }
 
@@ -154,19 +160,12 @@ void c_cw_dsp ::process_channels()
     if (channels[channel].num_observations == OBSERVATION_BUFFER_SIZE ||
         (channels[channel].trained &&
          channels[channel].num_observations == OBSERVATION_BURST_SIZE)) {
+      channels[channel].decoder.decode(channels[channel].observations,
+       channels[channel].num_observations);
 
-      // check for feasible SNR to perform decode
-      if (get_snr(channel) > 12.0f) {
-
-        channels[channel].decoder.decode(channels[channel].observations,
-                                         channels[channel].num_observations);
-
-        decode(channel, channels[channel].decoder.get_text(),
-               channels[channel].decoder.get_text_partial());
-
-        channels[channel].trained = true;
-      }
-
+      decode(channel, channels[channel].decoder.get_text(),
+        channels[channel].decoder.get_text_partial());
+      channels[channel].trained = true;
       channels[channel].num_observations = 0;
       channels[channel].duration = 0;
     }
@@ -178,29 +177,38 @@ void c_cw_dsp ::process_frame()
   print_frame("power", power);
 
   static bool initialised = false;
-  static uint16_t gate_count[FRAME_SIZE / 2];
   if (!initialised) {
     for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
       noise_estimate[idx] = power[idx];
-      gate_count[idx] = 0;
+      signal_estimate[idx] = power[idx];
+      state[idx] = false;
     }
     initialised = true;
   }
 
   for (uint16_t idx = 0; idx < FRAME_SIZE / 2; ++idx) {
-    if ((power[idx] < 7.0 * noise_estimate[idx]) || power[idx] < 5) {
-      noise_estimate[idx] = (0.995 * noise_estimate[idx]) + (0.005 * power[idx]);
-      gate_count[idx] = 0;
-    } else if (gate_count[idx] > 50) {
-      noise_estimate[idx] = (0.9 * noise_estimate[idx]) + (0.1 * power[idx]);
+
+    float s = signal_estimate[idx];
+    float n  = noise_estimate[idx];
+    float p = power[idx];
+    float t = (state[idx]?1.0:0.9) * n + 0.25*(s+n);
+
+    if (p > s || p > t) {
+      s = 0.6*s + 0.4*p;
+      state[idx] = true;
     } else {
-      gate_count[idx]++;
+      n = 0.96*n + 0.04*p;
+      s = 0.999*s;
+      state[idx] = false;
     }
-    noise_estimate[idx] = std::max(noise_estimate[idx], 1.0f);
-    threshold[idx] = noise_estimate[idx] * thresh_mult;
+
+    signal_estimate[idx] = s;
+    noise_estimate[idx] = n;
+    threshold[idx] = t;
   }
 
   print_frame_float("noise_estimate", noise_estimate);
+  print_frame_float("signal_estimate", signal_estimate);
   print_frame("threshold", threshold);
 
   // process active signals
@@ -251,18 +259,6 @@ float c_cw_dsp ::get_snr(int channel)
     return -99.0f;
 }
 
-float interpolate_peak(float ym1, float y0, float yp1)
-{
-    float denominator = ym1 - 2.0f * y0 + yp1;
-
-    if (fabsf(denominator) < 1e-12f)
-        return y0;
-
-    float delta = 0.5f * (ym1 - yp1) / denominator;
-
-    return y0 - 0.25f * (ym1 - yp1) * delta;
-}
-
 void c_cw_dsp ::process_sample(int16_t sample)
 {
   // resample from 15000Hz to 7500 Hz
@@ -296,6 +292,8 @@ void c_cw_dsp ::process_sample(int16_t sample)
 
 void c_cw_dsp ::print_frame(const char filename[], uint32_t frame[])
 {
+  (void)filename;
+  (void)frame;
 #ifdef LOG_TO_FILE
   FILE* outf = fopen(filename, "a");
   for (uint16_t f = 0; f < FRAME_SIZE / 2; f++) {
@@ -309,6 +307,8 @@ void c_cw_dsp ::print_frame(const char filename[], uint32_t frame[])
 
 void c_cw_dsp ::print_frame_float(const char filename[], float frame[])
 {
+  (void)filename;
+  (void)frame;
 #ifdef LOG_TO_FILE
   FILE* outf = fopen(filename, "a");
   for (uint16_t f = 0; f < FRAME_SIZE / 2; f++) {
@@ -322,6 +322,8 @@ void c_cw_dsp ::print_frame_float(const char filename[], float frame[])
 
 void c_cw_dsp ::print_element(const char filename[], uint32_t element)
 {
+  (void)filename;
+  (void)element;
 #ifdef LOG_TO_FILE
   FILE* outf = fopen(filename, "a");
   fprintf(outf, "%i", (int)element);
@@ -332,6 +334,8 @@ void c_cw_dsp ::print_element(const char filename[], uint32_t element)
 
 void c_cw_dsp ::print_bool(const char filename[], bool element)
 {
+  (void)filename;
+  (void)element;
 #ifdef LOG_TO_FILE
   FILE* outf = fopen(filename, "a");
   fprintf(outf, "%i", (int)element);

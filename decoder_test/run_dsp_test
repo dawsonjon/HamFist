@@ -5,6 +5,7 @@ echo "********** TEST1 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test1.wav
@@ -15,26 +16,29 @@ echo "********** TEST2 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test2.wav
-python draw_plots.py
+#python draw_plots.py
 
 echo
 echo "********** TEST3 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test3.wav
-python draw_plots.py
+#python draw_plots.py
 
 echo
 echo "********** TEST4 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test4.wav
@@ -45,6 +49,7 @@ echo "********** TEST5 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test5.wav
@@ -55,6 +60,7 @@ echo "********** TEST6 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test6.wav
@@ -65,6 +71,7 @@ echo "********** TEST7 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test7.wav
@@ -75,6 +82,7 @@ echo "********** TEST8 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test8.wav
@@ -85,16 +93,18 @@ echo "********** TEST9 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test9.wav
-python draw_plots.py
+#python draw_plots.py
 #
 echo
 echo "********** TEST10 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test10.wav
@@ -106,6 +116,7 @@ echo "********** TEST11 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test11.wav
@@ -116,6 +127,7 @@ echo "********** TEST12 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test12.wav
@@ -126,6 +138,7 @@ echo "********** TEST13 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test13.wav
@@ -136,6 +149,7 @@ echo "********** TEST14 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test14.wav
@@ -146,6 +160,7 @@ echo "********** TEST15 **********"
 echo
 rm power
 rm noise_estimate
+rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test15.wav
@@ -156,6 +171,7 @@ rm decode_bins
 #echo
 #rm power
 #rm noise_estimate
+#rm signal_estimate
 #rm threshold
 #rm decode_bins
 #./cw_dsp_test test16.wav
@@ -176,6 +192,7 @@ rm decode_bins
 #echo
 #rm power
 #rm noise_estimate
+#rm signal_estimate
 #rm threshold
 #rm decode_bins
 #./cw_dsp_test test18.wav
@@ -186,6 +203,7 @@ rm decode_bins
 #echo
 #rm power
 #rm noise_estimate
+#rm signal_estimate
 #rm threshold
 #rm decode_bins
 #./cw_dsp_test test19.wav
@@ -196,6 +214,7 @@ rm decode_bins
 #echo
 #rm power
 #rm noise_estimate
+#rm signal_estimate
 #rm threshold
 #rm decode_bins
 #./cw_dsp_test test20.wav
@@ -207,6 +226,7 @@ echo
 rm power
 rm smoothed_magnitude
 rm noise_estimate
+#rm signal_estimate
 rm threshold
 rm decode_bins
 ./cw_dsp_test test23.wav

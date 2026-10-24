@@ -395,12 +395,12 @@ void draw_waterfall(c_cw_dsp &cw_dsp)
   static uint16_t waterfall_newest = 0;
   static uint16_t waterfall[FRAME_SIZE/2][WATERFALL_WIDTH] = {0};
 
-  uint32_t *magnitudes = cw_dsp.get_magnitudes();
+  uint32_t *powers = cw_dsp.get_power();
 
   for(uint16_t bin=0; bin<FRAME_SIZE/2; ++bin) {
-    uint32_t magnitude = magnitudes[bin];
-    float scaled_magnitude = std::max(0.0, 20*log10(magnitude+1)-20);
-    uint8_t pixel = scaled_magnitude * 3.5;
+    uint32_t power = powers[bin];
+    float scaled_powers = std::max(0.0, 10*log10(power+1)-20);
+    uint8_t pixel = scaled_powers * 3.5;
 
     waterfall[bin][waterfall_newest] = display->colour565(0, pixel, pixel/2);
   }
@@ -479,14 +479,12 @@ void send_cw(PWMAudio &audio_output, uint16_t *output_buffer, c_cw_encoder &cw_e
 
 void enable_tx()
 {
-  Serial.println("enable TX");
   digitalWrite(LED_BUILTIN, HIGH);
   digitalWrite(PIN_PTT, HIGH);
 }
 
 void disable_tx()
 {
-  Serial.println("disable TX");
   digitalWrite(LED_BUILTIN, LOW);
   digitalWrite(PIN_PTT, LOW);
 }

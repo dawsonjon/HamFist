@@ -23,14 +23,15 @@
 
 static const uint16_t FRAME_SIZE = 64;
 // enough observations to train the decoder
-static const uint16_t OBSERVATION_BUFFER_SIZE = 50;
+static const uint16_t OBSERVATION_BUFFER_SIZE = 30;
 // enough observations to update the decoder
-static const uint16_t OBSERVATION_BURST_SIZE = 10;
-static const uint16_t TIMEOUT = 500;
+static const uint16_t OBSERVATION_BURST_SIZE = 5;
+static const uint16_t TIMEOUT = 200;
 static const uint16_t NUM_CHANNELS = 6;
 static const uint16_t CHANNEL_SIZE = 5;
 static const float SAMPLE_FREQUENCY = 15000.0f;
 static const float FRAME_MS = 1000.0f * 128.0f / SAMPLE_FREQUENCY;
+static const float MIN_SNR = 0.0f;
 
 struct s_channel
 {
@@ -58,8 +59,9 @@ class c_cw_dsp
   uint32_t new_power[FRAME_SIZE / 2];
   uint32_t threshold[FRAME_SIZE / 2];
   float noise_estimate[FRAME_SIZE / 2];
+  float signal_estimate[FRAME_SIZE / 2];
+  bool state[FRAME_SIZE / 2];
   uint32_t frame_count;
-  float thresh_mult = 12;
 
   s_channel channels[7];
 
