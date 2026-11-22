@@ -123,15 +123,18 @@ void c_cw_dsp ::process_channels()
                  channels[channel].value);
     //}
 
+    // floor noise at 1 (min non-zero power) so silence can't make snr inf/NaN
+    const float snr_ratio = max / std::max(max_noise_estimate, 1.0f);
+
     // measure signal present periods
     bool value;
     if (channels[channel].value) {
       channels[channel].snr =
-          (0.6 * channels[channel].snr) + (0.4 * max / max_noise_estimate);
+          (0.6 * channels[channel].snr) + (0.4 * snr_ratio);
       value = max > (0.7 * max_threshold) && get_snr(channel) > (MIN_SNR - 1.0f);
     } else {
       channels[channel].snr =
-          (0.995 * channels[channel].snr) + (0.005 * max / max_noise_estimate);
+          (0.995 * channels[channel].snr) + (0.005 * snr_ratio);
       value = max > max_threshold && get_snr(channel) > MIN_SNR;
     }
     channels[channel].duration++;
