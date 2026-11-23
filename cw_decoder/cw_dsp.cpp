@@ -274,6 +274,10 @@ void c_cw_dsp ::process_sample(int16_t sample)
   if (frequency_count == FRAME_SIZE) {
     frequency_count = 0;
 
+    // The input is real. The FFT works in place, so clear the imaginary
+    // part left over from the previous frame's FFT output.
+    memset(q, 0, sizeof(q));
+
     apply_window(i, q, window, FRAME_SIZE);
     fixed_fft(i, q, 6);
 
